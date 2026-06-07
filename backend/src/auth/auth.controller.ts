@@ -1,12 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { LocalGuard } from './Guards/local.guard';
+import type { Request } from 'express';
+import { JwtAuthGuard } from './Guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('login')
-    login(@Body() input: { name: string; email: string; password: string }) {
-        return this.authService.validateUser(input)
+    @UseGuards(LocalGuard)
+    login(@Req() req: Request) {
+        return req.user // usuário validado pelo guard, atrelado ao request pelo passport
+    }
+
+    @Get('status')
+    @UseGuards(JwtAuthGuard)
+    status(@Req() req: Request) {
+        return req.user // usuário validado pelo guard
     }
 }
