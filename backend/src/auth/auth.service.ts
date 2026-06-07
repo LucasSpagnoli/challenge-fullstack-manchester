@@ -21,7 +21,7 @@ export class AuthService {
 
         const accessToken = await this.jwtService.signAsync(tokenPayload) // cria um JWT com name, email e interestedIn[] (que será armazenado no cliente)
 
-        return { accessToken, username: user.name, userId: user.userId }
+        return { accessToken, name: user.name, userId: user.userId }
     }
 
     async validateUser(input: AuthInput) {
