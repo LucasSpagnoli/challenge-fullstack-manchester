@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalGuard } from './Guards/local.guard';
 import type { Request } from 'express';
@@ -9,6 +9,7 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('login')
+    @HttpCode(200)
     @UseGuards(LocalGuard)
     login(@Req() req: Request) {
         if (!req.user){
