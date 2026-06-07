@@ -5,12 +5,14 @@ import type { Request } from 'express';
 import { JwtAuthGuard } from './Guards/jwt.guard';
 import { CreateUserDTO } from 'src/types/DTO/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private usersService: UsersService
+        private usersService: UsersService,
+        private jwtService: JwtService
     ) { }
 
     @Post('login')
@@ -27,8 +29,9 @@ export class AuthController {
     }
 
     @Post("register")
-    register(@Body(ValidationPipe) createUserDTO: CreateUserDTO) {
-        return this.usersService.create(createUserDTO)
+    async register(@Body(ValidationPipe) createUserDTO: CreateUserDTO) {
+        const newUser = await this.usersService.create(createUserDTO)
+        return newUser
     }
 
     @Get('status')
