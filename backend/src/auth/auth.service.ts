@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
+import * as bcrypt from 'bcrypt';
 
 type AuthInput = { email: string; password: string }
 type SignInData = { userId: number; name: string }
@@ -24,12 +25,22 @@ export class AuthService {
     }
 
     async validateUser(input: AuthInput) {
-        const user = await this.databaseService.user.findUnique({ where: { email: input.email } })
+        const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } })
 
-        if (!user) {
-            throw new UnauthorizedException()
+        if (!foundUser) {
+            throw new UnauthorizedException("Usuário não encontrado")
         }
 
-        return user
+        const isPassCorrect = await bcrypt.compare(
+            input.password,
+            foundUser.password
+        )
+
+        if (!isPassCorrect) {
+            throw new UnauthorizedException("Senha incorreta")
+        }
+
+        const {password, ...user} = foundUser
+        return this.jwtService.sign(user) // cria um JWT com name, email e interestedIn[] (que será armazenado no cliente)
     }
 }
