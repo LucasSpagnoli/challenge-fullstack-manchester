@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, ValidationPipe } from '@nestjs/common';
-import { Prisma } from "@prisma/client";
 import { UsersService } from './users.service';
+import { CreateUserDTO } from './DTO/create-user.dto';
+import { UpdateUserDTO } from './DTO/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -12,12 +13,12 @@ export class UsersController {
     }
 
     @Post()
-    create(@Body(ValidationPipe) createUserDTO: Prisma.UserCreateInput) {
+    create(@Body(ValidationPipe) createUserDTO: CreateUserDTO) {
         return this.usersService.create(createUserDTO)
     }
 
     @Patch(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updatedUserDTO: Prisma.UserUpdateInput) {
+    update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updatedUserDTO: UpdateUserDTO) {
         return this.usersService.update(updatedUserDTO, id)
     }
 

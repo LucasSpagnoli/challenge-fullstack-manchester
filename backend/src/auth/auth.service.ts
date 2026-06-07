@@ -1,46 +1,35 @@
-// import { Injectable, UnauthorizedException } from '@nestjs/common';
-// import { DatabaseService } from 'src/database/database.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { DatabaseService } from 'src/database/database.service';
 
-// type AuthInput = { email: string; password: string }
-// type SignInData = { userId: number; name: string }
+type AuthInput = { email: string; password: string }
+type SignInData = { userId: number; name: string }
 
-// @Injectable()
-// export class AuthService {
-//     constructor(
-//         private readonly databaseService: DatabaseService,
-//         // private jwtService: JwtService
-//     ) { }
+@Injectable()
+export class AuthService {
+    constructor(
+        private readonly databaseService: DatabaseService,
+        private jwtService: JwtService
+    ) { }
 
-//     async ValidateUser(input: AuthInput) {
-//         const user = await this.databaseService.user.findUnique({ where: { email: input.email } })
+    async signIn(user: SignInData) {
+        const tokenPayload = {
+            sub: user.userId,
+            name: user.name
+        }
 
-//         if (user) {
-//             return {
-//                 userId: user.id,
-//                 username: user.name
-//             }
-//         }
+        const accessToken = await this.jwtService.signAsync(tokenPayload)
 
-//         return null
-//     }
+        return { username: user.name, userId: user.userId }
+    }
 
-//     async signIn(user: SignInData) {
-//         const tokenPayload = {
-//             sub: user.userId,
-//             name: user.name
-//         }
+    async validateUser(input: AuthInput) {
+        const user = await this.databaseService.user.findUnique({ where: { email: input.email } })
 
-//         // const accessToken = await this.jwtService.signAsync(tokenPayload)
+        if (!user) {
+            throw new UnauthorizedException()
+        }
 
-//         return { username: user.name, userId: user.userId }
-//     }
-
-//     async authenticate(input: AuthInput) {
-//         const user = this.ValidateUser(input)
-//         if (!user) {
-//             throw new UnauthorizedException()
-//         }
-
-//         return null
-//     }
-// }
+        return user
+    }
+}
