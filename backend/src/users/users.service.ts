@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, UseGuards } from "@nestjs/common";
 import { DatabaseService } from "src/database/database.service";
-import { CreateUserDTO } from "./DTO/create-user.dto";
-import { UpdateUserDTO } from "./DTO/update-user.dto";
+import { CreateUserDTO } from "../types/DTO/create-user.dto";
+import { UpdateUserDTO } from "../types/DTO/update-user.dto";
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
