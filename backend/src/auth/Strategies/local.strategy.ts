@@ -4,14 +4,16 @@ import { Strategy } from "passport-local";
 import { AuthService } from "../auth.service";
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy, 'my-local') {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     constructor(private authService: AuthService) {
-        super();
+        super({ usernameField: 'email' });
     }
 
     async validate(email: string, password: string): Promise<any> {
+        console.log("chegou na strategy")
         const user = await this.authService.validateUser({ email, password });
         if (!user) {
+            console.log("user not found")
             throw new UnauthorizedException("Invalid credentials");
         }
         return user;

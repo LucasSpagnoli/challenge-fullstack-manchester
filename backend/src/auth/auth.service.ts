@@ -19,15 +19,16 @@ export class AuthService {
             name: user.name
         }
 
-        const accessToken = await this.jwtService.signAsync(tokenPayload)
+        const accessToken = await this.jwtService.signAsync(tokenPayload) // cria um JWT com name, email e interestedIn[] (que será armazenado no cliente)
 
-        return { username: user.name, userId: user.userId }
+        return { accessToken, username: user.name, userId: user.userId }
     }
 
     async validateUser(input: AuthInput) {
         const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } })
 
         if (!foundUser) {
+            console.log("Usuário não encontrado")
             throw new UnauthorizedException("Usuário não encontrado")
         }
 
@@ -37,10 +38,12 @@ export class AuthService {
         )
 
         if (!isPassCorrect) {
+            console.log("Senha incorreta")
             throw new UnauthorizedException("Senha incorreta")
         }
 
         const {password, ...user} = foundUser
-        return this.jwtService.sign(user) // cria um JWT com name, email e interestedIn[] (que será armazenado no cliente)
+        console.log("Passou do validateUser")
+        return user
     }
 }
