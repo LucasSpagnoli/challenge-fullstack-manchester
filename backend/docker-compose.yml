@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: challenge_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: challenge_db
+    ports:
+      - "5432:5432"
