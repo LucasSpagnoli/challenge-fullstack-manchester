@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDTO } from 'src/types/DTO/create-user.dto';
+import { PreferencesService } from 'src/preferences/preferences.service';
 
 type AuthInput = { email: string; password: string }
 type SignInData = { userId: number; name: string }
@@ -11,7 +12,8 @@ type SignInData = { userId: number; name: string }
 export class AuthService {
     constructor(
         private readonly databaseService: DatabaseService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private readonly preferenceService: PreferencesService
     ) { }
 
     async signIn(user: SignInData) {
@@ -46,8 +48,9 @@ export class AuthService {
             name: newUser.name
         }
         const accessToken = await this.jwtService.signAsync(tokenPayload)
+        const newUserPreferences = await this.preferenceService.createUserPreferences({ user_id: newUser.id, topic: [] })
 
-        return { accessToken, newUser }
+        return { accessToken, newUser, Preferences: newUserPreferences }
     }
 
     async validateUser(input: AuthInput) {
