@@ -3,11 +3,13 @@ import { DatabaseService } from "src/database/database.service";
 import { CreateUserDTO } from "../types/DTO/create-user.dto";
 import { UpdateUserDTO } from "../types/DTO/update-user.dto";
 import * as bcrypt from 'bcrypt';
+import { PreferencesService } from "src/preferences/preferences.service";
 
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly databaseService: DatabaseService
+        private readonly databaseService: DatabaseService,
+        private readonly preferenceService: PreferencesService
     ) { }
 
     async findOne(id: number) {
@@ -40,7 +42,9 @@ export class UsersService {
             throw new Error("Create new user falhou")
         }
 
-        return newUser
+        const newUserPreferences = await this.preferenceService.createUserPreferences({ user_id: newUser.id, topic: [] })
+
+        return { newUser, Preferences: newUserPreferences }
     }
 
     async update(updateUserDTO: UpdateUserDTO, id: number) {
