@@ -7,17 +7,18 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './Strategies/local.strategy';
 import { JwtStrategy } from './Strategies/jwt.strategy';
 import { DatabaseModule } from 'src/database/database.module';
+import { PreferencesService } from 'src/preferences/preferences.service';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1h' }
+      signOptions: { expiresIn: '7d' }
     }),
     DatabaseModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, LocalStrategy, JwtStrategy, PreferencesService]
 })
 export class AuthModule { }
