@@ -15,14 +15,12 @@ export class InfoMoneyService {
 
     async getParsedNews() {
         const xmlNews = await this.getRSSNews()
-        console.log(xmlNews)
         const parser = new XMLParser()
         const json = parser.parse(xmlNews)
-        console.log(json)
-
+        
         // navega pelo RSS do InfoMoney (rss -> channel -> item)
         const items = json.rss.channel.item
-        console.log(items)
+        console.log(items[0])
 
         return items.map(item => ({
             title: item.title,
