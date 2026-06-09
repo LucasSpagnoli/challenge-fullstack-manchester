@@ -57,7 +57,6 @@ export class AuthService {
         const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } })
 
         if (!foundUser) {
-            console.log("Usuário não encontrado")
             throw new UnauthorizedException("Usuário não encontrado")
         }
 
@@ -67,12 +66,10 @@ export class AuthService {
         )
 
         if (!isPassCorrect) {
-            console.log("Senha incorreta")
             throw new UnauthorizedException("Senha incorreta")
         }
 
         const { password, ...user } = foundUser
-        console.log("Passou do validateUser")
         return user
     }
 }
