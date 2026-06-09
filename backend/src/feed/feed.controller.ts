@@ -5,12 +5,11 @@ import { FeedService } from './feed.service';
 import { InfoMoneyService } from './info-money.service';
 
 @Controller('feed')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class FeedController {
 
     constructor(
         private feedService: FeedService,
-        private infoMoneyService: InfoMoneyService,
     ) { }
 
     @Get()
