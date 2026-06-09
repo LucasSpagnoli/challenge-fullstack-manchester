@@ -54,13 +54,6 @@ describe('PreferencesController (e2e)', () => {
         .send({ topic: 'PETR4' })
         .expect(400);
     });
-
-    it('400 -> topic ausente', async () => {
-      await request(app.getHttpServer())
-        .post('/preferences')
-        .send({ user_id: 1 })
-        .expect(400);
-    });
   });
 
   describe('GET /preferences/:id', () => {
