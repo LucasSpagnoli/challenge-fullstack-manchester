@@ -19,10 +19,4 @@ export class FeedController {
         return this.feedService
     }
 
-    // tests
-    @Get('infomoney')
-    getNews(){
-        return this.infoMoneyService.getParsedNews()
-    }
-
 }

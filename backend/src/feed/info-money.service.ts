@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { HttpService } from '@nestjs/axios'
 import { firstValueFrom } from 'rxjs'
 import { XMLParser } from 'fast-xml-parser'
+import { summaryFormatter } from "./utils/summaryFormatter";
 
 @Injectable()
 export class InfoMoneyService {
@@ -17,16 +18,15 @@ export class InfoMoneyService {
         const xmlNews = await this.getRSSNews()
         const parser = new XMLParser()
         const json = parser.parse(xmlNews)
-        
+
         // navega pelo RSS do InfoMoney (rss -> channel -> item)
         const items = json.rss.channel.item
-        console.log(items[0])
 
         return items.map(item => ({
             title: item.title,
             link: item.link,
             dataPub: item.pubDate,
-            summary: item.description
+            summary: summaryFormatter(item.description)
         }))
     }
 }
