@@ -3,12 +3,11 @@ import { FeedController } from './feed.controller';
 import { FeedService } from './feed.service';
 import { DatabaseModule } from 'src/database/database.module';
 import { HttpModule } from '@nestjs/axios'
-import { InfoMoneyService } from './info-money.service';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
   controllers: [FeedController],
-  providers: [FeedService, InfoMoneyService]
+  providers: [FeedService]
 })
 export class FeedModule {
 

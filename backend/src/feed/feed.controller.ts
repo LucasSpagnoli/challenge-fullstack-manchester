@@ -1,8 +1,6 @@
 import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
-import { GeminiService } from './gemini.service';
-import { InfoMoneyService } from './info-money.service';
 import { FeedService } from './feed.service';
 
 @Controller('feed')
@@ -10,8 +8,6 @@ import { FeedService } from './feed.service';
 export class FeedController {
 
     constructor(
-        private geminiService: GeminiService,
-        private infoMoneyService: InfoMoneyService,
         private feedService: FeedService,
     ) { }
 
@@ -21,13 +17,13 @@ export class FeedController {
         if (!userId) {
             throw new BadRequestException("ID de usuário ausente")
         }
-        const news = await this.infoMoneyService.getParsedNews()
+        const news = await this.feedService.getParsedNews()
         const preferences = await this.feedService.getPreferences(userId)
-        return this.geminiService.geminiCall({ news, preferences })
+        return this.feedService.geminiCall({ news, preferences })
     }
 
     @Post()
     async geminiTest(@Body(ValidationPipe) { text }: { text: string }) {
-        return this.geminiService.geminiTest(text)
+        return this.feedService.geminiTest(text)
     }
 }
