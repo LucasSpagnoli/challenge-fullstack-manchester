@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import type { CreatePreferencesDto } from 'src/types/CreatePreferencesDTO';
+import type { CreatePreferencesDto } from 'src/types/CreatePreferences.dto';
 
 @Injectable()
 export class PreferencesService {

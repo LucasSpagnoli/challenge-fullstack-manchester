@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, UnauthorizedExcepti
 import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDTO } from 'src/types/DTO/create-user.dto';
+import { CreateUserDTO } from 'src/types/create-user.dto';
 import { PreferencesService } from 'src/preferences/preferences.service';
 
 type AuthInput = { email: string; password: string }

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, ValidationPipe } from '@nestjs/common';
 import { PreferencesService } from './preferences.service';
-import type { CreatePreferencesDto } from 'src/types/CreatePreferencesDTO';
+import type { CreatePreferencesDto } from 'src/types/CreatePreferences.dto';
 
 
 @Controller('preferences')

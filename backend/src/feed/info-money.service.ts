@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios'
 import { firstValueFrom } from 'rxjs'
 import { XMLParser } from 'fast-xml-parser'
 import { summaryFormatter } from "./utils/summaryFormatter";
+import { news } from "src/types/news";
 
 @Injectable()
 export class InfoMoneyService {
@@ -14,7 +15,7 @@ export class InfoMoneyService {
         return data
     }
 
-    async getParsedNews() {
+    async getParsedNews(): Promise<news> {
         const xmlNews = await this.getRSSNews()
         const parser = new XMLParser()
         const json = parser.parse(xmlNews)
@@ -24,8 +25,8 @@ export class InfoMoneyService {
 
         return items.map(item => ({
             title: item.title,
-            link: item.link,
-            dataPub: item.pubDate,
+            source: 'InfoMoney',
+            url: item.link,
             summary: summaryFormatter(item.description)
         }))
     }
