@@ -18,7 +18,7 @@ export class GeminiService {
         const body = {
             contents: [
                 {
-                    parts: [{ text: `[PROMPT] ${this.prompt} || [INTERESSES] ${preferences} || [NOTÍCIAS] ${news}` }]
+                    parts: [{ text: `[PROMPT] ${this.prompt} | [INTERESSES] ${preferences} | [NOTÍCIAS] ${news}` }]
                 }
             ]
         }
@@ -36,5 +36,26 @@ export class GeminiService {
     async aiFilter({ news, preferences }: AiChatDTO) {
         const result = await this.geminiCall({ news, preferences })
         return result
+    }
+
+    async geminiTest(text: string) {
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
+        const body = {
+            contents: [
+                {
+                    parts: [{ text: `[PROMPT] ${this.prompt} | [MENSAGEM] ${text}` }]
+                }
+            ]
+        }
+
+        try {
+            const { data } = await firstValueFrom(this.httpService.post(url, body, {
+                headers: { 'Content-Type': 'application/json' }
+            }))
+            return data.candidates[0].content.parts[0].text
+        } catch (error) {
+            throw new InternalServerErrorException(`Erro na API do Gemini: ${error}`)
+        }
     }
 }

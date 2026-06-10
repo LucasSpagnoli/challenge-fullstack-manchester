@@ -15,7 +15,7 @@ export class InfoMoneyService {
         return data
     }
 
-    async getParsedNews(): Promise<news> {
+    async getParsedNews(): Promise<news[]> {
         const xmlNews = await this.getRSSNews()
         const parser = new XMLParser()
         const json = parser.parse(xmlNews)
