@@ -8,7 +8,7 @@ import { FeedService } from './feed.service';
 export class FeedController {
 
     constructor(
-        private feedService: FeedService,
+        private feedService: FeedService
     ) { }
 
     @Get()
@@ -20,20 +20,7 @@ export class FeedController {
         if (!userId) {
             throw new BadRequestException("ID de usuário ausente")
         }
-        const news = await this.feedService.getParsedNews()
-        const preferences = await this.feedService.getPreferences(userId)
-        return this.feedService.getFeed({ news, preferences }, userId)
+        
+        return this.feedService.getFeed(userId)
     }
-
-    @Get('/news')
-    async getNews() {
-        return this.feedService.getParsedNews()
-    }
-
-    @Post()
-    async geminiTest(@Body(ValidationPipe) { text }: { text: string }) {
-        return this.feedService.geminiTest(text)
-    }
-
-
 }
