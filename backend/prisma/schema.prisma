@@ -24,7 +24,7 @@ model Preferences {
 
 model Cache {
   id           Int      @id @default(autoincrement())
-  user_id      Int
+  user_id      Int      @unique
   content_json Json
   generatedAt  DateTime @default(now())
 }
