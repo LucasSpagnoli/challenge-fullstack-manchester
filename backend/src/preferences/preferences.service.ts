@@ -30,6 +30,6 @@ export class PreferencesService {
         if (!userPref) {
             throw new BadRequestException("Nenhum usuário encontrado")
         }
-        return userPref
+        return userPref.topic
     }
 }
