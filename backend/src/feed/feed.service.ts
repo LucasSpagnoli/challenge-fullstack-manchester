@@ -54,14 +54,26 @@ export class FeedService {
 
     async createCache(id: number, news: news[]) {
         const content_json = JSON.stringify(news)
-        return this.databaseService.cache.create({ data: { user_id: id, content_json } })
+        return await this.databaseService.cache.create({ data: { user_id: id, content_json } })
     }
 
     async saveCache(id: number, news: news[]) {
+        const content_json = JSON.stringify(news)
+        const cacheAlreadyExists = await this.databaseService.cache.findUnique({ where: { user_id: id } })
+        const generatedAt = new Date()
+        if (cacheAlreadyExists) {
+            return await this.databaseService.cache.update({ where: { user_id: id }, data: { content_json, generatedAt } })
+        } else {
+            return await this.createCache(id, news)
+        }
     }
 
     async getCacheNews(id: number) {
-
+        const cache = await this.databaseService.cache.findUnique({ where: { user_id: id } })
+        if (!cache) {
+            throw new BadRequestException("Nenhum cache encontrado")
+        }
+        return cache.content_json
     }
 
     async getRSSNews(): Promise<string> {
