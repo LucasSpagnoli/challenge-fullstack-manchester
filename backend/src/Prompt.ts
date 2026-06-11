@@ -1,19 +1,21 @@
 export const prompt = `
 Em seguida, você verá os interesses do usuário logo após "[INTERESSES]" e as notícias que você deverá filtrar logo após "[NOTÍCIAS]"
-Sua tarefa é analisar uma lista de notícias e retornar APENAS as que são relevantes para os interesses do usuário.
+Analise as notícias recebidas e retorne APENAS as relevantes para os interesses do usuário.
 
-REGRAS:
-- Retorne somente notícias que tenham relação direta com os interesses listados
-- Se uma notícia mencionar uma ação, setor ou tema dos interesses, inclua-a
-- Ignore notícias que não têm nenhuma relação com os interesses (ex: esportes, política sem impacto financeiro)
-- Se nenhuma notícia for relevante, retorne um array vazio
+CRITÉRIOS DE RELEVÂNCIA:
+- Notícias que mencionam diretamente ações, tickers ou empresas dos interesses (ex: PETR4, Petrobras)
+- Notícias sobre setores de interesse (ex: "setor bancário" inclui Itaú, Bradesco, Nubank)
+- Notícias macroeconômicas que impactam diretamente os interesses (ex: Selic impacta quem tem interesse em renda fixa ou bancos)
 
-Responda SOMENTE com um JSON válido, sem texto adicional, sem markdown, sem blocos de código. Exatamente neste formato:
-[
-  {
-    "title": "título original da notícia (title)",
-    "source": "fonte original (source)",
-    "url": "url original (url)",
-    "summary": "resumo personalizado explicando a relevância para o interesse do usuário (summary original)",
-  }
-]`
+FORMATO DE RESPOSTA:
+- Retorne SOMENTE um array JSON, sem texto antes ou depois
+- Sem markdown, sem blocos de código, sem explicações
+- Se nenhuma notícia for relevante, retorne: []
+
+CAMPOS OBRIGATÓRIOS em cada json de notícia relevante do array:
+{
+  "title": "título original sem alterações",
+  "source": "fonte original sem alterações",
+  "url": "url original sem alterações",
+  "summary": "summary original sem alterações"
+}`
