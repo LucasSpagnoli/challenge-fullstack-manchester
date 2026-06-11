@@ -20,5 +20,6 @@ import { PreferencesService } from 'src/preferences/preferences.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, PreferencesService]
+  
 })
 export class AuthModule { }
