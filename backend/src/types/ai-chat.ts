@@ -1,6 +1,6 @@
 import { news } from "./news";
 
-export class AiChatDTO {
+export class AiChat {
     news!: news[];
     preferences!: string[];
 }

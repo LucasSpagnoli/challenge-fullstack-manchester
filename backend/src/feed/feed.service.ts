@@ -1,12 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { AiChatDTO } from "src/types/ai-chat.dto";
+import { AiChat } from "src/types/ai-chat";
 import { firstValueFrom } from "rxjs";
 import { XMLParser } from 'fast-xml-parser'
 import { summaryFormatter } from "./utils/summaryFormatter";
 import { news } from "src/types/news";
-import { PreferencesService } from 'src/preferences/preferences.service';
 import "dotenv/config";
 import { prompt } from 'src/Prompt';
 
@@ -20,8 +19,15 @@ export class FeedService {
     private readonly model = 'gemini-2.5-flash';
     private readonly apiKey = process.env.API_KEY
 
-    async geminiCall({ news, preferences }: AiChatDTO) {
+    async getFeed({ news, preferences }: AiChat, id: number) {
 
+        // procura se faz mais de um dia que foi gerado as últimas notícias
+        // se sim, aiFilter com news e preferences
+        // se não, retorna as notícias em cache
+        // return { generatedAt, interests: preferences, items: filteredNews }
+    }
+
+    async aiFilter({ news, preferences }: AiChat) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
         const body = {
             contents: [
@@ -35,7 +41,9 @@ export class FeedService {
             const { data } = await firstValueFrom(this.httpService.post(url, body, {
                 headers: { 'Content-Type': 'application/json' }
             }))
-            return data.candidates[0].content.parts[0].text
+            const filteredNews = data.candidates[0].content.parts[0].text
+            // salva em cache o filteredNews e data.now()
+            return filteredNews
         } catch (error: any) {
             const mensagem = error.response?.data?.error?.message ?? error.message;
             const status = error.response?.status;
@@ -44,33 +52,12 @@ export class FeedService {
         }
     }
 
-    async aiFilter({ news, preferences }: AiChatDTO) {
-        const result = await this.geminiCall({ news, preferences })
-        return result
+    async saveCache(id: number) {
+
     }
 
-    async geminiTest(text: string) {
+    async getCacheNews(id: number) {
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
-        const body = {
-            contents: [
-                {
-                    parts: [{ text: `[PROMPT] ${prompt} | [MENSAGEM] ${text}` }]
-                }
-            ]
-        }
-
-        try {
-            const { data } = await firstValueFrom(this.httpService.post(url, body, {
-                headers: { 'Content-Type': 'application/json' }
-            }))
-            return data.candidates[0].content.parts[0].text
-        } catch (error: any) {
-            const mensagem = error.response?.data?.error?.message ?? error.message;
-            const status = error.response?.status;
-            console.error(`Status: ${status} | Mensagem: ${mensagem}`);
-            throw new InternalServerErrorException(`Erro na API do Gemini: ${mensagem}`);
-        }
     }
 
     async getRSSNews(): Promise<string> {
@@ -105,5 +92,29 @@ export class FeedService {
             throw new BadRequestException("Usuário sem interesses registrados")
         }
         return userPreferences
+    }
+
+    async geminiTest(text: string) {
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
+        const body = {
+            contents: [
+                {
+                    parts: [{ text: `[PROMPT] ${prompt} | [MENSAGEM] ${text}` }]
+                }
+            ]
+        }
+
+        try {
+            const { data } = await firstValueFrom(this.httpService.post(url, body, {
+                headers: { 'Content-Type': 'application/json' }
+            }))
+            return data.candidates[0].content.parts[0].text
+        } catch (error: any) {
+            const mensagem = error.response?.data?.error?.message ?? error.message;
+            const status = error.response?.status;
+            console.error(`Status: ${status} | Mensagem: ${mensagem}`);
+            throw new InternalServerErrorException(`Erro na API do Gemini: ${mensagem}`);
+        }
     }
 }

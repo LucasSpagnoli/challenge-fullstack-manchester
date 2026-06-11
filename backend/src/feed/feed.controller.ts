@@ -22,7 +22,7 @@ export class FeedController {
         }
         const news = await this.feedService.getParsedNews()
         const preferences = await this.feedService.getPreferences(userId)
-        return this.feedService.geminiCall({ news, preferences })
+        return this.feedService.getFeed({ news, preferences }, userId)
     }
 
     @Get('/news')
