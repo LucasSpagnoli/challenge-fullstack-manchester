@@ -2,12 +2,13 @@ import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { AiChat } from "src/types/ai-chat";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, generate } from "rxjs";
 import { XMLParser } from 'fast-xml-parser'
 import { summaryFormatter } from "./utils/summaryFormatter";
 import { news } from "src/types/news";
 import "dotenv/config";
 import { prompt } from 'src/Prompt';
+import { JsonObject, JsonValue } from '@prisma/client/runtime/client';
 
 @Injectable()
 export class FeedService {
@@ -18,21 +19,31 @@ export class FeedService {
 
     private readonly model = 'gemini-2.5-flash';
     private readonly apiKey = process.env.API_KEY
+    private readonly oneDay = 24 * 60 * 60 * 1000;
 
     async getFeed({ news, preferences }: AiChat, id: number) {
 
-        // procura se faz mais de um dia que foi gerado as últimas notícias
-        // se sim, aiFilter com news e preferences
-        // se não, retorna as notícias em cache
-        // return { generatedAt, interests: preferences, items: filteredNews }
+        let cache = await this.getCache(id)
+        let filteredNews: news[]
+
+        if (!cache) {
+            filteredNews = await this.aiFilter({ news, preferences }, id)
+            cache = await this.createCache(id, filteredNews)
+        } else if (Date.now() - cache.generatedAt.getTime() > this.oneDay) {
+            filteredNews = await this.aiFilter({ news, preferences }, id)
+        } else {
+            filteredNews = JSON.parse(JSON.stringify(cache.content_json))
+        }
+
+        return { generatedAt: cache.generatedAt, interests: preferences, items: filteredNews }
     }
 
-    async aiFilter({ news, preferences }: AiChat) {
+    async aiFilter({ news, preferences }: AiChat, id: number): Promise<news[]> {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
         const body = {
             contents: [
                 {
-                    parts: [{ text: `[INSTRUÇÕES] ${prompt} \n\n [INTERESSES] ${JSON.stringify(preferences)} \n\n [NOTÍCIAS] ${JSON.stringify(news)}` }]
+                    parts: [{ text: `[INSTRUÇÕES] ${prompt} [INTERESSES] ${JSON.stringify(preferences)} [NOTÍCIAS] ${JSON.stringify(news)}` }]
                 }
             ]
         }
@@ -42,7 +53,7 @@ export class FeedService {
                 headers: { 'Content-Type': 'application/json' }
             }))
             const filteredNews = data.candidates[0].content.parts[0].text
-            // salva em cache o filteredNews e data.now()
+            await this.saveCache(id, news)
             return filteredNews
         } catch (error: any) {
             const mensagem = error.response?.data?.error?.message ?? error.message;
@@ -68,12 +79,9 @@ export class FeedService {
         }
     }
 
-    async getCacheNews(id: number) {
+    async getCache(id: number): Promise<{ user_id: number, content_json: JsonValue, generatedAt: Date } | null> {
         const cache = await this.databaseService.cache.findUnique({ where: { user_id: id } })
-        if (!cache) {
-            throw new BadRequestException("Nenhum cache encontrado")
-        }
-        return cache.content_json
+        return cache || null
     }
 
     async getRSSNews(): Promise<string> {
