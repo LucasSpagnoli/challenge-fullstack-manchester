@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common';
 import { FeedController } from './feed.controller';
 import { FeedService } from './feed.service';
-import { DatabaseModule } from 'src/database/database.module';
 import { HttpModule } from '@nestjs/axios'
 import { AuthModule } from 'src/auth/auth.module';
+import { CacheService } from 'src/services/cache.service';
+import { InfoMoneyService } from 'src/services/infomoney.service';
+import { AiService } from 'src/services/ai.service';
+import { PreferencesService } from 'src/preferences/preferences.service';
+import { DatabaseModule } from 'src/database/database.module';
+import { DatabaseService } from 'src/database/database.service';
 
 @Module({
-  imports: [DatabaseModule, HttpModule, AuthModule],
+  imports: [HttpModule, AuthModule, DatabaseModule],
   controllers: [FeedController],
-  providers: [FeedService]
+  providers: [FeedService, CacheService, InfoMoneyService, AiService, PreferencesService, DatabaseService]
 })
 export class FeedModule {
 
