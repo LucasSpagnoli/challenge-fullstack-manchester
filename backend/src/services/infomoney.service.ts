@@ -1,7 +1,7 @@
-import { firstValueFrom, generate } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { XMLParser } from 'fast-xml-parser'
 import { summaryFormatter } from '../utils/summaryFormatter';
-import { news } from "src/types/news";
+import { News } from "src/types/news";
 import "dotenv/config";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
@@ -18,7 +18,7 @@ export class InfoMoneyService {
         return data
     }
 
-    async getParsedNews(): Promise<news[]> {
+    async getParsedNews(): Promise<News[]> {
         const xmlNews = await this.getRSSNews()
         const parser = new XMLParser()
         const json = parser.parse(xmlNews)

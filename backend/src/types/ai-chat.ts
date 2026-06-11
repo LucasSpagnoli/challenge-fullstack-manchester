@@ -1,6 +1,6 @@
-import { news } from "./news";
+import { News } from "./news";
 
 export class AiChat {
-    news!: news[];
+    news!: News[];
     preferences!: string[];
 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common"
+import { Prisma } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/client"
 import { DatabaseService } from "src/database/database.service"
-import { news } from "src/types/news"
+import { News } from "src/types/news"
 
 @Injectable()
 export class CacheService {
@@ -12,11 +13,11 @@ export class CacheService {
     private readonly oneDay = 24 * 60 * 60 * 1000;
 
     async createCache(id: number) {
-        return await this.databaseService.cache.create({ data: { user_id: id, content_json: "" } })
+        return await this.databaseService.cache.create({ data: { user_id: id, content_json: [] } })
     }
 
-    async updateCache(userId: number, news: news[]) {
-        const content_json = JSON.stringify(news)
+    async updateCache(userId: number, news: News[]) {
+        const content_json = news
         const cacheAlreadyExists = await this.databaseService.cache.findUnique({ where: { user_id: userId } })
         const generatedAt = new Date()
         if (cacheAlreadyExists) {

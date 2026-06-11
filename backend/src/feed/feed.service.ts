@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { news } from "src/types/news";
+import { News } from "src/types/news";
 import "dotenv/config";
 import { CacheService } from 'src/services/cache.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
@@ -17,16 +17,16 @@ export class FeedService {
 
     private readonly oneDay = 24 * 60 * 60 * 1000;
 
-    async refreshFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: news[] }> {
+    async refreshFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
         const generatedAt = new Date(Date.now())
         const filteredNews = await this.aiFilter(id)
         const preferences = await this.preferenceService.getPreferencesById(id)
         return { generatedAt, interests: preferences, items: filteredNews }
     }
 
-    async getFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: news[] }> {
+    async getFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
         const cache = await this.cacheService.getCache(id)
-        let filteredNews: news[]
+        let filteredNews: News[]
         let generatedAt: Date
 
         if (cache) {
@@ -41,7 +41,7 @@ export class FeedService {
         return { generatedAt, interests: preferences, items: filteredNews }
     }
 
-    async aiFilter(id: number): Promise<news[]> {
+    async aiFilter(id: number): Promise<News[]> {
         const news = await this.infoMoneyService.getParsedNews()
         const preferences = await this.preferenceService.getPreferencesById(id)
         const filteredNews = await this.aiService.geminiService({ news, preferences })
