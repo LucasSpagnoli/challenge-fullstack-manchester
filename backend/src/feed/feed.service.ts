@@ -6,17 +6,19 @@ import { firstValueFrom } from "rxjs";
 import { XMLParser } from 'fast-xml-parser'
 import { summaryFormatter } from "./utils/summaryFormatter";
 import { news } from "src/types/news";
+import { PreferencesService } from 'src/preferences/preferences.service';
+import "dotenv/config";
+import { prompt } from 'src/Prompt';
 
 @Injectable()
 export class FeedService {
     constructor(
         private databaseService: DatabaseService,
-        private readonly httpService: HttpService
+        private httpService: HttpService,
     ) { }
 
     private readonly model = 'gemini-2.5-flash';
     private readonly apiKey = process.env.API_KEY
-    private readonly prompt = process.env.PROMPT
 
     async geminiCall({ news, preferences }: AiChatDTO) {
 
@@ -24,7 +26,7 @@ export class FeedService {
         const body = {
             contents: [
                 {
-                    parts: [{ text: `[PROMPT] ${this.prompt} | [INTERESSES] ${preferences} | [NOTÍCIAS] ${news}` }]
+                    parts: [{ text: `[INSTRUÇÕES] ${prompt} \n\n [INTERESSES] ${JSON.stringify(preferences)} \n\n [NOTÍCIAS] ${JSON.stringify(news)}` }]
                 }
             ]
         }
@@ -34,7 +36,7 @@ export class FeedService {
                 headers: { 'Content-Type': 'application/json' }
             }))
             return data.candidates[0].content.parts[0].text
-        } catch (error) {
+        } catch (error: any) {
             const mensagem = error.response?.data?.error?.message ?? error.message;
             const status = error.response?.status;
             console.error(`Status: ${status} | Mensagem: ${mensagem}`);
@@ -53,7 +55,7 @@ export class FeedService {
         const body = {
             contents: [
                 {
-                    parts: [{ text: `[PROMPT] ${this.prompt} | [MENSAGEM] ${text}` }]
+                    parts: [{ text: `[PROMPT] ${prompt} | [MENSAGEM] ${text}` }]
                 }
             ]
         }

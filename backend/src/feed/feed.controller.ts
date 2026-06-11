@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, ParseIntPipe, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { FeedService } from './feed.service';
@@ -11,9 +11,15 @@ export class FeedController {
         private feedService: FeedService,
     ) { }
 
-    @Get()
-    async getFeed(@Req() req: Request) {
-        const userId = req.user?.id
+    @Get('/infomoney')
+    async getNews() {
+        return this.feedService.getParsedNews()
+    }
+
+    @Get(':id')
+    async getFeed(@Param('id', ParseIntPipe) userId: number) {
+        // async getFeed(@Req() req: Request) {
+        // const userId = req.user?.id
         if (!userId) {
             throw new BadRequestException("ID de usuário ausente")
         }
@@ -26,4 +32,6 @@ export class FeedController {
     async geminiTest(@Body(ValidationPipe) { text }: { text: string }) {
         return this.feedService.geminiTest(text)
     }
+
+
 }
