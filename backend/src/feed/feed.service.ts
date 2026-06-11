@@ -17,6 +17,13 @@ export class FeedService {
 
     private readonly oneDay = 24 * 60 * 60 * 1000;
 
+    async refreshFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: news[] }> {
+        const generatedAt = new Date(Date.now())
+        const filteredNews = await this.aiFilter(id)
+        const preferences = await this.preferenceService.getPreferencesById(id)
+        return { generatedAt, interests: preferences, items: filteredNews }
+    }
+
     async getFeed(id: number): Promise<{ generatedAt: Date, interests: string[], items: news[] }> {
         const cache = await this.cacheService.getCache(id)
         let filteredNews: news[]
@@ -38,6 +45,7 @@ export class FeedService {
         const news = await this.infoMoneyService.getParsedNews()
         const preferences = await this.preferenceService.getPreferencesById(id)
         const filteredNews = await this.aiService.geminiService({ news, preferences })
+        await this.cacheService.updateCache(id, filteredNews)
         return filteredNews
     }
 }
