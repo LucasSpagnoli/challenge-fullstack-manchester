@@ -27,7 +27,9 @@ export class AiService {
                 headers: { 'Content-Type': 'application/json' }
             }))
 
-            return data.candidates[0].content.parts[0].text
+            const raw = data.candidates[0].content.parts[0].text
+            const clean = raw.trim().replace(/^```json|```$/g, '').trim()
+            return JSON.parse(clean)
 
         } catch (error: any) {
             const mensagem = error.response?.data?.error?.message ?? error.message;
