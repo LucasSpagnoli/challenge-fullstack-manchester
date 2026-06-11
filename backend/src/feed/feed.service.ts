@@ -52,8 +52,12 @@ export class FeedService {
         }
     }
 
-    async saveCache(id: number) {
+    async createCache(id: number, news: news[]) {
+        const content_json = JSON.stringify(news)
+        return this.databaseService.cache.create({ data: { user_id: id, content_json } })
+    }
 
+    async saveCache(id: number, news: news[]) {
     }
 
     async getCacheNews(id: number) {
