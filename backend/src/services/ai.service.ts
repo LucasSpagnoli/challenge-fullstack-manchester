@@ -18,8 +18,10 @@ export class AiService {
     async geminiService({ news, preferences }: AiChat) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
 
+        const numberedTitles = news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')
+
         const body = {
-            contents: [{ parts: [{ text: `[INSTRUÇÕES] ${prompt} [INTERESSES] ${JSON.stringify(preferences)} [NOTÍCIAS] ${JSON.stringify(news)}` }] }]
+            contents: [{ parts: [{ text: `[INSTRUÇÕES] ${prompt} [INTERESSES] ${JSON.stringify(preferences)} [NOTÍCIAS] ${numberedTitles}` }] }]
         }
 
         try {
@@ -27,10 +29,13 @@ export class AiService {
                 headers: { 'Content-Type': 'application/json' }
             }))
 
-            const raw = data.candidates[0].content.parts[0].text
-            const clean = raw.trim().replace(/^```json|```$/g, '').trim()
-            return JSON.parse(clean)
+            const raw: string = data.candidates[0].content.parts[0].text.trim()
 
+            console.log(raw)
+            if (raw === '-1') return []
+
+            const indices = raw.split(' ').map(n => parseInt(n) - 1)
+            return indices.map(i => news[i]) // reduziu em 3 segundos a solução de só mandar os títulos com um número respectivo
         } catch (error: any) {
             const mensagem = error.response?.data?.error?.message ?? error.message;
             const status = error.response?.status;
