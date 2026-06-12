@@ -13,7 +13,7 @@ export class AiService {
     ) { }
 
     private readonly model = 'gemini-2.5-flash';
-    private readonly apiKey = process.env.API_KEY
+    private readonly apiKey = process.env.GEMINI_API_KEY
 
     async geminiService({ news, preferences }: AiChat) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`
