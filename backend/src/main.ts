@@ -19,6 +19,15 @@ async function bootstrap() {
   return cachedApp;
 }
 
+if (!process.env.VERCEL) {
+  bootstrap().then(() => {
+    const port = process.env.PORT || 3000;
+    expressApp.listen(port, () => {
+      console.log(`Application is running on: http://localhost:${port}`);
+    });
+  });
+}
+
 export default async (req, res) => {
   const app = await bootstrap();
   app(req, res);

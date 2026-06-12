@@ -7,6 +7,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     canActivate(
         context: ExecutionContext
     ): boolean | Promise<boolean> | Observable<boolean> {
+        console.log('chegou no jwt guard')
         return super.canActivate(context) // chama a strategy
     }
 }
