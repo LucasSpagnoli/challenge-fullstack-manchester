@@ -1,8 +1,25 @@
 import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import express from 'express';
+
+const expressApp = express();
+
+let cachedApp;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  if (!cachedApp) {
+    const app = await NestFactory.create(
+      AppModule,
+      new ExpressAdapter(expressApp),
+    );
+    await app.init();
+    cachedApp = expressApp;
+  }
+  return cachedApp;
 }
-bootstrap();
+
+export default async (req, res) => {
+  const app = await bootstrap();
+  app(req, res);
+};
