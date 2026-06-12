@@ -23,3 +23,5 @@ export default async (req, res) => {
   const app = await bootstrap();
   app(req, res);
 };
+
+module.exports = exports.default;
