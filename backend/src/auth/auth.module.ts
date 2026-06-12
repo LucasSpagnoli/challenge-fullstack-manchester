@@ -13,7 +13,7 @@ import { PreferencesService } from 'src/preferences/preferences.service';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: 'teste',
       signOptions: { expiresIn: '7d' }
     }),
     DatabaseModule
