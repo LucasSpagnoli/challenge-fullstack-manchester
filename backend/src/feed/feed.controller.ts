@@ -5,7 +5,6 @@ import { FeedService } from './feed.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
 
 @Controller('feed')
-@UseGuards(JwtAuthGuard)
 export class FeedController {
 
     constructor(
@@ -13,6 +12,7 @@ export class FeedController {
         private infoMoneyService: InfoMoneyService
     ) { }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async getFeed(@Req() req: Request) {
         if (!req.user) {
@@ -26,6 +26,7 @@ export class FeedController {
         return this.feedService.getFeed(userId)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('refresh')
     async refreshFeed(@Req() req: Request) {
         if (!req.user) {
