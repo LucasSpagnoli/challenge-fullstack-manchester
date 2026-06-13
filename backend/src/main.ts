@@ -20,6 +20,7 @@ async function bootstrap() {
 }
 
 if (!process.env.VERCEL) {
+  console.log("Vindo para o lugar errado")
   bootstrap().then(() => {
     const port = process.env.PORT || 3000;
     expressApp.listen(port, () => {
