@@ -1,13 +1,27 @@
 import React, { useState } from "react";
+import { useAuth } from "../lib/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
+    const [isRegister, setIsRegister] = useState(false);
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate()
+    const { login, register, loading, error } = useAuth();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        try {
+            if (isRegister) {
+                await register({ name, email, password });
+            } else {
+                await login({ email, password });
+            }
+            navigate('/feed')
+        } catch {
+        }
     };
 
     return (
@@ -58,14 +72,34 @@ const LoginPage: React.FC = () => {
 
                     <div className="mb-10">
                         <h2 className="text-3xl font-light text-black tracking-tight">
-                            Acesso à conta
+                            {isRegister ? "Criar conta" : "Acesso à conta"}
                         </h2>
                         <p className="mt-2 text-sm text-black/50 font-sans">
-                            Insira suas credenciais para continuar.
+                            {isRegister
+                                ? "Preencha seus dados para se cadastrar."
+                                : "Insira suas credenciais para continuar."}
                         </p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6 font-sans">
+                        {/* Nome (apenas no cadastro) */}
+                        {isRegister && (
+                            <div>
+                                <label
+                                    htmlFor="name"
+                                    className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
+                                    Nome
+                                </label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Seu nome completo"
+                                    className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200" />
+                            </div>
+                        )}
+
                         {/* Email */}
                         <div>
                             <label
@@ -90,11 +124,6 @@ const LoginPage: React.FC = () => {
                                     className="block text-xs uppercase tracking-[0.15em] text-black/60">
                                     Senha
                                 </label>
-                                <button
-                                    type="button"
-                                    className="text-xs text-black/40 hover:text-[#D4AF37] transition-colors duration-200">
-                                    Esqueceu a senha?
-                                </button>
                             </div>
                             <div className="relative">
                                 <input
@@ -135,13 +164,32 @@ const LoginPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Botão de login */}
+                        {/* Mensagem de erro */}
+                        {error && (
+                            <p className="text-sm text-red-600">{error}</p>
+                        )}
+
+                        {/* Botão de login/cadastro */}
                         <button
                             type="submit"
+                            disabled={loading}
                             className="w-full bg-black text-white py-3.5 mt-4 text-sm uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300">
-                            Entrar
+                            {loading
+                                ? isRegister ? "Cadastrando..." : "Entrando..."
+                                : isRegister ? "Cadastrar" : "Entrar"}
                         </button>
                     </form>
+
+                    {/* Alternar entre login e cadastro */}
+                    <p className="mt-6 text-center text-sm text-black/50 font-sans">
+                        {isRegister ? "Já tem uma conta?" : "Ainda não tem uma conta?"}{" "}
+                        <button
+                            type="button"
+                            onClick={() => setIsRegister((v) => !v)}
+                            className="text-black hover:text-[#D4AF37] transition-colors duration-200 uppercase tracking-widest text-xs font-medium">
+                            {isRegister ? "Entrar" : "Cadastre-se"}
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>
