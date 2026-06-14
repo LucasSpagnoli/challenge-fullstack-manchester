@@ -1,0 +1,21 @@
+export interface FeedItem {
+    title: string;
+    source: string;
+    url: string;
+    summary: string;
+    // imageUrl?: string; // TODO: adicionar quando o backend passar a retornar imagem
+}
+
+export interface FeedResponse {
+    generatedAt: string;
+    interests: string[];
+    items: FeedItem[];
+}
+
+export interface UseFeedResult {
+    feed: FeedResponse | null;
+    loading: boolean;
+    refreshing: boolean;
+    error: string | null;
+    refresh: () => Promise<void>;
+}

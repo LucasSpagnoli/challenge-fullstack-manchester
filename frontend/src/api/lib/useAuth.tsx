@@ -10,9 +10,9 @@ import {
     loginUser,
     logoutLocal,
     registerUser,
-} from "../api/auth"
-import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from "../api/types/auth.interfaces";
-import { getAuthToken } from "../api/cookies";
+} from "../auth"
+import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from "../types/auth.interfaces";
+import { getAuthToken } from "../cookies";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setLoading(true);
         try {
             const response = await loginUser(payload);
-            setUser(response.user);
+            setUser({ userId: response.userId, name: response.name });
             setIsAuthenticated(true);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao fazer login");
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setLoading(true);
         try {
             const response = await registerUser(payload);
-            setUser(response.user);
+            setUser({ userId: response.userId, name: response.name });
             setIsAuthenticated(true);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao cadastrar");

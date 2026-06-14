@@ -19,7 +19,7 @@ export async function loginUser(
     body: JSON.stringify(payload),
   });
 
-  setAuthToken(response.token);
+  setAuthToken(response.accessToken);
   return response;
 }
 

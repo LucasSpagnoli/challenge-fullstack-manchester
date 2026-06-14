@@ -10,14 +10,14 @@ export interface LoginPayload {
 }
 
 export interface AuthUser {
-  id: string;
+  userId: number;
   name: string;
-  email: string;
 }
 
 export interface AuthResponse {
-  user: AuthUser;
-  token: string;
+  accessToken: string;
+  name: string;
+  userId: number;
 }
 
 export interface AuthContextValue {
