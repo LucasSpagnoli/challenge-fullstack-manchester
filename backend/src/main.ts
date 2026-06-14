@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import express from 'express';
+import cors from 'cors';
 
 const expressApp = express();
 
@@ -20,7 +21,10 @@ async function bootstrap() {
 }
 
 if (!process.env.VERCEL) {
-  console.log("Vindo para o lugar errado")
+  expressApp.use(cors({
+    origin: true,
+    credentials: true,
+  }));
   bootstrap().then(() => {
     const port = process.env.PORT || 3000;
     expressApp.listen(port, () => {
