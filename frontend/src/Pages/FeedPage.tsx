@@ -1,5 +1,6 @@
 import React from "react";
 import { useFeed } from "../api/lib/useFeed";
+import Header from "../components/Header";
 
 // Decodifica entidades HTML que vêm nos títulos/resumos (ex.: &#8221; -> ”)
 function decodeHtml(text: string): string {
@@ -15,22 +16,7 @@ const FeedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
-      {/* Header */}
-      <header className="w-full border-b border-black/10">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-          <span className="text-xl font-serif font-light tracking-[0.2em] text-black">
-            Manchester<span className="text-[#D4AF37]">.</span>
-          </span>
-          <nav className="flex items-center gap-6">
-            <button className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
-              Preferências
-            </button>
-            <button className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
-              Sair
-            </button>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Conteúdo */}
       <main className="flex-1 px-6 py-16">

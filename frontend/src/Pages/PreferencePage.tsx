@@ -1,36 +1,29 @@
 import React, { useState } from "react";
+import Header from "../components/Header";
+import { usePreferences } from "../api/lib/usePreferences";
 
 const PreferencesPage: React.FC = () => {
   const [newInterest, setNewInterest] = useState("");
-  const [interests, setInterests] = useState<string[]>([
-    "PETR4",
-    "VALE3",
-    "Setor bancário",
-    "Taxa Selic",
-  ]);
+  const {
+    interests,
+    loading,
+    saving,
+    removingTopic,
+    error,
+    addInterest,
+    removeInterest,
+    save,
+  } = usePreferences();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    // sem lógica de back, apenas UI
-  };
-
-  const handleRemove = (item: string) => {
-    // sem lógica de back, apenas UI
+    addInterest(newInterest);
+    setNewInterest("");
   };
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
-      {/* Header */}
-      <header className="w-full border-b border-black/10">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
-          <span className="text-xl font-serif font-light tracking-[0.2em] text-black">
-            AUREL<span className="text-[#D4AF37]">.</span>CAPITAL
-          </span>
-          <button className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
-            Sair
-          </button>
-        </div>
-      </header>
+      <Header />
 
       {/* Conteúdo */}
       <main className="flex-1 flex items-start justify-center px-6 py-16">
@@ -50,12 +43,18 @@ const PreferencesPage: React.FC = () => {
             feed diário será personalizado com base nessas informações.
           </p>
 
+          {/* Mensagem de erro */}
+          {error && (
+            <div className="border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3 mb-8">
+              {error}
+            </div>
+          )}
+
           {/* Formulário de adição */}
           <form onSubmit={handleAdd} className="mb-10">
             <label
               htmlFor="interest"
-              className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2"
-            >
+              className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
               Adicionar interesse
             </label>
             <div className="flex items-stretch gap-3">
@@ -65,12 +64,10 @@ const PreferencesPage: React.FC = () => {
                 value={newInterest}
                 onChange={(e) => setNewInterest(e.target.value)}
                 placeholder="Ex.: PETR4, VALE3, taxa Selic..."
-                className="flex-1 border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200"
-              />
+                className="flex-1 border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200" />
               <button
                 type="submit"
-                className="px-6 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300"
-              >
+                className="px-6 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300">
                 Adicionar
               </button>
             </div>
@@ -82,7 +79,16 @@ const PreferencesPage: React.FC = () => {
               Interesses cadastrados
             </h2>
 
-            {interests.length === 0 ? (
+            {loading ? (
+              <div className="flex flex-wrap gap-3 animate-pulse">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="h-9 w-24 bg-black/5 border border-black/10"
+                  />
+                ))}
+              </div>
+            ) : interests.length === 0 ? (
               <p className="text-sm text-black/40 border border-dashed border-black/15 py-8 text-center">
                 Nenhum interesse cadastrado ainda.
               </p>
@@ -91,25 +97,36 @@ const PreferencesPage: React.FC = () => {
                 {interests.map((item) => (
                   <span
                     key={item}
-                    className="group inline-flex items-center gap-2 border border-black/15 pl-4 pr-2 py-2 text-sm text-black hover:border-[#D4AF37] transition-colors duration-200"
-                  >
+                    className="group inline-flex items-center gap-2 border border-black/15 pl-4 pr-2 py-2 text-sm text-black hover:border-[#D4AF37] transition-colors duration-200">
                     {item}
                     <button
                       type="button"
-                      onClick={() => handleRemove(item)}
+                      onClick={() => removeInterest(item)}
+                      disabled={removingTopic === item}
                       aria-label={`Remover ${item}`}
-                      className="w-5 h-5 flex items-center justify-center text-black/40 hover:text-[#D4AF37] transition-colors duration-200"
-                    >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M18 6L6 18M6 6l12 12" />
-                      </svg>
+                      className="w-5 h-5 flex items-center justify-center text-black/40 hover:text-[#D4AF37] transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed">
+                      {removingTopic === item ? (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="animate-spin">
+                          <path d="M21 12a9 9 0 11-9-9" />
+                        </svg>
+                      ) : (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      )}
                     </button>
                   </span>
                 ))}
@@ -118,13 +135,16 @@ const PreferencesPage: React.FC = () => {
           </div>
 
           {/* Ação salvar */}
-          <div className="mt-12 pt-8 border-t border-black/10 flex items-center justify-between">
+          <div className="mt-12 pt-8 border-t border-black/10 flex items-center justify-between gap-4">
             <p className="text-xs text-black/40">
-              As alterações afetam o feed gerado a partir do próximo
+              As alterações afetam o feed gerado a partir da próxima
               atualização.
             </p>
-            <button className="px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap">
-              Salvar
+            <button
+              onClick={save}
+              disabled={loading || saving}
+              className="px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+              {saving ? "Salvando..." : "Salvar"}
             </button>
           </div>
         </div>

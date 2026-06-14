@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../api/lib/useAuth";
 import { useNavigate } from "react-router-dom";
+import { getPreferences } from "../api/preferences";
 
 const LoginPage: React.FC = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -14,12 +15,22 @@ const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            let authUser;
             if (isRegister) {
-                await register({ name, email, password });
+                authUser = await register({ name, email, password });
             } else {
-                await login({ email, password });
+                authUser = await login({ email, password });
             }
-            navigate('/feed')
+
+            // Verifica se o usuário já tem preferências cadastradas.
+            // Se não tiver (ou der erro, ex.: primeiro acesso), manda
+            // para a página de preferências; senão, para o feed.
+            try {
+                const topics = await getPreferences(authUser.userId);
+                navigate(topics.length > 0 ? '/feed' : '/preferences');
+            } catch {
+                navigate('/preferences');
+            }
         } catch {
         }
     };
