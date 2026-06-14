@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             const authUser = await loginUser(payload);
             setUser(authUser);
             setIsAuthenticated(true);
+            return authUser;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao fazer login");
             throw err;
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             const authUser = await registerUser(payload);
             setUser(authUser);
             setIsAuthenticated(true);
+            return authUser;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao cadastrar");
             throw err;
