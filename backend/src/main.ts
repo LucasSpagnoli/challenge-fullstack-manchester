@@ -8,7 +8,7 @@ const expressApp = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'challenge-fullstack-manchester.vercel.app',
-  'https://manchester-news-filter.vercel.app/'
+  'https://manchester-news-filter.vercel.app'
 ]
 
 let cachedApp;
