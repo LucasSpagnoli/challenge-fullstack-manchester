@@ -5,6 +5,11 @@ import express from 'express';
 import cors from 'cors';
 
 const expressApp = express();
+const allowedOrigins = [
+  'http://localhost:5173',
+  'challenge-fullstack-manchester.vercel.app',
+  'https://manchester-news-filter.vercel.app/'
+]
 
 let cachedApp;
 
@@ -21,10 +26,6 @@ async function bootstrap() {
 }
 
 if (!process.env.VERCEL) {
-  expressApp.use(cors({
-    origin: true,
-    credentials: true,
-  }));
   bootstrap().then(() => {
     const port = process.env.PORT || 3000;
     expressApp.listen(port, () => {
@@ -32,6 +33,17 @@ if (!process.env.VERCEL) {
     });
   });
 }
+
+expressApp.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin não permitida'));
+    }
+  },
+  credentials: true,
+}));
 
 export default async (req, res) => {
   const app = await bootstrap();
