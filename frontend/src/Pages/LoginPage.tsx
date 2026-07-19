@@ -184,7 +184,7 @@ const LoginPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-black text-white py-3.5 mt-4 text-sm uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300">
+                            className="cursor-pointer w-full bg-black text-white py-3.5 mt-4 text-sm uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300">
                             {loading
                                 ? isRegister ? "Cadastrando..." : "Entrando..."
                                 : isRegister ? "Cadastrar" : "Entrar"}

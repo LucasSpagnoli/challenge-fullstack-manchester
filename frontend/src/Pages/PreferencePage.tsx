@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { usePreferences } from "../api/lib/usePreferences";
+import { useNavigate } from "react-router-dom";
 
 const PreferencesPage: React.FC = () => {
   const [newInterest, setNewInterest] = useState("");
@@ -20,6 +21,8 @@ const PreferencesPage: React.FC = () => {
     addInterest(newInterest);
     setNewInterest("");
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
@@ -141,7 +144,10 @@ const PreferencesPage: React.FC = () => {
               atualização.
             </p>
             <button
-              onClick={save}
+              onClick={()=>{
+                save
+                navigate('/feed')
+              }}
               disabled={loading || saving}
               className="px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? "Salvando..." : "Salvar"}

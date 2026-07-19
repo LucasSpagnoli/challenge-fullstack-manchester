@@ -8,7 +8,10 @@ export class CreateUserDTO {
     @IsEmail()
     email!: string;
 
-    @IsStrongPassword()
+    @IsStrongPassword({
+        minUppercase: 0,
+        minSymbols: 0,
+    })
     password!: string
 }
 
