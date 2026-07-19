@@ -68,7 +68,7 @@ const FeedPage: React.FC = () => {
             <button
               onClick={refresh}
               disabled={loading || refreshing}
-              className="self-start sm:self-auto px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+              className="self-start sm:self-auto px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-150 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
               {refreshing ? "Atualizando..." : "Atualizar feed"}
             </button>
           </div>
@@ -105,7 +105,7 @@ const FeedPage: React.FC = () => {
               {feed.items.map((item, idx) => (
                 <article
                   key={idx}
-                  className="group border border-black/10 p-6 flex flex-col gap-4 hover:border-[#D4AF37] transition-colors duration-200">
+                  className="group border border-black/10 p-6 flex flex-col gap-4 hover:border-[#D4AF37] transition-colors duration-100">
 
                   {/* TODO: quando o backend retornar imagem, exibir aqui
                                     {item.imageUrl && (
@@ -121,7 +121,7 @@ const FeedPage: React.FC = () => {
                     <span className="text-xs uppercase tracking-[0.15em] text-[#D4AF37]">
                       {item.source}
                     </span>
-                    <div className="w-6 h-px bg-black/10 group-hover:bg-[#D4AF37] transition-colors duration-200" />
+                    <div className="w-6 h-px bg-black/10 group-hover:bg-[#D4AF37] transition-colors duration-100" />
                   </div>
 
                   <h3 className="text-lg font-serif font-light text-black leading-snug">
@@ -136,7 +136,7 @@ const FeedPage: React.FC = () => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-black hover:text-[#D4AF37] transition-colors duration-200 mt-2">
+                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-black hover:text-[#D4AF37] transition-colors duration-100 mt-2">
                     Ler matéria completa
                     <svg
                       width="14"
