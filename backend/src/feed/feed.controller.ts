@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Query, UseGuards, ParseIntPipe, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Req, Query, UseGuards, ForbiddenException } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { FeedService } from './feed.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
@@ -16,10 +16,13 @@ export class FeedController {
     @UseGuards(JwtAuthGuard)
     @Get()
     async getFeed(
-        @Query('target_id', ParseIntPipe) target_id: number,
-        @Query('role') role: 'user' | 'client',
-        @Req() req: RequestWithUser
+        @Req() req: RequestWithUser,
+        @Query('target_id') queryTargetId?: string,
+        @Query('role') queryRole?: 'user' | 'client'
     ) {
+        const role = queryRole || 'user';
+        const target_id = queryTargetId ? parseInt(queryTargetId, 10) : req.user.id;
+
         if (role === 'client') {
             await this.clientsService.findOne(target_id, req.user.id);
         } else if (target_id !== req.user.id) {
@@ -32,10 +35,13 @@ export class FeedController {
     @UseGuards(JwtAuthGuard)
     @Get('refresh')
     async refreshFeed(
-        @Query('target_id', ParseIntPipe) target_id: number,
-        @Query('role') role: 'user' | 'client',
-        @Req() req: RequestWithUser
+        @Req() req: RequestWithUser,
+        @Query('target_id') queryTargetId?: string,
+        @Query('role') queryRole?: 'user' | 'client'
     ) {
+        const role = queryRole || 'user';
+        const target_id = queryTargetId ? parseInt(queryTargetId, 10) : req.user.id;
+
         if (role === 'client') {
             await this.clientsService.findOne(target_id, req.user.id);
         } else if (target_id !== req.user.id) {

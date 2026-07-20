@@ -1,18 +1,22 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { PreferencesService } from 'src/preferences/preferences.service';
 
 @Injectable()
 export class ClientsService {
   constructor(
-    private readonly databaseService: DatabaseService
+    private readonly databaseService: DatabaseService,
+    private readonly preferenceService: PreferencesService
   ) { }
 
   async create(data: Prisma.ClientsUncheckedCreateInput) {
     if (!data.name || !data.number) {
       throw new BadRequestException("Nome ou número de celular ausentes.");
     }
-    return await this.databaseService.clients.create({ data });
+    const newClient = await this.databaseService.clients.create({ data });
+    const newClientPreferences = await this.preferenceService.createPreferences({ owner_id: newClient.id, topic: [], role: 'client' });
+    return { Client: newClient, Preferences: newClientPreferences };
   }
 
   async findAll(user_id: number) {
@@ -39,7 +43,7 @@ export class ClientsService {
   }
 
   async delete(id: number, user_id: number) {
-    await this.findOne(id, user_id); 
+    await this.findOne(id, user_id);
 
     return await this.databaseService.clients.delete({ where: { id } });
   }

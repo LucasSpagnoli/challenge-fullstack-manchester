@@ -25,19 +25,24 @@ export class FeedService {
     }
 
     async getFeed(id: number, role: Role): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
+        console.log('chamada de cache')
         const cache = await this.cacheService.getCache(id, role);
         let filteredNews: News[];
         let generatedAt: Date;
-
+        console.log('passou da chamada de cache')
         if (cache) {
             generatedAt = cache.generatedAt;
             filteredNews = JSON.parse(JSON.stringify(cache.content_json));
         } else {
             generatedAt = new Date();
+            console.log('chamada de IA')
             filteredNews = await this.aiFilter(id, role);
+            console.log('passou da chamada de IA')
         }
 
+        console.log('chamada de preferências')
         const preferences = await this.preferenceService.getPreferencesById(id, role);
+        console.log('passou da chamada de preferências')
         return { generatedAt, interests: preferences, items: filteredNews };
     }
 

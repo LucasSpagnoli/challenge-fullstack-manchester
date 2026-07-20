@@ -9,11 +9,12 @@ import { AiService } from 'src/services/ai.service';
 import { PreferencesService } from 'src/preferences/preferences.service';
 import { DatabaseModule } from 'src/database/database.module';
 import { DatabaseService } from 'src/database/database.service';
+import { ClientsService } from 'src/clients/clients.service';
 
 @Module({
   imports: [HttpModule, AuthModule, DatabaseModule],
   controllers: [FeedController],
-  providers: [FeedService, CacheService, InfoMoneyService, AiService, PreferencesService, DatabaseService]
+  providers: [FeedService, CacheService, InfoMoneyService, AiService, PreferencesService, DatabaseService, ClientsService]
 })
 export class FeedModule {
 

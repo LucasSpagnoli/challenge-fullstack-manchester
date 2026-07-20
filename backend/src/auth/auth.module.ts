@@ -8,6 +8,7 @@ import { LocalStrategy } from './Strategies/local.strategy';
 import { JwtStrategy } from './Strategies/jwt.strategy';
 import { DatabaseModule } from 'src/database/database.module';
 import { PreferencesModule } from 'src/preferences/preferences.module';
+import { PreferencesService } from 'src/preferences/preferences.service';
 
 @Module({
   imports: [
@@ -16,10 +17,9 @@ import { PreferencesModule } from 'src/preferences/preferences.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '7d' }
     }),
-    DatabaseModule,
-    PreferencesModule
+    DatabaseModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, LocalStrategy, JwtStrategy, PreferencesService]
 })
 export class AuthModule { }

@@ -32,8 +32,8 @@ export class PreferencesController {
     async createPreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
         if (preferencesDTO.role === 'client') {
             await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
-        } else if (preferencesDTO.owner_id !== req.user.id) {
-            throw new ForbiddenException("Acesso denegado.");
+        } else if (preferencesDTO.role === 'user' && preferencesDTO.owner_id !== req.user.id) {
+            throw new ForbiddenException("Acesso negado.");
         }
 
         return this.preferenceService.createPreferences(preferencesDTO);
@@ -44,7 +44,7 @@ export class PreferencesController {
         if (preferencesDTO.role === 'client') {
             await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
         } else if (preferencesDTO.owner_id !== req.user.id) {
-            throw new ForbiddenException("Acesso denegado.");
+            throw new ForbiddenException("Acesso negado.");
         }
 
         return this.preferenceService.updatePreferences(preferencesDTO);

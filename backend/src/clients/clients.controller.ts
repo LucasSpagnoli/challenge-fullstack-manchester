@@ -11,7 +11,7 @@ export class ClientsController {
 
   @Post()
   create(
-    @Body() createClientDto: Omit<Prisma.ClientsUncheckedCreateInput, 'user_id'>,
+    @Body() createClientDto: Prisma.ClientsCreateInput,
     @Req() req: RequestWithUser
   ) {
     return this.clientsService.create({
