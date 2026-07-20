@@ -1,8 +1,8 @@
-import { BadRequestException, Body, Controller, Get, Param, ParseIntPipe, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
-import type { Request } from 'express';
+import { BadRequestException, Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { FeedService } from './feed.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
+import type { RequestWithUser } from 'src/types/request-with-user';
 
 @Controller('feed')
 export class FeedController {
@@ -14,34 +14,26 @@ export class FeedController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getFeed(@Req() req: Request) {
-        if (!req.user) {
-            throw new BadRequestException("Usuário ausente")
+    async getFeed(@Req() req: RequestWithUser) {
+        if (!req.user?.id) {
+            throw new BadRequestException("Identificador peremptório ausente.");
         }
-        const userId = req.user.id
-        if (!userId) {
-            throw new BadRequestException("ID de usuário ausente")
-        }
-        
-        return this.feedService.getFeed(userId)
+
+        return this.feedService.getFeed(req.user.id, req.user.role);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('refresh')
-    async refreshFeed(@Req() req: Request) {
-        if (!req.user) {
-            throw new BadRequestException("Usuário ausente")
+    async refreshFeed(@Req() req: RequestWithUser) {
+        if (!req.user?.id) {
+            throw new BadRequestException("Identificador peremptório ausente.");
         }
-        const userId = req.user.id
-        if (!userId) {
-            throw new BadRequestException("ID de usuário ausente")
-        }
-        
-        return this.feedService.refreshFeed(userId)
+
+        return this.feedService.refreshFeed(req.user.id, req.user.role);
     }
 
     @Get('news')
-    async getNews(){
-        return this.infoMoneyService.getParsedNews()
+    async getNews() {
+        return this.infoMoneyService.getParsedNews();
     }
 }
