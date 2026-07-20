@@ -7,7 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './Strategies/local.strategy';
 import { JwtStrategy } from './Strategies/jwt.strategy';
 import { DatabaseModule } from 'src/database/database.module';
-import { PreferencesService } from 'src/preferences/preferences.service';
+import { PreferencesModule } from 'src/preferences/preferences.module';
 
 @Module({
   imports: [
@@ -16,10 +16,10 @@ import { PreferencesService } from 'src/preferences/preferences.service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '7d' }
     }),
-    DatabaseModule
+    DatabaseModule,
+    PreferencesModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, PreferencesService]
-  
+  providers: [AuthService, LocalStrategy, JwtStrategy]
 })
 export class AuthModule { }
