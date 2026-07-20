@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Query, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe, ForbiddenException } from '@nestjs/common';
 import { PreferencesService } from './preferences.service';
+import { ClientsService } from 'src/clients/clients.service';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import type { PreferencesPayload } from 'src/types/create-preferences.dto';
 import type { RequestWithUser } from 'src/types/request-with-user';
@@ -7,26 +8,45 @@ import type { RequestWithUser } from 'src/types/request-with-user';
 @UseGuards(JwtAuthGuard)
 @Controller('preferences')
 export class PreferencesController {
-    constructor(private readonly preferenceService: PreferencesService) { }
+    constructor(
+        private readonly preferenceService: PreferencesService,
+        private readonly clientsService: ClientsService
+    ) { }
 
-    @Get(":id")
-    findById(@Param('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
-        return this.preferenceService.getPreferencesById(id, req.user.role);
+    @Get()
+    async find(
+        @Query('target_id', ParseIntPipe) target_id: number,
+        @Query('role') role: 'user' | 'client',
+        @Req() req: RequestWithUser
+    ) {
+        if (role === 'client') {
+            await this.clientsService.findOne(target_id, req.user.id); // Atesta jurisdição
+        } else if (target_id !== req.user.id) {
+            throw new ForbiddenException("Acesso denegado a credenciais alheias.");
+        }
+
+        return this.preferenceService.getPreferencesById(target_id, role);
     }
 
     @Post()
-    createPreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
-        return this.preferenceService.createPreferences({
-            ...preferencesDTO,
-            role: req.user.role
-        });
+    async createPreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
+        if (preferencesDTO.role === 'client') {
+            await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
+        } else if (preferencesDTO.owner_id !== req.user.id) {
+            throw new ForbiddenException("Acesso denegado.");
+        }
+
+        return this.preferenceService.createPreferences(preferencesDTO);
     }
 
     @Patch()
-    updatePreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
-        return this.preferenceService.updatePreferences({
-            ...preferencesDTO,
-            role: req.user.role
-        });
+    async updatePreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
+        if (preferencesDTO.role === 'client') {
+            await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
+        } else if (preferencesDTO.owner_id !== req.user.id) {
+            throw new ForbiddenException("Acesso denegado.");
+        }
+
+        return this.preferenceService.updatePreferences(preferencesDTO);
     }
 }

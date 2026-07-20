@@ -48,7 +48,6 @@ model Clients {
   id          Int      @id @default(autoincrement())
   name        String
   number      String
-  preferences String[]
   user_id     Int
   user        User     @relation(fields: [user_id], references: [id])
 }
