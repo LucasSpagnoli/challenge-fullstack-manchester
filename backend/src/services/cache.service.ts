@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common"
+import { BadRequestException, Injectable } from "@nestjs/common"
 import { Prisma } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/client"
 import { DatabaseService } from "src/database/database.service"
 import { News } from "src/types/news"
+import { Role } from "src/types/role";
 
 @Injectable()
 export class CacheService {
@@ -12,8 +13,14 @@ export class CacheService {
 
     private readonly oneDay = 24 * 60 * 60 * 1000;
 
-    async createCache(id: number) {
-        return await this.databaseService.cache.create({ data: { user_id: id, content_json: [] } })
+    async createCache(id: number, role: Role) {
+        if (role == "client") {
+            return await this.databaseService.client_cache.create({ data: { owner_id: id, content_json: [] } })
+        } else if (role == "user") {
+            return await this.databaseService.user_cache.create({ data: { owner_id: id, content_json: [] } })
+        } else {
+            throw new BadRequestException("Role inexistente")
+        }
     }
 
     async updateCache(userId: number, news: News[]) {
