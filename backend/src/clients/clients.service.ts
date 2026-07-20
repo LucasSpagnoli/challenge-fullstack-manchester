@@ -8,53 +8,39 @@ export class ClientsService {
     private readonly databaseService: DatabaseService
   ) { }
 
-  async create(createClientDto: Prisma.ClientsCreateInput) {
-    if (!createClientDto?.name) {
-      throw new BadRequestException("Nome do cliente ausente");
+  async create(data: Prisma.ClientsUncheckedCreateInput) {
+    if (!data.name || !data.number) {
+      throw new BadRequestException("Nome ou número de celular ausentes.");
     }
-    if (!createClientDto?.number) {
-      throw new BadRequestException("Número do cliente ausente");
-    }
-    return await this.databaseService.clients.create({ data: createClientDto });
+    return await this.databaseService.clients.create({ data });
   }
 
-  async findAll() {
-    return await this.databaseService.clients.findMany();
+  async findAll(user_id: number) {
+    return await this.databaseService.clients.findMany({ where: { user_id } });
   }
 
-  async findOne(id: number) {
-    if (!id) {
-      throw new BadRequestException("ID do cliente ausente");
-    }
-    const client = await this.databaseService.clients.findUnique({ where: { id } });
+  async findOne(id: number, user_id: number) {
+    const client = await this.databaseService.clients.findFirst({ where: { id, user_id } });
+
     if (!client) {
-      throw new NotFoundException("Nenhum cliente encontrado");
+      throw new NotFoundException("Cliente inexistente.");
     }
+
     return client;
   }
 
-  async update(id: number, updateClientDto: Prisma.ClientsUpdateInput) {
-    if (!id) {
-      throw new BadRequestException("ID do cliente ausente");
-    }
-    const client = await this.databaseService.clients.findUnique({ where: { id } });
-    if (!client) {
-      throw new NotFoundException("Nenhum cliente encontrado");
-    }
+  async update(id: number, user_id: number, data: Prisma.ClientsUpdateInput) {
+    await this.findOne(id, user_id);
+
     return await this.databaseService.clients.update({
       where: { id },
-      data: updateClientDto,
+      data,
     });
   }
 
-  async delete(id: number) {
-    if (!id) {
-      throw new BadRequestException("ID do cliente ausente");
-    }
-    const client = await this.databaseService.clients.findUnique({ where: { id } });
-    if (!client) {
-      throw new NotFoundException("Nenhum cliente encontrado");
-    }
+  async delete(id: number, user_id: number) {
+    await this.findOne(id, user_id); 
+
     return await this.databaseService.clients.delete({ where: { id } });
   }
 }
