@@ -144,8 +144,8 @@ const PreferencesPage: React.FC = () => {
               atualização.
             </p>
             <button
-              onClick={()=>{
-                save
+              onClick={async () => {
+                await save()
                 navigate('/feed')
               }}
               disabled={loading || saving}

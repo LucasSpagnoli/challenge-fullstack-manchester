@@ -4,6 +4,7 @@ import FeedPage from './Pages/FeedPage'
 import PreferencesPage from './Pages/PreferencePage'
 import { AuthProvider } from './api/lib/useAuth'
 import { RequireAuth, RedirectIfAuth, RequirePreferences } from './routes/guards'
+import ClientPage from './Pages/ClientPage'
 
 function App() {
 
@@ -21,6 +22,8 @@ function App() {
             <Route element={<RequirePreferences />}>
               <Route path='/feed' element={<FeedPage />} />
             </Route>
+
+            <Route path='/clients' element={<ClientPage />} />
           </Route>
         </Routes>
       </AuthProvider>
