@@ -5,11 +5,6 @@ import type {
     UpdatePreferencesPayload,
 } from "./types/preferences.interfaces";
 
-/**
- * GET /preferences/:id
- * Retorna a lista de interesses cadastrados do usuário.
- * O backend retorna o array de tópicos diretamente (string[]).
- */
 export async function getPreferences(
     userId: number
 ): Promise<PreferencesResponse> {
@@ -18,10 +13,6 @@ export async function getPreferences(
     });
 }
 
-/**
- * POST /preferences
- * Cria o registro de preferências de um usuário (primeira vez).
- */
 export async function createPreferences(
     payload: UpdatePreferencesPayload
 ): Promise<UpdatePreferencesPayload> {
@@ -31,11 +22,6 @@ export async function createPreferences(
     });
 }
 
-/**
- * PATCH /preferences
- * Atualiza a lista completa de interesses do usuário.
- * Usado também para remover interesses: envia a lista sem o item removido.
- */
 export async function updatePreferences(
     payload: UpdatePreferencesPayload
 ): Promise<UpdatePreferencesPayload> {

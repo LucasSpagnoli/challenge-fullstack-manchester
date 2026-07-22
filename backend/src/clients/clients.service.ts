@@ -33,11 +33,11 @@ export class ClientsService {
     return client;
   }
 
-  async update(id: number, user_id: number, data: Prisma.ClientsUpdateInput) {
-    await this.findOne(id, user_id);
+  async update(client_id: number, user_id: number, data: Prisma.ClientsUpdateInput) {
+    await this.findOne(client_id, user_id);
 
     return await this.databaseService.clients.update({
-      where: { id },
+      where: { id: client_id },
       data,
     });
   }

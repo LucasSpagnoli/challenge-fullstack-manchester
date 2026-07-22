@@ -25,22 +25,22 @@ export class ClientsController {
     return this.clientsService.findAll(req.user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
-    return this.clientsService.findOne(id, req.user.id);
+  @Get(':client_id')
+  findOne(@Param('id', ParseIntPipe) client_id: number, @Req() req: RequestWithUser) {
+    return this.clientsService.findOne(client_id, req.user.id);
   }
 
-  @Patch(':id')
+  @Patch(':client_id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('client_id', ParseIntPipe) client_id: number,
     @Body() updateClientDto: Prisma.ClientsUpdateInput,
     @Req() req: RequestWithUser
   ) {
-    return this.clientsService.update(id, req.user.id, updateClientDto);
+    return this.clientsService.update(client_id, req.user.id, updateClientDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
-    return this.clientsService.delete(id, req.user.id);
+  @Delete(':client_id')
+  remove(@Param('client_id', ParseIntPipe) client_id: number, @Req() req: RequestWithUser) {
+    return this.clientsService.delete(client_id, req.user.id);
   }
 }
