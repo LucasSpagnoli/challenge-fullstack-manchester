@@ -1,28 +1,30 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { usePreferences } from "../api/lib/usePreferences";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../api/lib/useAuth";
 
 const PreferencesPage: React.FC = () => {
   const [newInterest, setNewInterest] = useState("");
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const {
-    interests,
+    prefs,
     loading,
     saving,
     removingTopic,
     error,
-    addInterest,
-    removeInterest,
+    addPref,
+    removePref,
     save,
-  } = usePreferences();
+  } = usePreferences(user?.userId, 'user');
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    addInterest(newInterest);
+    addPref(newInterest);
     setNewInterest("");
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
@@ -91,20 +93,20 @@ const PreferencesPage: React.FC = () => {
                   />
                 ))}
               </div>
-            ) : interests.length === 0 ? (
+            ) : prefs.length === 0 ? (
               <p className="text-sm text-black/40 border border-dashed border-black/15 py-8 text-center">
                 Nenhum interesse cadastrado ainda.
               </p>
             ) : (
               <div className="flex flex-wrap gap-3">
-                {interests.map((item) => (
+                {prefs.map((item) => (
                   <span
                     key={item}
                     className="group inline-flex items-center gap-2 border border-black/15 pl-4 pr-2 py-2 text-sm text-black hover:border-[#D4AF37] transition-colors duration-200">
                     {item}
                     <button
                       type="button"
-                      onClick={() => removeInterest(item)}
+                      onClick={() => removePref(item)}
                       disabled={removingTopic === item}
                       aria-label={`Remover ${item}`}
                       className="w-5 h-5 flex items-center justify-center text-black/40 hover:text-[#D4AF37] transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed">

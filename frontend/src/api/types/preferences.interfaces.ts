@@ -1,8 +1,9 @@
 export type PreferencesResponse = string[];
 
 export interface UpdatePreferencesPayload {
-    user_id: number;
+    owner_id: number;
     topic: string[];
+    role: 'client' | 'user'
 }
 
 export interface UsePreferencesResult {

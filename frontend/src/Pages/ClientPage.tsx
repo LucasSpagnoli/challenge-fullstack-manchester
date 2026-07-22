@@ -6,7 +6,7 @@ import { useClient } from "../api/lib/useClient";
 
 const ClientPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { clients, addClient, updateClient, deleteClient } = useClient()
+    const { clients, updateClient, deleteClient } = useClient()
 
 
     return (
@@ -14,7 +14,6 @@ const ClientPage: React.FC = () => {
             <Header />
 
             <main className="flex-1 px-6 py-16">
-                {/* Contêiner expandido para comportar as 3 colunas harmoniosamente */}
                 <div className="max-w-7xl mx-auto">
                     <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
                         <div>
@@ -38,10 +37,15 @@ const ClientPage: React.FC = () => {
 
                     {/* Malha (Grid) de 3 colunas */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <ClientCard />
-                        <ClientCard />
-                        <ClientCard />
-                        <ClientCard />
+                        {
+                            clients.length > 0
+                                ?
+                                clients.map((client) => (
+                                    <ClientCard key={client.client_id} client={client} />
+                                ))
+                                :
+                                <h1>Sem clientes registrados</h1>
+                        }
                     </div>
                 </div>
             </main>
