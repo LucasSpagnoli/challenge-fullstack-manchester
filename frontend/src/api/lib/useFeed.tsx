@@ -9,26 +9,17 @@ export function useFeed(): UseFeedResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let mounted = true;
-
+        
         getFeed()
             .then((data) => {
-                if (mounted) setFeed(data);
+                setFeed(data);
             })
             .catch((err) => {
-                if (mounted) {
-                    setError(
-                        err instanceof Error ? err.message : "Erro ao carregar o feed"
-                    );
-                }
+                setError(err instanceof Error ? err.message : "Erro ao carregar o feed")
             })
             .finally(() => {
-                if (mounted) setLoading(false);
+                setLoading(false);
             });
-
-        return () => {
-            mounted = false;
-        };
     }, []);
 
     const refresh = useCallback(async () => {

@@ -2,44 +2,34 @@ import { apiFetch } from "./client";
 import { clearAuthToken, setAuthToken } from "./cookies";
 import type { AuthUser, LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from "./types/auth.interfaces";
 
-export async function registerUser(
-  payload: RegisterPayload
-): Promise<AuthUser> {
+export async function registerUser(payload: RegisterPayload): Promise<AuthUser> {
   const response = await apiFetch<RegisterResponse>("/auth/register", {
     method: "POST",
     body: JSON.stringify(payload),
   });
- 
+
   setAuthToken(response.accessToken);
- 
+
   return {
     userId: response.newUser.id,
     name: response.newUser.name,
   };
 }
- 
-/**
- * POST /auth/login
- * Autentica o usuário e armazena o JWT retornado.
- */
+
 export async function loginUser(payload: LoginPayload): Promise<AuthUser> {
   const response = await apiFetch<LoginResponse>("/auth/login", {
     method: "POST",
     body: JSON.stringify(payload),
   });
- 
+
   setAuthToken(response.accessToken);
- 
+
   return {
     userId: response.userId,
     name: response.name,
   };
 }
- 
-/**
- * Logout local: remove o JWT armazenado no navegador.
- * Não chama o backend (não há rota de logout).
- */
+
 export function logoutLocal(): void {
   clearAuthToken();
 }

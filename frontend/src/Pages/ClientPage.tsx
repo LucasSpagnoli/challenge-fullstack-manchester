@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import ClientCard from "../components/ClientCard";
 import { NewClientModal } from "../components/NewClientModal";
+import { useClient } from "../api/lib/useClient";
 
 const ClientPage: React.FC = () => {
-    // Estado meramente ilustrativo para alternar a exibição do modal
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { clients } = useClient()
+
 
     return (
         <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
@@ -29,8 +31,7 @@ const ClientPage: React.FC = () => {
 
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap"
-                        >
+                            className="px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 whitespace-nowrap">
                             + Adicionar Cliente
                         </button>
                     </header>

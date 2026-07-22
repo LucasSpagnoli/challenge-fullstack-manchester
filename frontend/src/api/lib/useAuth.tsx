@@ -1,24 +1,12 @@
-import React, {
-    createContext,
-    useCallback,
-    useContext,
-    useState,
-    type ReactNode,
-} from "react";
+import React, { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 
-import {
-    loginUser,
-    logoutLocal,
-    registerUser,
-} from "../auth"
+import { loginUser, logoutLocal, registerUser } from "../auth"
 import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from "../types/auth.interfaces";
 import { getAuthToken } from "../cookies";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -72,8 +60,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
 export function useAuth(): AuthContextValue {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth deve ser usado dentro de um <AuthProvider>");
-    }
+    if (!context) { throw new Error("useAuth deve ser usado dentro de um <AuthProvider>"); }
     return context;
 }
