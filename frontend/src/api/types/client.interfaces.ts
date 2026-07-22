@@ -10,9 +10,16 @@ export interface UseClientResult {
     addClient: (client: Client) => Client,
     updateClient: (client: Client) => Client,
     deleteClient: (client_id: number) => any,
+    error: string,
+    loading: boolean,
 }
 
 export interface UpdateClientPayload {
     name?: string,
     number?: string
+}
+
+export interface CreateClientPayload {
+    name: string,
+    number: string
 }

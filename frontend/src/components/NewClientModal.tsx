@@ -1,6 +1,8 @@
 import React from "react";
+import { useClient } from "../api/lib/useClient";
 
 export const NewClientModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+    const { addClient } = useClient()
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
             <div className="bg-white w-full max-w-md p-8 shadow-2xl border border-black/10 flex flex-col">

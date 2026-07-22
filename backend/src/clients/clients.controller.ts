@@ -26,7 +26,7 @@ export class ClientsController {
   }
 
   @Get(':client_id')
-  findOne(@Param('id', ParseIntPipe) client_id: number, @Req() req: RequestWithUser) {
+  findOne(@Param('client_id', ParseIntPipe) client_id: number, @Req() req: RequestWithUser) {
     return this.clientsService.findOne(client_id, req.user.id);
   }
 
