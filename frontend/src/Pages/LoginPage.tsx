@@ -10,13 +10,23 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate()
-    const { loading, error } = useAuth();
+    const { loading, error, login, register } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Verifica se o usuário já tem preferências cadastradas.
-        // Se não tiver (ou der erro, ex.: primeiro acesso), manda
-        // para a página de preferências; senão, para o feed.
+
+        try {
+            if (isRegister) {
+                await register({ name, email, password });
+            } else {
+                await login({ email, password });
+            }
+        } catch {
+            // erro já fica em `error` via context, exibido no formulário
+            return;
+        }
+
+        // só chega aqui se login/register deu certo — agora sim há token válido
         try {
             const preferences = await getUserPreferences();
             navigate(preferences.length > 0 ? '/feed' : '/preferences');
