@@ -10,28 +10,18 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate()
-    const { login, register, loading, error } = useAuth();
+    const { loading, error } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        // Verifica se o usuário já tem preferências cadastradas.
+        // Se não tiver (ou der erro, ex.: primeiro acesso), manda
+        // para a página de preferências; senão, para o feed.
         try {
-            let authUser;
-            if (isRegister) {
-                authUser = await register({ name, email, password });
-            } else {
-                authUser = await login({ email, password });
-            }
-
-            // Verifica se o usuário já tem preferências cadastradas.
-            // Se não tiver (ou der erro, ex.: primeiro acesso), manda
-            // para a página de preferências; senão, para o feed.
-            try {
-                const topics = await getUserPreferences();
-                navigate(topics.length > 0 ? '/feed' : '/preferences');
-            } catch {
-                navigate('/preferences');
-            }
+            const preferences = await getUserPreferences();
+            navigate(preferences.length > 0 ? '/feed' : '/preferences');
         } catch {
+            navigate('/preferences');
         }
     };
 

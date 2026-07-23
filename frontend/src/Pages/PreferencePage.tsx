@@ -11,7 +11,6 @@ const PreferencesPage: React.FC = () => {
     prefs,
     loading,
     saving,
-    removingTopic,
     error,
     addPref,
     removePref,
@@ -105,31 +104,19 @@ const PreferencesPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => removePref(item)}
-                      disabled={removingTopic === item}
                       aria-label={`Remover ${item}`}
-                      className="w-5 h-5 flex items-center justify-center text-black/40 hover:text-[#D4AF37] transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed">
-                      {removingTopic === item ? (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="animate-spin">
-                          <path d="M21 12a9 9 0 11-9-9" />
-                        </svg>
-                      ) : (
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2">
-                          <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                      )}
+                      className="w-5 h-5 flex items-center justify-center text-black/40 hover:text-[#D4AF37] transition-colors duration-200"
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M18 6L6 18M6 6l12 12" />
+                      </svg>
                     </button>
                   </span>
                 ))}
