@@ -1,17 +1,35 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const expressApp = express();
+
 const allowedOrigins = [
   'http://localhost:5173',
-  'challenge-fullstack-manchester.vercel.app',
-  'https://manchester-news-filter.vercel.app'
-]
+  'https://challenge-fullstack-manchester.vercel.app',
+  'https://manchester-news-filter.vercel.app',
+];
 
-let cachedApp;
+// registra ANTES do Nest, garantindo que rodem primeiro no pipeline
+expressApp.set('trust proxy', 1);
+expressApp.use(cookieParser());
+expressApp.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Origem não permitida'));
+      }
+    },
+    credentials: true,
+  }),
+);
+
+let cachedApp: express.Express | undefined;
 
 async function bootstrap() {
   if (!cachedApp) {
@@ -34,18 +52,7 @@ if (!process.env.VERCEL) {
   });
 }
 
-expressApp.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Origin não permitida'));
-    }
-  },
-  credentials: true,
-}));
-
-export default async (req, res) => {
+export default async (req: Request, res: Response) => {
   const app = await bootstrap();
   app(req, res);
 };

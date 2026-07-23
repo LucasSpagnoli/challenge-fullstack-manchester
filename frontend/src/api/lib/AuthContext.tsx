@@ -1,16 +1,25 @@
-import React, { createContext, useCallback, useContext, useState, type ReactNode } from "react";
-
-import { loginUser, logoutLocal, registerUser } from "../auth";
-import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from "../types/auth.interfaces";
-import { getAuthToken } from "../cookies";
+import React, { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { loginUser, logoutUser, registerUser, fetchAuthStatus } from '../auth';
+import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from '../types/auth.interfaces';
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthUser | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!getAuthToken());
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+    useEffect(() => {
+        (async () => {
+            const status = await fetchAuthStatus();
+            if (status) {
+                setUser(status);
+                setIsAuthenticated(true);
+            }
+            setLoading(false);
+        })();
+    }, []);
 
     const login = useCallback(async (payload: LoginPayload) => {
         setError(null);
@@ -21,7 +30,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsAuthenticated(true);
             return authUser;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao fazer login");
+            setError(err instanceof Error ? err.message : 'Erro ao fazer login');
             throw err;
         } finally {
             setLoading(false);
@@ -37,15 +46,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsAuthenticated(true);
             return authUser;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao cadastrar");
+            setError(err instanceof Error ? err.message : 'Erro ao cadastrar');
             throw err;
         } finally {
             setLoading(false);
         }
     }, []);
 
-    const logout = useCallback(() => {
-        logoutLocal();
+    const logout = useCallback(async () => {
+        await logoutUser();
         setUser(null);
         setIsAuthenticated(false);
     }, []);
@@ -59,8 +68,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export function useAuth(): AuthContextValue {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth deve ser invocado no escopo de um <AuthProvider>");
-    }
+    if (!context) throw new Error('useAuth deve ser invocado no escopo de um <AuthProvider>');
     return context;
 }
