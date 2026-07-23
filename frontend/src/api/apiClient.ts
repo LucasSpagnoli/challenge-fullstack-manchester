@@ -3,13 +3,13 @@ import { getAuthToken } from './cookies'
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
     const token = getAuthToken();
-
+    console.log("Token no fetch:", token)
     const headers: HeadersInit = {
         "Content-Type": "application/json",
         ...(options.headers || {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
-    
+
     const response = await fetch(`${API_BASE_URL}${path}`, {
         ...options,
         headers
