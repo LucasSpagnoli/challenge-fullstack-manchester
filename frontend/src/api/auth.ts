@@ -1,4 +1,5 @@
 import { apiFetch } from './apiClient';
+import { setAccessToken, clearAccessToken } from './cookies';
 import type { AuthUser, LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from './types/auth.interfaces';
 
 export async function registerUser(payload: RegisterPayload): Promise<AuthUser> {
@@ -6,7 +7,13 @@ export async function registerUser(payload: RegisterPayload): Promise<AuthUser> 
     method: 'POST',
     body: JSON.stringify(payload),
   });
-  return { userId: response.newUser.id, name: response.newUser.name };
+
+  setAccessToken(response.accessToken);
+
+  return {
+    userId: response.newUser.id,
+    name: response.newUser.name,
+  };
 }
 
 export async function loginUser(payload: LoginPayload): Promise<AuthUser> {
@@ -14,17 +21,15 @@ export async function loginUser(payload: LoginPayload): Promise<AuthUser> {
     method: 'POST',
     body: JSON.stringify(payload),
   });
-  return { userId: response.userId, name: response.name };
+
+  setAccessToken(response.accessToken);
+
+  return {
+    userId: response.userId,
+    name: response.name,
+  };
 }
 
-export async function logoutUser(): Promise<void> {
-  await apiFetch('/auth/logout', { method: 'POST' });
-}
-
-export async function fetchAuthStatus(): Promise<AuthUser | null> {
-  try {
-    return await apiFetch<AuthUser>('/auth/status');
-  } catch {
-    return null; // não autenticado ou cookie expirado
-  }
+export function logoutLocal(): void {
+  clearAccessToken();
 }

@@ -3,7 +3,6 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import express, { type Request, type Response } from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 
 const expressApp = express();
 
@@ -13,9 +12,6 @@ const allowedOrigins = [
   'https://manchester-news-filter.vercel.app',
 ];
 
-// registra ANTES do Nest, garantindo que rodem primeiro no pipeline
-expressApp.set('trust proxy', 1);
-expressApp.use(cookieParser());
 expressApp.use(
   cors({
     origin: (origin, callback) => {
@@ -25,7 +21,6 @@ expressApp.use(
         callback(new Error('Origem não permitida'));
       }
     },
-    credentials: true,
   }),
 );
 
@@ -33,10 +28,7 @@ let cachedApp: express.Express | undefined;
 
 async function bootstrap() {
   if (!cachedApp) {
-    const app = await NestFactory.create(
-      AppModule,
-      new ExpressAdapter(expressApp),
-    );
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
     await app.init();
     cachedApp = expressApp;
   }
