@@ -4,7 +4,7 @@ import FeedPage from './Pages/FeedPage'
 import PreferencesPage from './Pages/PreferencePage'
 import { RequireAuth, RedirectIfAuth, RequirePreferences } from './routes/guards'
 import ClientPage from './Pages/ClientPage'
-import { AuthProvider } from './api/lib/AuthProvider'
+import { AuthProvider } from './api/lib/AuthContext'
 
 function App() {
 

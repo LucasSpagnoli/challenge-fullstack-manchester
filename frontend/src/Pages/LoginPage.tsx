@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../api/lib/useAuth";
 import { useNavigate } from "react-router-dom";
-import { getPreferences } from "../api/preferences";
+import { getUserPreferences } from "../api/preferences";
+import { useAuth } from "../api/lib/AuthContext";
 
 const LoginPage: React.FC = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
             // Se não tiver (ou der erro, ex.: primeiro acesso), manda
             // para a página de preferências; senão, para o feed.
             try {
-                const topics = await getPreferences(authUser.userId);
+                const topics = await getUserPreferences();
                 navigate(topics.length > 0 ? '/feed' : '/preferences');
             } catch {
                 navigate('/preferences');

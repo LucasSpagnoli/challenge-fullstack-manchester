@@ -1,10 +1,11 @@
-import React, { createContext, useCallback, useState, type ReactNode } from "react";
+import React, { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 
-import { loginUser, logoutLocal, registerUser } from "../auth"
+import { loginUser, logoutLocal, registerUser } from "../auth";
 import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from "../types/auth.interfaces";
 import { getAuthToken } from "../cookies";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -50,9 +51,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     return (
-        <AuthContext.Provider
-            value={{ user, isAuthenticated, loading, error, login, register, logout }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, loading, error, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
+
+export function useAuth(): AuthContextValue {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth deve ser invocado no escopo de um <AuthProvider>");
+    }
+    return context;
+}

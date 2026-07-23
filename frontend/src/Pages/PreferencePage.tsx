@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { usePreferences } from "../api/lib/usePreferences";
-import { useAuth } from "../api/lib/useAuth";
 
 const PreferencesPage: React.FC = () => {
   const [newInterest, setNewInterest] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const {
     prefs,
@@ -18,7 +16,7 @@ const PreferencesPage: React.FC = () => {
     addPref,
     removePref,
     save,
-  } = usePreferences(user?.userId, 'user');
+  } = usePreferences();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
