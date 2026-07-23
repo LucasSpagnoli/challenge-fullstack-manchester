@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { addClient as apiAddClient, getClients as apiGetClients, updateClient as apiUpdateClient, deleteClient as apiDeleteClient } from "../clients";
+import { createClient as apiCreateClient, getClients as apiGetClients, updateClient as apiUpdateClient, deleteClient as apiDeleteClient } from "../clients";
 import type { Client, CreateClientPayload, UpdateClientPayload } from "../types/client.interfaces";
 
 export function useClient() {
@@ -27,7 +27,7 @@ export function useClient() {
     const addClient = useCallback(async (payload: CreateClientPayload) => {
         setError(null)
         try {
-            const response = await apiAddClient(payload)
+            const response = await apiCreateClient(payload)
             setClients((prev) => [...prev, response.newClient]);
             return response
         } catch (err) {

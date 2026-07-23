@@ -1,11 +1,5 @@
 export type PreferencesResponse = string[];
 
-export interface UpdatePreferencesPayload {
-    owner_id: number;
-    topic: string[];
-    role: 'client' | 'user'
-}
-
 export interface UsePreferencesResult {
     prefs: string[];
     loading: boolean;
@@ -13,6 +7,6 @@ export interface UsePreferencesResult {
     removingTopic: string | null;
     error: string | null;
     addPref: (topic: string) => void;
-    removePref: (topic: string) => Promise<void>;
+    removePref: (topic: string) => void;
     save: () => Promise<void>;
 }

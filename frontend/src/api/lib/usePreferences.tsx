@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { getPreferences, updatePreferences } from "../preferences";
+import { getUserPreferences, updateUserPreferences } from "../preferences";
 import type { UsePreferencesResult } from "../types/preferences.interfaces";
 
-export function usePreferences(owner_id: number | undefined, role: 'user' | 'client'): UsePreferencesResult {
+export function usePreferences(): UsePreferencesResult {
     const [prefs, setPrefs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);
@@ -10,12 +10,8 @@ export function usePreferences(owner_id: number | undefined, role: 'user' | 'cli
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!owner_id) {
-            setLoading(false);
-            return;
-        }
 
-        getPreferences(owner_id, role)
+        getUserPreferences()
             .then((topics) => {
                 setPrefs(topics);
             })
@@ -29,7 +25,7 @@ export function usePreferences(owner_id: number | undefined, role: 'user' | 'cli
             .finally(() => {
                 setLoading(false);
             });
-    }, [owner_id, role]);
+    }, []);
 
     const addPref = useCallback((topic: string) => {
         const trimmed = topic.trim();
@@ -43,50 +39,16 @@ export function usePreferences(owner_id: number | undefined, role: 'user' | 'cli
         });
     }, []);
 
-    const removePref = useCallback(
-        async (topic: string) => {
-            if (!owner_id) {
-                setError("Identificador de entidade ausente.");
-                return;
-            }
-
-            const updated = prefs.filter((item) => item !== topic);
-
-            setError(null);
-            setRemovingTopic(topic);
-            try {
-                const data = await updatePreferences({
-                    owner_id,
-                    role,
-                    topic: updated,
-                });
-                setPrefs(data.topic);
-            } catch (err) {
-                setError(
-                    err instanceof Error ? err.message : "Infortúnio ao suprimir o interesse."
-                );
-            } finally {
-                setRemovingTopic(null);
-            }
-        },
-        [owner_id, role, prefs]
-    );
+    const removePref = useCallback((topic: string) => {
+        setPrefs((prev) => prev.filter((item) => item !== topic));
+    }, []);
 
     const save = useCallback(async () => {
-        if (!owner_id) {
-            setError("Identificador de entidade ausente.");
-            return;
-        }
-
         setError(null);
         setSaving(true);
         try {
-            const data = await updatePreferences({
-                owner_id,
-                role,
-                topic: prefs,
-            });
-            setPrefs(data.topic);
+            const data = await updateUserPreferences(prefs);
+            setPrefs(data);
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Infortúnio ao persistir as preferências."
@@ -94,7 +56,7 @@ export function usePreferences(owner_id: number | undefined, role: 'user' | 'cli
         } finally {
             setSaving(false);
         }
-    }, [owner_id, role, prefs]);
+    }, [prefs]);
 
     return {
         prefs,

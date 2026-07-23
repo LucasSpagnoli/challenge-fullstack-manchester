@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getFeed, refreshFeed } from "../feed";
+import { getUserFeed, refreshUserFeed } from "../feed";
 import type { FeedResponse, UseFeedResult } from "../types/feed.interfaces";
 
 export function useFeed(): UseFeedResult {
@@ -9,8 +9,7 @@ export function useFeed(): UseFeedResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        
-        getFeed()
+        getUserFeed()
             .then((data) => {
                 setFeed(data);
             })
@@ -26,7 +25,7 @@ export function useFeed(): UseFeedResult {
         setError(null);
         setRefreshing(true);
         try {
-            const data = await refreshFeed();
+            const data = await refreshUserFeed();
             setFeed(data);
         } catch (err) {
             setError(

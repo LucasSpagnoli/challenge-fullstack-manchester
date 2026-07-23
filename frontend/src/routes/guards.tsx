@@ -36,7 +36,7 @@ export const RequirePreferences: React.FC = () => {
 
         let mounted = true;
 
-        getPreferences(user.userId)
+        getPreferences(user.userId, 'user')
             .then((topics) => {
                 if (mounted) setHasPreferences(topics.length > 0);
             })
