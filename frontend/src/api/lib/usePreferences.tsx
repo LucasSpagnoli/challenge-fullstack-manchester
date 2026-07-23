@@ -1,64 +1,37 @@
 import { useCallback, useEffect, useState } from "react";
-import { getPreferences, updatePreferences } from "../preferences";
-import { useAuth } from "./useAuth";
-
-interface UsePreferencesResult {
-    interests: string[];
-    loading: boolean;
-    saving: boolean;
-    removingTopic: string | null;
-    error: string | null;
-    addInterest: (topic: string) => void;
-    removeInterest: (topic: string) => Promise<void>;
-    save: () => Promise<void>;
-}
+import { getUserPreferences, updateUserPreferences } from "../preferences";
+import type { UsePreferencesResult } from "../types/preferences.interfaces";
 
 export function usePreferences(): UsePreferencesResult {
-    const { user } = useAuth();
-    const [interests, setInterests] = useState<string[]>([]);
+    const [prefs, setPrefs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);
     const [removingTopic, setRemovingTopic] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // Carrega os interesses cadastrados ao montar a página
     useEffect(() => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
 
-        let mounted = true;
-
-        getPreferences(user.userId)
+        getUserPreferences()
             .then((topics) => {
-                if (mounted) setInterests(topics);
+                setPrefs(topics);
             })
             .catch((err) => {
-                if (mounted) {
-                    setError(
-                        err instanceof Error
-                            ? err.message
-                            : "Erro ao carregar preferências"
-                    );
-                }
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Infortúnio ao carregar as preferências."
+                );
             })
             .finally(() => {
-                if (mounted) setLoading(false);
+                setLoading(false);
             });
+    }, []);
 
-        return () => {
-            mounted = false;
-        };
-    }, [user]);
-
-    // Adiciona um novo interesse à lista local (persistido apenas ao "Salvar")
-    const addInterest = useCallback((topic: string) => {
+    const addPref = useCallback((topic: string) => {
         const trimmed = topic.trim();
         if (!trimmed) return;
 
-        setInterests((prev) => {
-            // evita duplicados (case-insensitive)
+        setPrefs((prev) => {
             if (prev.some((item) => item.toLowerCase() === trimmed.toLowerCase())) {
                 return prev;
             }
@@ -66,68 +39,33 @@ export function usePreferences(): UsePreferencesResult {
         });
     }, []);
 
-    // Remove um interesse e persiste imediatamente via PATCH
-    // (não há endpoint de remoção individual; envia a lista sem o item)
-    const removeInterest = useCallback(
-        async (topic: string) => {
-            if (!user) {
-                setError("Usuário não autenticado");
-                return;
-            }
+    const removePref = useCallback((topic: string) => {
+        setPrefs((prev) => prev.filter((item) => item !== topic));
+    }, []);
 
-            const updated = interests.filter((item) => item !== topic);
-
-            setError(null);
-            setRemovingTopic(topic);
-            try {
-                const data = await updatePreferences({
-                    user_id: user.userId,
-                    topic: updated,
-                });
-                setInterests(data.topic);
-            } catch (err) {
-                setError(
-                    err instanceof Error ? err.message : "Erro ao remover interesse"
-                );
-            } finally {
-                setRemovingTopic(null);
-            }
-        },
-        [user, interests]
-    );
-
-    // Envia a lista atualizada (com novos itens adicionados) para o backend
     const save = useCallback(async () => {
-        if (!user) {
-            setError("Usuário não autenticado");
-            return;
-        }
-
         setError(null);
         setSaving(true);
         try {
-            const data = await updatePreferences({
-                user_id: user.userId,
-                topic: interests,
-            });
-            setInterests(data.topic);
+            const data = await updateUserPreferences(prefs);
+            setPrefs(data);
         } catch (err) {
             setError(
-                err instanceof Error ? err.message : "Erro ao salvar preferências"
+                err instanceof Error ? err.message : "Infortúnio ao persistir as preferências."
             );
         } finally {
             setSaving(false);
         }
-    }, [user, interests]);
+    }, [prefs]);
 
     return {
-        interests,
+        prefs,
         loading,
         saving,
         removingTopic,
         error,
-        addInterest,
-        removeInterest,
+        addPref,
+        removePref,
         save,
     };
 }

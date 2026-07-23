@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getFeed, refreshFeed } from "../feed";
+import { getUserFeed, refreshUserFeed } from "../feed";
 import type { FeedResponse, UseFeedResult } from "../types/feed.interfaces";
 
 export function useFeed(): UseFeedResult {
@@ -9,33 +9,23 @@ export function useFeed(): UseFeedResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let mounted = true;
-
-        getFeed()
+        getUserFeed()
             .then((data) => {
-                if (mounted) setFeed(data);
+                setFeed(data);
             })
             .catch((err) => {
-                if (mounted) {
-                    setError(
-                        err instanceof Error ? err.message : "Erro ao carregar o feed"
-                    );
-                }
+                setError(err instanceof Error ? err.message : "Erro ao carregar o feed")
             })
             .finally(() => {
-                if (mounted) setLoading(false);
+                setLoading(false);
             });
-
-        return () => {
-            mounted = false;
-        };
     }, []);
 
     const refresh = useCallback(async () => {
         setError(null);
         setRefreshing(true);
         try {
-            const data = await refreshFeed();
+            const data = await refreshUserFeed();
             setFeed(data);
         } catch (err) {
             setError(

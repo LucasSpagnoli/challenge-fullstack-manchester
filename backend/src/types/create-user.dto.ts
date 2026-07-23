@@ -13,5 +13,7 @@ export class CreateUserDTO {
         minSymbols: 0,
     })
     password!: string
+
+    preferences!: string[]
 }
 

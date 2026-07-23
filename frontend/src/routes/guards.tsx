@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../api/lib/useAuth";
-import { getPreferences } from "../api/preferences";
+import { getUserPreferences } from "../api/preferences";
+import { useAuth } from "../api/lib/AuthContext";
 
 export const RequireAuth: React.FC = () => {
     const { isAuthenticated } = useAuth();
@@ -36,7 +36,7 @@ export const RequirePreferences: React.FC = () => {
 
         let mounted = true;
 
-        getPreferences(user.userId)
+        getUserPreferences()
             .then((topics) => {
                 if (mounted) setHasPreferences(topics.length > 0);
             })

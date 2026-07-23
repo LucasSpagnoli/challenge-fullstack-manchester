@@ -3,6 +3,8 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import "dotenv/config";
 
+type Role = "client" | "user";
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
@@ -13,8 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         })
     }
 
-    async validate(payload: { sub: string, name: string }) {
-        console.log('chegou no jwt strategy')
+    async validate(payload: { sub: number, name: string }) {
         return { id: payload.sub, name: payload.name };
     }
 }

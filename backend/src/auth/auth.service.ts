@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDTO } from 'src/types/create-user.dto';
-import { PreferencesService } from 'src/preferences/preferences.service';
 
 type AuthInput = { email: string; password: string }
 type SignInData = { userId: number; name: string }
@@ -13,18 +12,18 @@ export class AuthService {
     constructor(
         private readonly databaseService: DatabaseService,
         private jwtService: JwtService,
-        private readonly preferenceService: PreferencesService
     ) { }
 
     async signIn(user: SignInData) {
         const tokenPayload = {
             sub: user.userId,
-            name: user.name
+            name: user.name,
+            role: 'user'
         }
 
-        const accessToken = await this.jwtService.signAsync(tokenPayload) // cria um JWT com name, email e interestedIn[] (que será armazenado no cliente)
+        const accessToken = await this.jwtService.signAsync(tokenPayload);
 
-        return { accessToken, name: user.name, userId: user.userId }
+        return { accessToken, name: user.name, userId: user.userId };
     }
 
     async register(createUserDTO: CreateUserDTO) {
@@ -32,44 +31,47 @@ export class AuthService {
             throw new BadRequestException('Body ausente');
         }
 
-        const userExists = await this.databaseService.user.findUnique({ where: { email: createUserDTO.email } })
+        const userExists = await this.databaseService.user.findUnique({ where: { email: createUserDTO.email } });
         if (userExists) {
-            throw new ConflictException("Usuário já existente")
+            throw new ConflictException("Usuário já existente");
         }
 
-        const hashedPassword = await bcrypt.hash(createUserDTO.password, 10)
-        const newUser = await this.databaseService.user.create({ data: { ...createUserDTO, password: hashedPassword } })
+        const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
+        const newUser = await this.databaseService.user.create({ data: { ...createUserDTO, password: hashedPassword } });
+
         if (!newUser) {
-            throw new Error("Create new user falhou")
+            throw new Error("A criação do novo usuário falhou");
         }
 
         const tokenPayload = {
             sub: newUser.id,
-            name: newUser.name
-        }
-        const accessToken = await this.jwtService.signAsync(tokenPayload)
-        const newUserPreferences = await this.preferenceService.createUserPreferences({ user_id: newUser.id, topic: [] })
+            name: newUser.name,
+            role: 'user'
+        };
+        const accessToken = await this.jwtService.signAsync(tokenPayload);
 
-        return { accessToken, newUser, Preferences: newUserPreferences }
+        const { password, ...userWithoutPassword } = newUser;
+
+        return { accessToken, newUser: userWithoutPassword };
     }
 
     async validateUser(input: AuthInput) {
-        const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } })
+        const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } });
 
         if (!foundUser) {
-            throw new UnauthorizedException("Usuário não encontrado")
+            throw new UnauthorizedException("Usuário não encontrado");
         }
 
         const isPassCorrect = await bcrypt.compare(
             input.password,
             foundUser.password
-        )
+        );
 
         if (!isPassCorrect) {
-            throw new UnauthorizedException("Senha incorreta")
+            throw new UnauthorizedException("Senha incorreta");
         }
 
-        const { password, ...user } = foundUser
-        return user
+        const { password, ...user } = foundUser;
+        return user;
     }
 }

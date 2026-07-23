@@ -1,6 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import type { CreatePreferencesDto } from 'src/types/create-preferences.dto';
+import { PreferencesPayload } from 'src/types/PreferencesPayload';
+import { Role } from 'src/types/role';
 
 @Injectable()
 export class PreferencesService {
@@ -8,28 +9,28 @@ export class PreferencesService {
         private readonly databaseService: DatabaseService
     ) { }
 
-    async createUserPreferences({ user_id, topic }: CreatePreferencesDto) {
-        if (!user_id) {
-            throw new BadRequestException("ID de usuário ausente")
-        }
-        return await this.databaseService.preferences.create({ data: { user_id, topic } })
+    async updatePreferences({ id, preferences, role }: PreferencesPayload) {
+        if (!id) throw new BadRequestException("ID ausente.");
+
+        const where = { id };
+        const data = { preferences };
+
+        const newPrefs = role === 'user'
+            ? await this.databaseService.user.update({ where, data })
+            : await this.databaseService.clients.update({ where, data });
+
+        return newPrefs.preferences
     }
 
-    async updatePreferences({ user_id, topic }: CreatePreferencesDto) {
-        if (!user_id) {
-            throw new BadRequestException("ID de usuário ausente")
-        }
-        return await this.databaseService.preferences.update({ where: { user_id }, data: { topic } })
-    }
+    async getPreferencesById(id: number, role: Role) {
+        if (!id) throw new BadRequestException("ID ausente.");
 
-    async getPreferencesById(user_id: number) {
-        if (!user_id) {
-            throw new BadRequestException("ID do usuário ausente")
-        }
-        const userPref = await this.databaseService.preferences.findUnique({ where: { user_id } })
-        if (!userPref) {
-            throw new BadRequestException("Nenhum usuário encontrado")
-        }
-        return userPref.topic
+        const user = role === 'user'
+            ? await this.databaseService.user.findUnique({ where: { id } })
+            : await this.databaseService.clients.findUnique({ where: { id } });
+
+        if (!user) throw new NotFoundException("Preferências inexistentes ou não encontradas.");
+
+        return user.preferences;
     }
 }

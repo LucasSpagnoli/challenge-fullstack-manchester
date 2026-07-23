@@ -1,45 +1,27 @@
-import { apiFetch } from "./client";
-import type {
-    PreferencesResponse,
-    UpdatePreferencesPayload,
-} from "./types/preferences.interfaces";
+import { apiFetch } from "./apiClient";
 
-/**
- * GET /preferences/:id
- * Retorna a lista de interesses cadastrados do usuário.
- * O backend retorna o array de tópicos diretamente (string[]).
- */
-export async function getPreferences(
-    userId: number
-): Promise<PreferencesResponse> {
-    return apiFetch<PreferencesResponse>(`/preferences/${userId}`, {
+export async function getUserPreferences(): Promise<string[]> {
+    return apiFetch<string[]>("/preferences", {
         method: "GET",
     });
 }
 
-/**
- * POST /preferences
- * Cria o registro de preferências de um usuário (primeira vez).
- */
-export async function createPreferences(
-    payload: UpdatePreferencesPayload
-): Promise<UpdatePreferencesPayload> {
-    return apiFetch<UpdatePreferencesPayload>("/preferences", {
-        method: "POST",
-        body: JSON.stringify(payload),
+export async function getClientPreferences(client_id: number): Promise<string[]> {
+    return apiFetch<string[]>(`/preferences/${client_id}`, {
+        method: "GET",
     });
 }
 
-/**
- * PATCH /preferences
- * Atualiza a lista completa de interesses do usuário.
- * Usado também para remover interesses: envia a lista sem o item removido.
- */
-export async function updatePreferences(
-    payload: UpdatePreferencesPayload
-): Promise<UpdatePreferencesPayload> {
-    return apiFetch<UpdatePreferencesPayload>("/preferences", {
+export async function updateUserPreferences(preferences: string[]): Promise<string[]> {
+    return apiFetch<string[]>("/preferences", {
         method: "PATCH",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ preferences }),
+    });
+}
+
+export async function updateClientPreferences(client_id: number, preferences: string[]): Promise<string[]> {
+    return apiFetch<string[]>(`/preferences/${client_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ preferences }),
     });
 }

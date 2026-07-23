@@ -7,24 +7,35 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  preferences String[]
+  clients     Clients[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-model Preferences {
-  id         Int      @id @default(autoincrement())
-  topic      String[]
-  user_id    Int      @unique
-  created_at DateTime @default(now())
-}
-
-model Cache {
+model User_cache {
   id           Int      @id @default(autoincrement())
-  user_id      Int      @unique
+  owner_id     Int      @unique
   content_json Json
   generatedAt  DateTime @default(now())
+}
+
+model Client_cache {
+  id           Int      @id @default(autoincrement())
+  owner_id     Int      @unique
+  content_json Json
+  generatedAt  DateTime @default(now())
+}
+
+model Clients {
+  id          Int      @id @default(autoincrement())
+  name        String
+  number      String
+  user_id     Int
+  preferences String[] @default([])
+  user        User     @relation(fields: [user_id], references: [id])
 }

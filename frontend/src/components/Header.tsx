@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../api/lib/useAuth";
+import { useAuth } from "../api/lib/AuthContext";
 
 const Header: React.FC = () => {
     const { logout } = useAuth();

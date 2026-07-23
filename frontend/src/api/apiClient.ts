@@ -1,10 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 import { getAuthToken } from './cookies'
 
-export async function apiFetch<T>(
-    path: string,
-    options: RequestInit = {}
-): Promise<T> {
+export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
     const token = getAuthToken();
 
     const headers: HeadersInit = {
@@ -12,6 +9,7 @@ export async function apiFetch<T>(
         ...(options.headers || {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
+    
     const response = await fetch(`${API_BASE_URL}${path}`, {
         ...options,
         headers
@@ -23,7 +21,7 @@ export async function apiFetch<T>(
             const data = await response.json();
             message = data?.message || message;
         } catch {
-            // resposta sem corpo JSON
+            // resposta sem corpo json
         }
         throw new ApiError(message, response.status);
     }
