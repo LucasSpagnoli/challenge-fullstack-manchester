@@ -6,7 +6,6 @@ export function usePreferences(): UsePreferencesResult {
     const [prefs, setPrefs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [saving, setSaving] = useState<boolean>(false);
-    const [removingTopic, setRemovingTopic] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -62,7 +61,6 @@ export function usePreferences(): UsePreferencesResult {
         prefs,
         loading,
         saving,
-        removingTopic,
         error,
         addPref,
         removePref,
