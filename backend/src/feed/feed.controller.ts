@@ -23,16 +23,6 @@ export class FeedController {
         }
     }
 
-    @Get(':client_id')
-    async getClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
-        try {
-            await this.clientsService.findOne(client_id, req.user.id);
-            return await this.feedService.getFeed(client_id, 'client');
-        } catch (err) {
-            throw new ForbiddenException('Acesso a este cliente negado');
-        }
-    }
-
     @Get('refresh')
     async refreshUserFeed(@Req() req: RequestWithUser) {
         try {
@@ -40,6 +30,11 @@ export class FeedController {
         } catch (err) {
             throw new BadRequestException('Erro ao atualizar feed do usuário');
         }
+    }
+
+    @Get('news')
+    async getNews() {
+        return this.infoMoneyService.getParsedNews();
     }
 
     @Get('refresh/:client_id')
@@ -52,8 +47,13 @@ export class FeedController {
         }
     }
 
-    @Get('news')
-    async getNews() {
-        return this.infoMoneyService.getParsedNews();
+    @Get(':client_id')
+    async getClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
+        try {
+            await this.clientsService.findOne(client_id, req.user.id);
+            return await this.feedService.getFeed(client_id, 'client');
+        } catch (err) {
+            throw new ForbiddenException('Acesso a este cliente negado');
+        }
     }
 }
