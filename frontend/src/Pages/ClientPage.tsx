@@ -6,7 +6,7 @@ import { useClient } from "../api/lib/useClient";
 
 const ClientPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { clients, updateClient, deleteClient } = useClient()
+    const { clients } = useClient()
 
 
     return (

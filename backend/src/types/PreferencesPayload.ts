@@ -1,7 +1,8 @@
 import { Role } from "./role";
 
 export interface PreferencesPayload {
-    owner_id: number;
-    topic: string[];
+    id: number;
+    preferences: string[];
     role: Role;
 }
+

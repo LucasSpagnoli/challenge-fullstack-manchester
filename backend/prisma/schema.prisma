@@ -7,27 +7,14 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  clients   Clients[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model User_preferences {
-  id         Int      @id @default(autoincrement())
-  topic      String[]
-  owner_id   Int      @unique
-  created_at DateTime @default(now())
-}
-
-model Clients_preferences {
-  id         Int      @id @default(autoincrement())
-  topic      String[]
-  owner_id   Int      @unique
-  created_at DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  preferences String[]
+  clients     Clients[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model User_cache {
@@ -49,5 +36,6 @@ model Clients {
   name        String
   number      String
   user_id     Int
+  preferences String[] @default([])
   user        User     @relation(fields: [user_id], references: [id])
 }

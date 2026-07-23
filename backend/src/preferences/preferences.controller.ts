@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Query, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe, ForbiddenException } from '@nestjs/common';
+import { Body, Controller, Get, ParseIntPipe, Patch, Req, UseGuards, ForbiddenException, Param, BadRequestException } from '@nestjs/common';
 import { PreferencesService } from './preferences.service';
 import { ClientsService } from 'src/clients/clients.service';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
-import type { PreferencesPayload } from 'src/types/create-preferences.dto';
 import type { RequestWithUser } from 'src/types/request-with-user';
 
 @UseGuards(JwtAuthGuard)
@@ -14,39 +13,40 @@ export class PreferencesController {
     ) { }
 
     @Get()
-    async find(
-        @Query('target_id', ParseIntPipe) target_id: number,
-        @Query('role') role: 'user' | 'client',
-        @Req() req: RequestWithUser
-    ) {
-        if (role === 'client') {
-            await this.clientsService.findOne(target_id, req.user.id); // Atesta jurisdição
-        } else if (target_id !== req.user.id) {
-            throw new ForbiddenException("Acesso denegado a credenciais alheias.");
+    async findUser(@Req() req: RequestWithUser) {
+        try {
+            return this.preferenceService.getPreferencesById(req.user.id, 'user');
+        } catch (err) {
+            throw new BadRequestException('Erro ao buscar preferências de usuário')
         }
-
-        return this.preferenceService.getPreferencesById(target_id, role);
     }
 
-    @Post()
-    async createPreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
-        if (preferencesDTO.role === 'client') {
-            await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
-        } else if (preferencesDTO.role === 'user' && preferencesDTO.owner_id !== req.user.id) {
-            throw new ForbiddenException("Acesso negado.");
+    @Get(':client_id')
+    async findClient(@Req() req: RequestWithUser, @Param('client_id', new ParseIntPipe({ optional: true })) client_id: number) {
+        try {
+            await this.clientsService.findOne(client_id, req.user.id);
+            return this.preferenceService.getPreferencesById(client_id, 'client');
+        } catch (err) {
+            throw new ForbiddenException('Acesso a este cliente negado')
         }
-
-        return this.preferenceService.createPreferences(preferencesDTO);
     }
 
     @Patch()
-    async updatePreferences(@Body(ValidationPipe) preferencesDTO: PreferencesPayload, @Req() req: RequestWithUser) {
-        if (preferencesDTO.role === 'client') {
-            await this.clientsService.findOne(preferencesDTO.owner_id, req.user.id);
-        } else if (preferencesDTO.owner_id !== req.user.id) {
-            throw new ForbiddenException("Acesso negado.");
+    async updateUserPreferences(@Body('preferences') preferences: string[], @Req() req: RequestWithUser) {
+        try {
+            return this.preferenceService.updatePreferences({ id: req.user.id, preferences, role: 'user' });
+        } catch (err) {
+            throw new BadRequestException('Erro ao atualizar preferência de usuário')
         }
+    }
 
-        return this.preferenceService.updatePreferences(preferencesDTO);
+    @Patch(':client_id')
+    async updateClientPreferences(@Body('preferences') preferences: string[], @Req() req: RequestWithUser, @Param('client_id', new ParseIntPipe({ optional: true })) client_id: number) {
+        try {
+            await this.clientsService.findOne(client_id, req.user.id);
+            return this.preferenceService.updatePreferences({ id: client_id, preferences, role: 'client' });
+        } catch (err) {
+            throw new ForbiddenException('Acesso a este cliente negado')
+        }
     }
 }
