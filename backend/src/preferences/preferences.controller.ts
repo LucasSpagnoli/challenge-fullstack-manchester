@@ -17,7 +17,7 @@ export class PreferencesController {
         try {
             return this.preferenceService.getPreferencesById(req.user.id, 'user');
         } catch (err) {
-            throw new BadRequestException('Erro ao buscar preferências de usuário')
+            throw new BadRequestException(err)
         }
     }
 
@@ -27,7 +27,7 @@ export class PreferencesController {
             await this.clientsService.findOne(client_id, req.user.id);
             return this.preferenceService.getPreferencesById(client_id, 'client');
         } catch (err) {
-            throw new ForbiddenException('Acesso a este cliente negado')
+            throw new ForbiddenException(err)
         }
     }
 
@@ -36,7 +36,7 @@ export class PreferencesController {
         try {
             return this.preferenceService.updatePreferences({ id: req.user.id, preferences, role: 'user' });
         } catch (err) {
-            throw new BadRequestException('Erro ao atualizar preferência de usuário')
+            throw new BadRequestException(err)
         }
     }
 
@@ -46,7 +46,7 @@ export class PreferencesController {
             await this.clientsService.findOne(client_id, req.user.id);
             return this.preferenceService.updatePreferences({ id: client_id, preferences, role: 'client' });
         } catch (err) {
-            throw new ForbiddenException('Acesso a este cliente negado')
+            throw new ForbiddenException(err)
         }
     }
 }

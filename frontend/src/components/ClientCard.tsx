@@ -1,7 +1,22 @@
+import { useState } from "react";
 import type { Client } from "../api/types/client.interfaces";
+import { usePreferences } from "../api/lib/usePreferences";
+import { useFeed } from "../api/lib/useFeed";
 import News from "./News";
+import { ClientModal } from "./ClientModal";
 
 export const ClientCard = ({ client }: { client: Client }) => {
+    const [newPref, setNewPref] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
+    const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
+
+    const handleAddPref = async () => {
+        if (!newPref.trim()) return;
+        addPref(newPref);
+        setNewPref("");
+    };
+
     return (
         <article className="flex flex-col h-full w-full border border-black/10 bg-white p-5 hover:border-[#D4AF37] transition-colors duration-300">
             <header className="mb-5">
@@ -21,47 +36,66 @@ export const ClientCard = ({ client }: { client: Client }) => {
                 <div className="flex items-stretch gap-2 mb-3">
                     <input
                         type="text"
-                        placeholder="Ex.: PETR4..."
-                        className="flex-1 border-0 border-b border-black/20 bg-transparent py-1.5 text-xs text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200" />
-                    <button className="px-3 bg-black text-white text-[10px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300">
-                        Add
+                        value={newPref}
+                        onChange={(e) => setNewPref(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleAddPref()}
+                        disabled={prefsLoading}
+                        className="flex-1 border-0 border-b border-black/20 bg-transparent py-1.5 text-xs text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200 disabled:opacity-50" />
+                    <button
+                        onClick={handleAddPref}
+                        disabled={prefsLoading}
+                        className="px-3 bg-black text-white text-[10px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 disabled:opacity-50">
+                        Adicionar
                     </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                    {["VALE3", "Taxa Selic", "Agro"].map((pref) => (
-                        <span className="inline-flex items-center gap-1 border border-black/15 pl-2 pr-1.5 py-1 text-[11px] text-black hover:border-[#D4AF37] transition-colors duration-200">
-                            {pref}
-                            <button
-                                aria-label="Remover"
-                                className="w-4 h-4 flex items-center justify-center text-black/40 hover:text-red-600 transition-colors">
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M18 6L6 18M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </span>
-                    ))}
+                <div className="flex flex-wrap gap-2 min-h-6">
+                    {prefsLoading && prefs.length === 0 ? (
+                        <span className="text-[10px] text-black/30 italic">Carregando...</span>
+                    ) : (
+                        prefs.map((pref) => (
+                            <span
+                                key={pref}
+                                className="inline-flex items-center gap-1 border border-black/15 pl-2 pr-1.5 py-1 text-[11px] text-black hover:border-[#D4AF37] transition-colors duration-200">
+                                {pref}
+                                <button
+                                    onClick={() => removePref(pref)}
+                                    disabled={prefsLoading}
+                                    aria-label="Remover"
+                                    className="w-4 h-4 flex items-center justify-center text-black/40 hover:text-red-600 transition-colors disabled:opacity-50">
+                                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M18 6L6 18M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                        ))
+                    )}
+                    {prefsError && <p className="text-xs text-red-600 mb-2">{prefsError}</p>}
                 </div>
             </section>
 
-            <button className="w-full py-2.5 bg-black text-white text-[11px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 mb-5">
-                Gerar Feed
+            <button
+                onClick={refresh}
+                disabled={feedLoading || feedRefreshing}
+                className="w-full py-2.5 bg-black text-white text-[11px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 mb-5 disabled:opacity-50">
+                {feedRefreshing ? "Atualizando..." : "Gerar Feed"}
             </button>
 
-            <section className="mb-5 flex-1 min-h-30">
-                <News />
+            <section className="mb-5 flex-1 flex flex-col">
+                <News items={feed?.items || []} loading={feedLoading} />
             </section>
 
             <footer className="pt-4 border-t border-black/10 flex items-center justify-between mt-auto">
-                <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium">
+                <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
                 </button>
                 <button className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
                     Excluir
                 </button>
             </footer>
+            {isModalOpen && <ClientModal initialData={client} onSubmit={() => setIsModalOpen(false)} isNew={false} onClose={() => setIsModalOpen(false)} />}
         </article>
     );
 };
 
-export default ClientCard
+export default ClientCard;

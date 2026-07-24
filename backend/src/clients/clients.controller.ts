@@ -31,11 +31,7 @@ export class ClientsController {
   }
 
   @Patch(':client_id')
-  update(
-    @Param('client_id', ParseIntPipe) client_id: number,
-    @Body() updateClientDto: Prisma.ClientsUpdateInput,
-    @Req() req: RequestWithUser
-  ) {
+  update(@Param('client_id', ParseIntPipe) client_id: number, @Body() updateClientDto: Prisma.ClientsUpdateInput, @Req() req: RequestWithUser) {
     return this.clientsService.update(client_id, req.user.id, updateClientDto);
   }
 
