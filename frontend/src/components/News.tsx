@@ -21,7 +21,7 @@ const News: React.FC<{ items: any[]; loading?: boolean }> = ({ items, loading })
         return (
             <div className="border border-dashed border-black/15 py-12 flex items-center justify-center bg-black/2 h-full min-h-48">
                 <p className="text-sm text-black/40 italic font-serif text-center px-4">
-                    Nenhuma notícia correlata localizada.
+                    Clique em 'gerar feed' para receber as notícias.
                 </p>
             </div>
         );

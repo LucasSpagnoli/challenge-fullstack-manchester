@@ -7,11 +7,7 @@ export async function getUserFeed(): Promise<FeedResponse> {
     });
 }
 
-export async function getClientFeed(client_id: number): Promise<FeedResponse> {
-    return apiFetch<FeedResponse>(`/feed/${client_id}`, {
-        method: "GET",
-    });
-}
+// não existe getClientFeed pois o feed do cliente só é gerado manualmente, para preservar tokens
 
 export async function refreshUserFeed(): Promise<FeedResponse> {
     return apiFetch<FeedResponse>("/feed/refresh", {
