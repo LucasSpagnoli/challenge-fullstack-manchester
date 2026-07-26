@@ -1,39 +1,44 @@
 import React, { useState, useEffect } from "react";
 import type { Client } from "../api/types/client.interfaces";
+import { useClient } from "../api/lib/useClient";
 
 interface ClientModalProps {
     onClose: () => void;
     isNew: boolean;
     initialData?: Client;
-    onSubmit: (data: { name: string; number: string }) => Promise<void> | void;
+    client_id?: number
 }
 
-export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, onSubmit }) => {
+export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, client_id }) => {
     const [name, setName] = useState("");
     const [number, setNumber] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { addClient, updateClient } = useClient()
 
     useEffect(() => {
         if (!isNew && initialData) {
             setName(initialData.name);
             setNumber(initialData.number);
-        } else {
-            setName("");
-            setNumber("");
         }
     }, [isNew, initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const pristineName = name.trim();
-        const pristineNumber = number.trim();
+        const trimmedName = name.trim();
+        const trimmedNumber = number.trim();
 
-        if (!pristineName || !pristineNumber) return;
+        if (!trimmedName || !trimmedNumber) return;
 
         setIsSubmitting(true);
         try {
-            await onSubmit({ name: pristineName, number: pristineNumber });
+            if (isNew) {
+                await addClient({ name: trimmedName, number: trimmedNumber })
+            } else if (client_id) {
+                await updateClient(client_id, { name: trimmedName, number: trimmedNumber })
+            } else {
+                console.error('Erro ao invocar modal de cliente')
+            }
             onClose();
         } catch (error) {
             console.error("Falha ao consolidar os dados:", error);

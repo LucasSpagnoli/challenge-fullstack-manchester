@@ -4,6 +4,7 @@ import { usePreferences } from "../api/lib/usePreferences";
 import { useFeed } from "../api/lib/useFeed";
 import News from "./News";
 import { ClientModal } from "./ClientModal";
+import { deleteClient } from "../api/clients";
 
 export const ClientCard = ({ client }: { client: Client }) => {
     const [newPref, setNewPref] = useState("");
@@ -89,11 +90,11 @@ export const ClientCard = ({ client }: { client: Client }) => {
                 <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
                 </button>
-                <button className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
+                <button onClick={() => deleteClient(client.client_id)} className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
                     Excluir
                 </button>
             </footer>
-            {isModalOpen && <ClientModal initialData={client} onSubmit={() => setIsModalOpen(false)} isNew={false} onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <ClientModal client_id={client.client_id} initialData={client} isNew={false} onClose={() => setIsModalOpen(false)} />}
         </article>
     );
 };

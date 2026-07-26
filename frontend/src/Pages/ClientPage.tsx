@@ -59,7 +59,7 @@ const ClientPage: React.FC = () => {
                         ) : (
                             <div className="col-span-full border border-dashed border-black/15 py-16 text-center">
                                 <p className="text-sm text-black/40 italic font-serif">
-                                    Nenhum cliente arregimentado até o momento.
+                                    Nenhum cliente até o momento.
                                 </p>
                             </div>
                         )}
@@ -67,7 +67,7 @@ const ClientPage: React.FC = () => {
                 </div>
             </main>
 
-            {isModalOpen && <ClientModal onSubmit={() => setIsModalOpen(false)} isNew={true} onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <ClientModal isNew={true} onClose={() => setIsModalOpen(false)} />}
         </div>
     );
 };
