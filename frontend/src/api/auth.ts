@@ -1,5 +1,5 @@
 import { apiFetch } from './apiClient';
-import { setAccessToken, clearAccessToken } from './cookies';
+import { setAccessToken, clearAccessToken } from './accessToken';
 import type { AuthUser, LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from './types/auth.interfaces';
 
 export async function registerUser(payload: RegisterPayload): Promise<AuthUser> {

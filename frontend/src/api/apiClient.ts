@@ -1,5 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL;
-import { getAccessToken } from './cookies';
+import { getAccessToken } from './accessToken';
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
     const token = getAccessToken();
