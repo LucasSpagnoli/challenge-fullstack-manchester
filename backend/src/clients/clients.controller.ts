@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { ClientsService } from './clients.service';
-import { Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import type { RequestWithUser } from 'src/types/request-with-user';
+import { CreateClientDTO, UpdateClientDTO } from 'src/types/clients.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('clients')
@@ -10,10 +10,7 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) { }
 
   @Post()
-  create(
-    @Body() createClientDto: Prisma.ClientsCreateInput,
-    @Req() req: RequestWithUser
-  ) {
+  create(@Body(ValidationPipe) createClientDto: CreateClientDTO, @Req() req: RequestWithUser) {
     return this.clientsService.create({
       ...createClientDto,
       user_id: req.user.id
@@ -31,7 +28,7 @@ export class ClientsController {
   }
 
   @Patch(':client_id')
-  update(@Param('client_id', ParseIntPipe) client_id: number, @Body() updateClientDto: Prisma.ClientsUpdateInput, @Req() req: RequestWithUser) {
+  update(@Param('client_id', ParseIntPipe) client_id: number, @Body(ValidationPipe) updateClientDto: UpdateClientDTO, @Req() req: RequestWithUser) {
     return this.clientsService.update(client_id, req.user.id, updateClientDto);
   }
 

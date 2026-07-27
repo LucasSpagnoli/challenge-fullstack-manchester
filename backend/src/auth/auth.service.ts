@@ -57,7 +57,7 @@ export class AuthService {
 
             const err = error instanceof Error ? error : new Error(String(error));
 
-            this.logger.error(`Erro ao persistir usuário (${createUserDTO.email}). Motivo: ${err.message}`, err.stack);
+            this.logger.error(`Erro ao persistir usuário (${createUserDTO.email}). Motivo: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Erro ao processar o registro.");
         }
     }
@@ -86,7 +86,7 @@ export class AuthService {
 
             const err = error instanceof Error ? error : new Error(String(error));
 
-            this.logger.error(`Erro durante a validação de credenciais do e-mail (${input.email}). Motivo: ${err.message}`, err.stack);
+            this.logger.error(`Erro durante a validação de credenciais do e-mail (${input.email}). Motivo: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Contingência ao validar o usuário.");
         }
     }
