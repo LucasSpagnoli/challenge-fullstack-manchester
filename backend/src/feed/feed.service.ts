@@ -66,8 +66,19 @@ export class FeedService {
             return filteredNews;
         } catch (error) {
             const err = error as Error;
-            this.logger.error(`Anomalia no processamento heurístico da IA [ID: ${id}, Role: ${role}]: ${err.message}`, err.stack);
+            this.logger.error(`Erro no filtramento de notícias da IA [ID: ${id}]: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Falha ao filtrar notícias mediante Inteligência Artificial.");
+        }
+    }
+
+    async aiSummary(client_id: number): Promise<string> {
+        try {
+            const news = await this.getFeed(client_id, 'client')
+            return await this.aiService.aiSummary(news.items)
+        } catch (error) {
+            const err = error as Error;
+            this.logger.error(`Erro no processamento do resumo pela IA [ID: ${client_id}]: ${err.message}\n`, err.stack);
+            throw new InternalServerErrorException("Falha ao obter resumo das notícias filtradas mediante Inteligência Artificial.");
         }
     }
 }
