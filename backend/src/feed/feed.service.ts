@@ -3,7 +3,7 @@ import { News } from "src/types/news";
 import "dotenv/config";
 import { CacheService } from 'src/services/cache.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
-import { AiService } from 'src/services/ai.service';
+import { AiService } from 'src/services/ai.services';
 import { PreferencesService } from 'src/preferences/preferences.service';
 import { Role } from 'src/types/request-with-user';
 
