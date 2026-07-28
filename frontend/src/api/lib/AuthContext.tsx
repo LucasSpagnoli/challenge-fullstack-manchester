@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 import { loginUser, logoutLocal, registerUser } from '../auth';
 import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from '../types/auth.interfaces';
+import { getAccessToken } from '../accessToken';
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -8,7 +9,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!getAccessToken());
 
     const login = useCallback(async (payload: LoginPayload) => {
         setError(null);

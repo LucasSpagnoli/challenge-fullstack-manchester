@@ -1,10 +1,14 @@
 import { apiFetch } from "./apiClient";
 import type { Client, CreateClientPayload, UpdateClientPayload } from "./types/client.interfaces";
 
-export function getClients(): Promise<Client[]> {
-    return apiFetch<Client[]>(`/clients`, {
-        method: "GET",
-    });
+export async function getClients(): Promise<Client[]> {
+    const data = await apiFetch<any[]>("/clients", { method: "GET" });
+    return data.map((c) => ({
+        client_id: c.id,
+        name: c.name,
+        number: c.number,
+        user_id: c.user_id,
+    }));
 }
 
 export function getClientById(client_id: number): Promise<Client[]> {

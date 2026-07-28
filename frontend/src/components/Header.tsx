@@ -19,6 +19,11 @@ const Header: React.FC = () => {
                 </span>
                 <nav className="flex items-center gap-6">
                     <Link
+                        to="/clients"
+                        className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
+                        Clientes
+                    </Link>
+                    <Link
                         to="/preferences"
                         className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
                         Preferências

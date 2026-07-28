@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Param, ParseIntPipe, Req, UseGuards, ForbiddenException, } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { FeedService } from './feed.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
@@ -16,20 +16,12 @@ export class FeedController {
 
     @Get()
     async getUserFeed(@Req() req: RequestWithUser) {
-        try {
-            return await this.feedService.getFeed(req.user.id, 'user');
-        } catch (err) {
-            throw new BadRequestException('Erro ao buscar feed do usuário');
-        }
+        return await this.feedService.getFeed(req.user.id, 'user');
     }
 
     @Get('refresh')
     async refreshUserFeed(@Req() req: RequestWithUser) {
-        try {
-            return await this.feedService.refreshFeed(req.user.id, 'user');
-        } catch (err) {
-            throw new BadRequestException('Erro ao atualizar feed do usuário');
-        }
+        return await this.feedService.refreshFeed(req.user.id, 'user');
     }
 
     @Get('news')
@@ -38,22 +30,14 @@ export class FeedController {
     }
 
     @Get('refresh/:client_id')
-    async refreshClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number,) {
-        try {
-            await this.clientsService.findOne(client_id, req.user.id);
-            return await this.feedService.refreshFeed(client_id, 'client');
-        } catch (err) {
-            throw new ForbiddenException('Acesso a este cliente negado');
-        }
+    async refreshClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
+        await this.clientsService.findOne(client_id, req.user.id);
+        return await this.feedService.refreshFeed(client_id, 'client');
     }
 
     @Get(':client_id')
     async getClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
-        try {
-            await this.clientsService.findOne(client_id, req.user.id);
-            return await this.feedService.getFeed(client_id, 'client');
-        } catch (err) {
-            throw new ForbiddenException('Acesso a este cliente negado');
-        }
+        await this.clientsService.findOne(client_id, req.user.id);
+        return await this.feedService.getFeed(client_id, 'client');
     }
 }

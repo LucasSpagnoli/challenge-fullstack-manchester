@@ -5,7 +5,7 @@ import { HttpModule } from '@nestjs/axios'
 import { AuthModule } from 'src/auth/auth.module';
 import { CacheService } from 'src/services/cache.service';
 import { InfoMoneyService } from 'src/services/infomoney.service';
-import { AiService } from 'src/services/ai.service';
+import { AiService } from 'src/services/ai.services';
 import { DatabaseModule } from 'src/database/database.module';
 import { DatabaseService } from 'src/database/database.service';
 import { ClientsService } from 'src/clients/clients.service';

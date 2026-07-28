@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +9,8 @@ type SignInData = { userId: number; name: string }
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private readonly databaseService: DatabaseService,
         private jwtService: JwtService,
@@ -20,58 +22,72 @@ export class AuthService {
             name: user.name,
             role: 'user'
         }
-
         const accessToken = await this.jwtService.signAsync(tokenPayload);
 
         return { accessToken, name: user.name, userId: user.userId };
     }
 
     async register(createUserDTO: CreateUserDTO) {
-        if (!createUserDTO) {
-            throw new BadRequestException('Body ausente');
+        try {
+            const userExists = await this.databaseService.user.findUnique({
+                where: { email: createUserDTO.email }
+            });
+
+            if (userExists) {
+                this.logger.warn(`Colisão de credenciais: tentativa de registro com e-mail já utilizado (${createUserDTO.email}).`);
+                throw new ConflictException("Usuário já existente");
+            }
+
+            const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
+            const newUser = await this.databaseService.user.create({ data: { ...createUserDTO, password: hashedPassword } });
+
+            const tokenPayload = {
+                sub: newUser.id,
+                name: newUser.name,
+                role: 'user'
+            };
+            const accessToken = await this.jwtService.signAsync(tokenPayload);
+
+            const { password, ...userWithoutPassword } = newUser;
+
+            return { accessToken, newUser: userWithoutPassword };
+
+        } catch (error) {
+            if (error instanceof ConflictException) throw error;
+
+            const err = error instanceof Error ? error : new Error(String(error));
+
+            this.logger.error(`Erro ao persistir usuário (${createUserDTO.email}). Motivo: ${err.message}\n`, err.stack);
+            throw new InternalServerErrorException("Erro ao processar o registro.");
         }
-
-        const userExists = await this.databaseService.user.findUnique({ where: { email: createUserDTO.email } });
-        if (userExists) {
-            throw new ConflictException("Usuário já existente");
-        }
-
-        const hashedPassword = await bcrypt.hash(createUserDTO.password, 10);
-        const newUser = await this.databaseService.user.create({ data: { ...createUserDTO, password: hashedPassword } });
-
-        if (!newUser) {
-            throw new Error("A criação do novo usuário falhou");
-        }
-
-        const tokenPayload = {
-            sub: newUser.id,
-            name: newUser.name,
-            role: 'user'
-        };
-        const accessToken = await this.jwtService.signAsync(tokenPayload);
-
-        const { password, ...userWithoutPassword } = newUser;
-
-        return { accessToken, newUser: userWithoutPassword };
     }
 
     async validateUser(input: AuthInput) {
-        const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } });
+        try {
+            const foundUser = await this.databaseService.user.findUnique({ where: { email: input.email } });
 
-        if (!foundUser) {
-            throw new UnauthorizedException("Usuário não encontrado");
+            if (!foundUser) {
+                this.logger.warn(`Autenticação falhou: e-mail não encontrado (${input.email}).`);
+                throw new UnauthorizedException("Usuário não encontrado");
+            }
+
+            const isPassCorrect = await bcrypt.compare(input.password, foundUser.password);
+
+            if (!isPassCorrect) {
+                this.logger.warn(`Autenticação falhou: divergência criptográfica para o usuário (${foundUser.id}).`);
+                throw new UnauthorizedException("Senha incorreta");
+            }
+
+            const { password, ...user } = foundUser;
+            return user;
+
+        } catch (error) {
+            if (error instanceof UnauthorizedException) throw error;
+
+            const err = error instanceof Error ? error : new Error(String(error));
+
+            this.logger.error(`Erro durante a validação de credenciais do e-mail (${input.email}). Motivo: ${err.message}\n`, err.stack);
+            throw new InternalServerErrorException("Contingência ao validar o usuário.");
         }
-
-        const isPassCorrect = await bcrypt.compare(
-            input.password,
-            foundUser.password
-        );
-
-        if (!isPassCorrect) {
-            throw new UnauthorizedException("Senha incorreta");
-        }
-
-        const { password, ...user } = foundUser;
-        return user;
     }
 }
