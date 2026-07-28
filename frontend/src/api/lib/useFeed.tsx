@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUserFeed, refreshUserFeed, refreshClientFeed } from "../feed";
+import { getUserFeed, refreshUserFeed, refreshClientFeed, getClientSummary } from "../feed";
 import type { FeedResponse, UseFeedResult } from "../types/feed.interfaces";
 
 export function useFeed(clientId?: number): UseFeedResult {
@@ -31,5 +31,18 @@ export function useFeed(clientId?: number): UseFeedResult {
         }
     }, [clientId]);
 
-    return { feed, loading, refreshing, error, refresh };
+    const getSummary = useCallback(async () => {
+        if (!clientId) return null;
+        setError(null)
+        setLoading(true)
+        try {
+            return await getClientSummary(clientId)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Erro ao resumir notícias");
+            return null
+        } finally {
+            setLoading(false);
+        }
+    }, [clientId])
+    return { feed, loading, refreshing, error, refresh, getSummary };
 }
