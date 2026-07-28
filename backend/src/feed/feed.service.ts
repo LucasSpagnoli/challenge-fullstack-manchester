@@ -60,7 +60,7 @@ export class FeedService {
             const news = await this.infoMoneyService.getParsedNews();
             const preferences = await this.preferenceService.getPreferencesById(id, role);
 
-            const filteredNews = await this.aiService.geminiService({ news, preferences });
+            const filteredNews = await this.aiService.aiFilter({ news, preferences });
             await this.cacheService.updateCache(id, filteredNews, role);
 
             return filteredNews;
