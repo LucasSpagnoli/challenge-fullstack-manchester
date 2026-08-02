@@ -10,7 +10,10 @@ export function useFeed(clientId?: number): UseFeedResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (clientId) return;
+        if (clientId) {
+            
+            return
+        }
 
         setLoading(true);
         getUserFeed()

@@ -1,4 +1,4 @@
-export interface FeedItem {
+export interface News {
     title: string;
     source: string;
     url: string;
@@ -9,7 +9,7 @@ export interface FeedItem {
 export interface FeedResponse {
     generatedAt: string;
     interests: string[];
-    items: FeedItem[];
+    items: News[];
 }
 
 export interface SummaryResponse {

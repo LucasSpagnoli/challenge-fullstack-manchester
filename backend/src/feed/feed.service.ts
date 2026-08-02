@@ -6,6 +6,7 @@ import { InfoMoneyService } from 'src/services/infomoney.service';
 import { AiService } from 'src/services/ai.services';
 import { PreferencesService } from 'src/preferences/preferences.service';
 import { Role } from 'src/types/request-with-user';
+import { FeedResponse } from 'src/types/feed-response';
 
 @Injectable()
 export class FeedService {
@@ -18,7 +19,7 @@ export class FeedService {
         private preferenceService: PreferencesService
     ) { }
 
-    async refreshFeed(id: number, role: Role): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
+    async refreshFeed(id: number, role: Role): Promise<FeedResponse> {
         try {
             const generatedAt = new Date();
             const filteredNews = await this.getFilteredNews(id, role);
@@ -27,12 +28,12 @@ export class FeedService {
             return { generatedAt, interests: preferences, items: filteredNews };
         } catch (error) {
             const err = error as Error;
-            this.logger.error(`Infortúnio ao reciclar feed [ID: ${id}, Role: ${role}]: ${err.message}`, err.stack);
+            this.logger.error(`Infortúnio ao reciclar feed [ID: ${id}]: ${err.message}`, err.stack);
             throw new InternalServerErrorException("Não foi possível atualizar o feed no momento.");
         }
     }
 
-    async getFeed(id: number, role: Role): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
+    async getFeed(id: number, role: Role): Promise<FeedResponse> {
         try {
             const cache = await this.cacheService.getCache(id, role);
             let filteredNews: News[];
@@ -85,6 +86,19 @@ export class FeedService {
             const err = error as Error;
             this.logger.error(`Erro no processamento do resumo pela IA [ID: ${client_id}]: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Falha ao obter resumo das notícias filtradas mediante Inteligência Artificial.");
+        }
+    }
+
+    async getClientCacheFeed(client_id: number): Promise<News[] | null> {
+        try {
+            const cache = await this.cacheService.getCache(client_id, 'client');
+            return cache?.content_json
+                ? JSON.parse(JSON.stringify(cache.content_json))
+                : null
+        } catch (error) {
+            const err = error as Error;
+            this.logger.error(`Falha ao resgatar feed [ID: ${client_id}]: ${err.message}`, err.stack);
+            throw new InternalServerErrorException("Inviável carregar o feed de notícias.");
         }
     }
 }
