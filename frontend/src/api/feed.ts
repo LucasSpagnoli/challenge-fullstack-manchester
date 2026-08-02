@@ -1,8 +1,14 @@
 import { apiFetch } from "./apiClient";
-import type { FeedResponse } from "./types/feed.interfaces";
+import type { FeedResponse, SummaryResponse } from "./types/feed.interfaces";
 
 export async function getUserFeed(): Promise<FeedResponse> {
     return apiFetch<FeedResponse>("/feed", {
+        method: "GET",
+    });
+}
+
+export async function getClientSummary(client_id: number): Promise<SummaryResponse> {
+    return apiFetch<SummaryResponse>(`/feed/summary/${client_id}`, {
         method: "GET",
     });
 }

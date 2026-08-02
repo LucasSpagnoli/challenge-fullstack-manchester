@@ -21,7 +21,7 @@ export class FeedService {
     async refreshFeed(id: number, role: Role): Promise<{ generatedAt: Date, interests: string[], items: News[] }> {
         try {
             const generatedAt = new Date();
-            const filteredNews = await this.aiFilter(id, role);
+            const filteredNews = await this.getFilteredNews(id, role);
             const preferences = await this.preferenceService.getPreferencesById(id, role);
 
             return { generatedAt, interests: preferences, items: filteredNews };
@@ -38,12 +38,12 @@ export class FeedService {
             let filteredNews: News[];
             let generatedAt: Date;
 
-            if (cache) {
+            if (cache?.content_json) {
                 generatedAt = cache.generatedAt;
                 filteredNews = JSON.parse(JSON.stringify(cache.content_json));
             } else {
                 generatedAt = new Date();
-                filteredNews = await this.aiFilter(id, role);
+                filteredNews = await this.getFilteredNews(id, role);
             }
 
             const preferences = await this.preferenceService.getPreferencesById(id, role);
@@ -55,19 +55,36 @@ export class FeedService {
         }
     }
 
-    async aiFilter(id: number, role: Role): Promise<News[]> {
+    async getFilteredNews(id: number, role: Role): Promise<News[]> {
         try {
             const news = await this.infoMoneyService.getParsedNews();
             const preferences = await this.preferenceService.getPreferencesById(id, role);
 
             const filteredNews = await this.aiService.aiFilter({ news, preferences });
-            await this.cacheService.updateCache(id, filteredNews, role);
+            await this.cacheService.updateCache(id, role, filteredNews, null);
 
             return filteredNews;
         } catch (error) {
             const err = error as Error;
-            this.logger.error(`Anomalia no processamento heurístico da IA [ID: ${id}, Role: ${role}]: ${err.message}`, err.stack);
+            this.logger.error(`Erro no filtramento de notícias da IA [ID: ${id}]: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Falha ao filtrar notícias mediante Inteligência Artificial.");
+        }
+    }
+
+    async getAISummary(client_id: number): Promise<string> {
+        try {
+            const cache = await this.cacheService.getCache(client_id, 'client');
+            if (cache?.summary) {
+                return cache.summary;
+            }
+            const news = await this.getFeed(client_id, 'client')
+            const summary = await this.aiService.aiSummary(news.items)
+            await this.cacheService.updateCache(client_id, 'client', undefined, summary);
+            return summary
+        } catch (error) {
+            const err = error as Error;
+            this.logger.error(`Erro no processamento do resumo pela IA [ID: ${client_id}]: ${err.message}\n`, err.stack);
+            throw new InternalServerErrorException("Falha ao obter resumo das notícias filtradas mediante Inteligência Artificial.");
         }
     }
 }
