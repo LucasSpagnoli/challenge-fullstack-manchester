@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { Client } from "../api/types/client.interfaces";
 import { useClient } from "../api/lib/useClient";
+import { numberToCellphone } from "../utils/numberToCellphone";
 
 interface ClientModalProps {
     onClose: () => void;
@@ -26,7 +27,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
         e.preventDefault();
 
         const trimmedName = name.trim();
-        const trimmedNumber = number.trim();
+        const trimmedNumber = numberToCellphone(number.trim());
 
         if (!trimmedName || !trimmedNumber) return;
 
@@ -84,7 +85,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             type="tel"
                             value={number}
                             onChange={(e) => setNumber(e.target.value)}
-                            placeholder="+55 (00) 00000-0000"
+                            placeholder="+55 (47) 99999-9999"
                             disabled={isSubmitting}
                             className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200 disabled:opacity-50"
                         />
@@ -95,15 +96,13 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             onClick={onClose}
                             type="button"
                             disabled={isSubmitting}
-                            className="text-xs uppercase tracking-[0.15em] text-black/60 hover:text-black transition-colors font-medium px-4 py-2 disabled:opacity-50"
-                        >
+                            className="text-xs uppercase tracking-[0.15em] text-black/60 hover:text-black transition-colors font-medium px-4 py-2 disabled:opacity-50">
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={isSubmitting || !name.trim() || !number.trim()}
-                            className="px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 disabled:opacity-50"
-                        >
+                            className="px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 disabled:opacity-50">
                             {isSubmitting
                                 ? "Processando..."
                                 : isNew

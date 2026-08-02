@@ -5,6 +5,7 @@ import { useFeed } from "../api/lib/useFeed";
 import News from "./News";
 import { ClientModal } from "./ClientModal";
 import { deleteClient } from "../api/clients";
+import { cellphoneToNumber } from "../utils/cellphoneToNumber";
 
 export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () => void }) => {
     const [newPref, setNewPref] = useState("");
@@ -34,7 +35,7 @@ export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () 
                     {client.name}
                 </h2>
                 <h4 className="text-xs text-black/50 font-sans mt-1">
-                    {client.number}
+                    {cellphoneToNumber(client.number)}
                 </h4>
             </header>
 
