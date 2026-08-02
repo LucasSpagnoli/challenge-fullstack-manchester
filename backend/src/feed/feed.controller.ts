@@ -42,9 +42,16 @@ export class FeedController {
         return { summary }
     }
 
+    @Get('/cache/:client_id')
+    async getClientCacheFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
+        return await this.feedService.getClientCacheFeed(client_id);
+    }
+
     @Get(':client_id')
     async getClientFeed(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
         await this.clientsService.findOne(client_id, req.user.id);
         return await this.feedService.getFeed(client_id, 'client');
     }
+
+
 }

@@ -6,7 +6,7 @@ import News from "./News";
 import { ClientModal } from "./ClientModal";
 import { deleteClient } from "../api/clients";
 
-export const ClientCard = ({ client }: { client: Client }) => {
+export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () => void }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
@@ -120,7 +120,10 @@ export const ClientCard = ({ client }: { client: Client }) => {
                 <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
                 </button>
-                <button onClick={() => deleteClient(client.client_id)} className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
+                <button onClick={async () => {
+                    await deleteClient(client.client_id)
+                    onUpdate()
+                }} className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
                     Excluir
                 </button>
             </footer>

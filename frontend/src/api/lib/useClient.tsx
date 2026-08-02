@@ -67,5 +67,6 @@ export function useClient() {
         addClient,
         updateClient,
         deleteClient,
+        getClients
     };
 }
