@@ -21,7 +21,5 @@ export interface UseFeedResult {
     loading: boolean;
     refreshing: boolean;
     error: string | null;
-    summaryLoading: boolean;
     refresh: () => Promise<void>;
-    getSummary: () => Promise<SummaryResponse>
 }

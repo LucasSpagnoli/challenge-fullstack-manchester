@@ -6,21 +6,14 @@ import { ClientModal } from "./ClientModal";
 import { deleteClient } from "../api/clients";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
 import ClientNews from "./ClientNews";
+import useClientSummary from "../api/lib/useClientSummary";
 
 export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () => void }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
-    const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh, getSummary, error, summaryLoading } = useFeed(client.client_id);
-
-    const handleGetSummary = async () => {
-        if (!feed?.items || feed.items.length === 0) {
-            await refresh()
-        }
-        const data = await getSummary();
-        await navigator.clipboard.writeText(data.summary);
-        alert('Resumo copiado!')
-    }
+    const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
+    const { copySummary, error, summaryLoading } = useClientSummary(client.client_id, feed, refresh);
 
     const handleAddPref = async () => {
         if (!newPref.trim()) return;
@@ -101,7 +94,7 @@ export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () 
                     type="button"
                     disabled={summaryLoading}
                     className="flex-1 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50"
-                    onClick={handleGetSummary}>
+                    onClick={copySummary}>
                     {summaryLoading ? 'Resumindo...' : 'Copiar Resumo'}
                 </button>
 

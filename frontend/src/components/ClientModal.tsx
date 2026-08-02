@@ -1,52 +1,8 @@
-import React, { useState, useEffect } from "react";
-import type { Client } from "../api/types/client.interfaces";
-import { useClient } from "../api/lib/useClient";
-import { numberToCellphone } from "../utils/numberToCellphone";
-
-interface ClientModalProps {
-    onClose: () => void;
-    isNew: boolean;
-    initialData?: Client;
-    client_id?: number
-}
+import type { ClientModalProps } from "../api/types/client.interfaces";
+import useClientForm from "../api/lib/useClientForm";
 
 export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, client_id }) => {
-    const [name, setName] = useState("");
-    const [number, setNumber] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const { addClient, updateClient, error } = useClient()
-
-    useEffect(() => {
-        if (!isNew && initialData) {
-            setName(initialData.name);
-            setNumber(initialData.number);
-        }
-    }, [isNew, initialData]);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        const trimmedName = name.trim();
-        const trimmedNumber = numberToCellphone(number.trim());
-
-        if (!trimmedName || !trimmedNumber) return;
-
-        setIsSubmitting(true);
-        try {
-            if (isNew) {
-                await addClient({ name: trimmedName, number: trimmedNumber })
-            } else if (client_id) {
-                await updateClient(client_id, { name: trimmedName, number: trimmedNumber })
-            } else {
-                console.error('Erro ao invocar modal de cliente')
-            }
-            onClose();
-        } catch (error) {
-            console.error("Falha ao consolidar os dados:", error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    const { name, setName, number, setNumber, fieldErrors, error: apiError, isSubmitting, handleSubmit } = useClientForm({ isNew, initialData, client_id, onClose })
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
@@ -90,7 +46,9 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200 disabled:opacity-50"
                         />
                     </div>
-                    {error && <p className="text-xs text-red-600 mb-2">{error}</p>}
+                    {fieldErrors.name && <p className="text-xs text-red-600">{fieldErrors.name}</p>}
+                    {fieldErrors.number && <p className="text-xs text-red-600 mb-2">{fieldErrors.number}</p>}
+                    {apiError && <p className="text-xs text-red-600 mb-2">{apiError}</p>}
                     <footer className="mt-10 flex items-center justify-end gap-4">
                         <button
                             onClick={onClose}

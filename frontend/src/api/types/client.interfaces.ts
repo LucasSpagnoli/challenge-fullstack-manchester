@@ -23,3 +23,10 @@ export interface CreateClientPayload {
     name: string,
     number: string
 }
+
+export interface ClientModalProps {
+    onClose: () => void;
+    isNew: boolean;
+    initialData?: Client;
+    client_id?: number
+}
