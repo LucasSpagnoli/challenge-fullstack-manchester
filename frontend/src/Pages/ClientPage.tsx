@@ -6,7 +6,7 @@ import { useClient } from "../api/lib/useClient";
 
 const ClientPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { clients, loading } = useClient();
+    const { clients, loading, getClients } = useClient();
 
     return (
         <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
@@ -54,7 +54,7 @@ const ClientPage: React.FC = () => {
                             ))
                         ) : clients.length > 0 ? (
                             clients.map((client) => (
-                                <ClientCard key={client.client_id} client={client} />
+                                <ClientCard key={client.client_id} client={client} onUpdate={getClients} />
                             ))
                         ) : (
                             <div className="col-span-full border border-dashed border-black/15 py-16 text-center">
@@ -67,7 +67,10 @@ const ClientPage: React.FC = () => {
                 </div>
             </main>
 
-            {isModalOpen && <ClientModal isNew={true} onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <ClientModal isNew={true} onClose={() => {
+                setIsModalOpen(false)
+                getClients()
+            }} />}
         </div>
     );
 };

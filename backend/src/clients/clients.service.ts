@@ -48,7 +48,7 @@ export class ClientsService {
       return await this.databaseService.clients.update({
         where: { id: client_id },
         data,
-      });
+      })
     } catch (error) {
       const err = error as Error;
       this.logger.error(`Falha ao atualizar cliente [ID: ${client_id}]: ${err.message}\n`, err.stack);
