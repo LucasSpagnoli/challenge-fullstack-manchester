@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUserFeed, refreshUserFeed, refreshClientFeed, getClientSummary } from "../feed";
+import { getUserFeed, refreshUserFeed, refreshClientFeed, getClientSummary, getClientCacheFeed } from "../feed";
 import type { FeedResponse, SummaryResponse, UseFeedResult } from "../types/feed.interfaces";
 
 export function useFeed(clientId?: number): UseFeedResult {
@@ -10,16 +10,18 @@ export function useFeed(clientId?: number): UseFeedResult {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (clientId) {
-            
-            return
-        }
-
         setLoading(true);
-        getUserFeed()
-            .then(setFeed)
-            .catch((err) => setError(err instanceof Error ? err.message : "Erro ao carregar o feed"))
-            .finally(() => setLoading(false));
+        if (clientId) {
+            getClientCacheFeed(clientId)
+                .then(setFeed)
+                .catch((err) => setError(err instanceof Error ? err.message : "Erro ao carregar o feed"))
+                .finally(() => setLoading(false));
+        } else {
+            getUserFeed()
+                .then(setFeed)
+                .catch((err) => setError(err instanceof Error ? err.message : "Erro ao carregar o feed"))
+                .finally(() => setLoading(false));
+        }
     }, [clientId]);
 
     const refresh = useCallback(async () => {

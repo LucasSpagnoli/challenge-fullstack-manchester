@@ -89,12 +89,13 @@ export class FeedService {
         }
     }
 
-    async getClientCacheFeed(client_id: number): Promise<News[] | null> {
+    async getClientCacheFeed(client_id: number): Promise<{ items: News[] }> {
         try {
             const cache = await this.cacheService.getCache(client_id, 'client');
-            return cache?.content_json
+            const items = cache?.content_json
                 ? JSON.parse(JSON.stringify(cache.content_json))
-                : null
+                : []
+            return { items }
         } catch (error) {
             const err = error as Error;
             this.logger.error(`Falha ao resgatar feed [ID: ${client_id}]: ${err.message}`, err.stack);
