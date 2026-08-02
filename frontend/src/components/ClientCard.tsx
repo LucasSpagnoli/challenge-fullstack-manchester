@@ -13,6 +13,9 @@ export const ClientCard = ({ client }: { client: Client }) => {
     const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh, getSummary, error, summaryLoading } = useFeed(client.client_id);
 
     const handleGetSummary = async () => {
+        if (!feed?.items || feed.items.length === 0) {
+            await refresh()
+        }
         const data = await getSummary();
         await navigator.clipboard.writeText(data.summary);
         alert('Resumo copiado!')
@@ -98,7 +101,7 @@ export const ClientCard = ({ client }: { client: Client }) => {
                     disabled={summaryLoading}
                     className="flex-1 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50"
                     onClick={handleGetSummary}>
-                    Copiar Resumo
+                    {summaryLoading ? 'Resumindo...' : 'Copiar Resumo'}
                 </button>
 
                 <button
