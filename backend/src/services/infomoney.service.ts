@@ -9,7 +9,10 @@ import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common
 @Injectable()
 export class InfoMoneyService {
     private readonly logger = new Logger(InfoMoneyService.name);
-
+    private extractImageUrl(html: string): string | null {
+        const match = html.match(/<img[^>]+src="([^"]+)"/i);
+        return match ? match[1].replace(/&amp;/g, "&") : null;
+    }
     constructor(
         private httpService: HttpService,
     ) { }
@@ -40,7 +43,8 @@ export class InfoMoneyService {
                 title: item.title,
                 source: 'InfoMoney',
                 url: item.link,
-                summary: summaryFormatter(item.description)
+                summary: summaryFormatter(item.description),
+                imageUrl: this.extractImageUrl(item.description),
             }));
         } catch (error) {
             const err = error as Error;

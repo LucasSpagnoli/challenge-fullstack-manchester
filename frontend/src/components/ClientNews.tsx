@@ -6,7 +6,7 @@ function decodeHtml(text: string): string {
     return textarea.value;
 }
 
-const News: React.FC<{ items: any[]; loading?: boolean }> = ({ items, loading }) => {
+const ClientNews: React.FC<{ items: any[]; loading?: boolean }> = ({ items, loading }) => {
     if (loading) {
         return (
             <div className="border border-dashed border-black/15 py-12 flex items-center justify-center bg-black/2 h-full min-h-48">
@@ -49,4 +49,4 @@ const News: React.FC<{ items: any[]; loading?: boolean }> = ({ items, loading })
     );
 };
 
-export default News;
+export default ClientNews

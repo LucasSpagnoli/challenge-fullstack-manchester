@@ -3,7 +3,7 @@ export interface News {
     source: string;
     url: string;
     summary: string;
-    // imageUrl?: string; // TODO: adicionar quando o backend passar a retornar imagem
+    imageUrl: string;
 }
 
 export interface FeedResponse {

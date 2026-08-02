@@ -14,7 +14,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
     const [name, setName] = useState("");
     const [number, setNumber] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { addClient, updateClient } = useClient()
+    const { addClient, updateClient, error } = useClient()
 
     useEffect(() => {
         if (!isNew && initialData) {
@@ -90,7 +90,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200 disabled:opacity-50"
                         />
                     </div>
-
+                    {error && <p className="text-xs text-red-600 mb-2">{error}</p>}
                     <footer className="mt-10 flex items-center justify-end gap-4">
                         <button
                             onClick={onClose}

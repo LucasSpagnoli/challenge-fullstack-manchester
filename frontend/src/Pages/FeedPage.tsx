@@ -1,13 +1,10 @@
 import React from "react";
 import { useFeed } from "../api/lib/useFeed";
 import Header from "../components/Header";
+import UserNews from "../components/UserNews";
 
 // Decodifica entidades HTML que vêm nos títulos/resumos (ex.: &#8221; -> ”)
-function decodeHtml(text: string): string {
-  const textarea = document.createElement("textarea");
-  textarea.innerHTML = text;
-  return textarea.value;
-}
+
 
 const FeedPage: React.FC = () => {
   const { feed, loading, refreshing, error, refresh } = useFeed();
@@ -18,10 +15,8 @@ const FeedPage: React.FC = () => {
     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
       <Header />
 
-      {/* Conteúdo */}
       <main className="flex-1 px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          {/* Título e ações */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
             <div>
               <div className="mb-2 flex items-center gap-3">
@@ -51,7 +46,6 @@ const FeedPage: React.FC = () => {
                   : "Carregando informações do feed..."}
               </p>
 
-              {/* Tags dos interesses considerados */}
               {feed && feed.interests.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4">
                   {feed.interests.map((interest) => (
@@ -73,14 +67,12 @@ const FeedPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Mensagem de erro */}
           {error && (
             <div className="border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3 mb-8">
               {error}
             </div>
           )}
 
-          {/* Loading inicial */}
           {loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {Array.from({ length: 4 }).map((_, idx) => (
@@ -99,61 +91,14 @@ const FeedPage: React.FC = () => {
             </div>
           )}
 
-          {/* Grid de cards */}
           {!loading && feed && feed.items.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {feed.items.map((item, idx) => (
-                <article
-                  key={idx}
-                  className="group border border-black/10 p-6 flex flex-col gap-4 hover:border-[#D4AF37] transition-colors duration-100">
-
-                  {/* TODO: quando o backend retornar imagem, exibir aqui
-                                    {item.imageUrl && (
-                                        <img
-                                            src={item.imageUrl}
-                                            alt={item.title}
-                                            className="w-full h-40 object-cover border border-black/10"
-                                        />
-                                    )}
-                                    */}
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase tracking-[0.15em] text-[#D4AF37]">
-                      {item.source}
-                    </span>
-                    <div className="w-6 h-px bg-black/10 group-hover:bg-[#D4AF37] transition-colors duration-100" />
-                  </div>
-
-                  <h3 className="text-lg font-serif font-light text-black leading-snug">
-                    {decodeHtml(item.title)}
-                  </h3>
-
-                  <p className="text-sm text-black/60 leading-relaxed flex-1">
-                    {decodeHtml(item.summary)}
-                  </p>
-
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-black hover:text-[#D4AF37] transition-colors duration-100 mt-2">
-                    Ler matéria completa
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5">
-                      <path d="M5 12h14M13 6l6 6-6 6" />
-                    </svg>
-                  </a>
-                </article>
+                <UserNews item={item} idx={idx} />
               ))}
             </div>
           )}
 
-          {/* Estado vazio */}
           {!loading && !error && feed && feed.items.length === 0 && (
             <div className="border border-dashed border-black/15 py-16 text-center">
               <p className="text-sm text-black/40">

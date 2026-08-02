@@ -5,4 +5,5 @@ export interface News extends Prisma.JsonObject {
     source: string
     url: string
     summary: string
+    imageUrl: string
 }

@@ -7,15 +7,7 @@ const PreferencesPage: React.FC = () => {
   const [newInterest, setNewInterest] = useState("");
   const navigate = useNavigate();
 
-  const {
-    prefs,
-    loading,
-    saving,
-    error,
-    addPref,
-    removePref,
-    save,
-  } = usePreferences();
+  const { prefs, loading, saving, error, addPref, removePref, save, } = usePreferences();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,14 +37,12 @@ const PreferencesPage: React.FC = () => {
             feed diário será personalizado com base nessas informações.
           </p>
 
-          {/* Mensagem de erro */}
           {error && (
             <div className="border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3 mb-8">
               {error}
             </div>
           )}
 
-          {/* Formulário de adição */}
           <form onSubmit={handleAdd} className="mb-10">
             <label
               htmlFor="interest"
@@ -75,7 +65,6 @@ const PreferencesPage: React.FC = () => {
             </div>
           </form>
 
-          {/* Lista de interesses (chips) */}
           <div>
             <h2 className="text-xs uppercase tracking-[0.15em] text-black/60 mb-4">
               Interesses cadastrados
@@ -122,7 +111,6 @@ const PreferencesPage: React.FC = () => {
             )}
           </div>
 
-          {/* Ação salvar */}
           <div className="mt-12 pt-8 border-t border-black/10 flex items-center justify-between gap-4">
             <p className="text-xs text-black/40">
               As alterações afetam o feed gerado a partir da próxima

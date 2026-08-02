@@ -2,10 +2,10 @@ import { useState } from "react";
 import type { Client } from "../api/types/client.interfaces";
 import { usePreferences } from "../api/lib/usePreferences";
 import { useFeed } from "../api/lib/useFeed";
-import News from "./News";
 import { ClientModal } from "./ClientModal";
 import { deleteClient } from "../api/clients";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
+import ClientNews from "./ClientNews";
 
 export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () => void }) => {
     const [newPref, setNewPref] = useState("");
@@ -93,7 +93,7 @@ export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () 
             </button>
 
             <section className="mb-5 flex-1 flex flex-col">
-                <News items={feed?.items || []} loading={feedLoading} />
+                <ClientNews items={feed?.items || []} loading={feedLoading} />
             </section>
 
             <div className="flex items-center gap-3 mb-5">
