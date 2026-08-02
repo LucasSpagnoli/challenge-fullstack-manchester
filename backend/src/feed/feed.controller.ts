@@ -38,7 +38,7 @@ export class FeedController {
     @Get('summary/:client_id')
     async getFeedSummary(@Req() req: RequestWithUser, @Param('client_id', ParseIntPipe) client_id: number) {
         await this.clientsService.findOne(client_id, req.user.id);
-        const summary = await this.feedService.aiSummary(client_id);
+        const summary = await this.feedService.getAISummary(client_id);
         return { summary }
     }
 

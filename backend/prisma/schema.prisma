@@ -28,6 +28,7 @@ model Client_cache {
   id           Int      @id @default(autoincrement())
   owner_id     Int      @unique
   content_json Json
+  summary      String?
   generatedAt  DateTime @default(now())
 }
 

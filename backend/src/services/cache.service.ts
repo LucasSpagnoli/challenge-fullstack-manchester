@@ -15,10 +15,9 @@ export class CacheService {
 
     async createCache(owner_id: number, role: Role) {
         try {
-            const data = { owner_id, content_json: [] };
             return role === "user"
-                ? await this.databaseService.user_cache.create({ data })
-                : await this.databaseService.client_cache.create({ data });
+                ? await this.databaseService.user_cache.create({ data: { owner_id, content_json: [] } })
+                : await this.databaseService.client_cache.create({ data: { owner_id, content_json: [], summary: '' } });
         } catch (error) {
             const err = error as Error;
             this.logger.error(`Falha ao instanciar cache [Owner: ${owner_id}, Role: ${role}]: ${err.message}`, err.stack);
@@ -26,13 +25,13 @@ export class CacheService {
         }
     }
 
-    async updateCache(owner_id: number, news: News[], role: Role) {
+    async updateCache(owner_id: number, role: Role, news?: News[], summary?: string | null) {
         try {
-            const content_json = news
-            const generatedAt = new Date();
             const where = { owner_id };
-            const data = { content_json, generatedAt };
-            
+            const data: any = { generatedAt: new Date() };
+            if (news !== undefined) data.content_json = news;
+            if (summary !== undefined && role === 'client') data.summary = summary;
+
             const cacheExists = role === "user"
                 ? await this.databaseService.user_cache.findUnique({ where })
                 : await this.databaseService.client_cache.findUnique({ where });
@@ -51,7 +50,7 @@ export class CacheService {
         }
     }
 
-    async getCache(owner_id: number, role: Role): Promise<{ owner_id: number, content_json: JsonValue, generatedAt: Date } | null> {
+    async getCache(owner_id: number, role: Role): Promise<{ owner_id: number, content_json: JsonValue, summary?: string, generatedAt: Date } | null> {
         try {
             const cache = role === "user"
                 ? await this.databaseService.user_cache.findUnique({ where: { owner_id } })
@@ -66,6 +65,7 @@ export class CacheService {
                 return null;
             }
 
+            console.log('cache')
             return cache;
         } catch (error) {
             const err = error as Error;
