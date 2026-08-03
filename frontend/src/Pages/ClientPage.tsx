@@ -3,10 +3,11 @@ import Header from "../components/Header";
 import ClientCard from "../components/ClientCard";
 import { ClientModal } from "../components/ClientModal";
 import { useClient } from "../api/lib/useClient";
+import type { UpdateClientPayload } from "../api/types/client.interfaces";
 
 const ClientPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { clients, loading, getClients } = useClient();
+    const { clients, loading, deleteClient, addClient, updateClient } = useClient();
 
     return (
         <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
@@ -36,7 +37,7 @@ const ClientPage: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {loading ? (
-                            // Esqueleto visual (Skeleton) iterado para mitigar a lacuna de carregamento
+                            // Esqueleto visual iterado para mitigar a lacuna de carregamento
                             Array.from({ length: 3 }).map((_, idx) => (
                                 <div key={idx} className="border border-black/10 p-5 flex flex-col gap-4 animate-pulse min-h-100">
                                     <div className="h-6 w-3/4 bg-black/10" />
@@ -54,7 +55,7 @@ const ClientPage: React.FC = () => {
                             ))
                         ) : clients.length > 0 ? (
                             clients.map((client) => (
-                                <ClientCard key={client.client_id} client={client} onUpdate={getClients} />
+                                <ClientCard key={client.client_id} client={client} onDelete={() => { deleteClient(client.client_id) }} onUpdate={(newData: UpdateClientPayload) => { updateClient(client.client_id, newData) }} />
                             ))
                         ) : (
                             <div className="col-span-full border border-dashed border-black/15 py-16 text-center">
@@ -67,10 +68,7 @@ const ClientPage: React.FC = () => {
                 </div>
             </main>
 
-            {isModalOpen && <ClientModal isNew={true} onClose={() => {
-                setIsModalOpen(false)
-                getClients()
-            }} />}
+            {isModalOpen && <ClientModal isNew={true} onClose={() => setIsModalOpen(false)} onSubmitAction={addClient} />}
         </div>
     );
 };

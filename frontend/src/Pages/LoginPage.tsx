@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
             return;
         }
 
-        // só chega aqui se login/register deu certo — agora sim há token válido
+        // só chega aqui se login/register deu certo
         try {
             const preferences = await getUserPreferences();
             navigate(preferences.length > 0 ? '/feed' : '/preferences');
@@ -37,15 +37,12 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="min-h-screen w-full flex bg-white font-serif">
-            {/* Painel esquerdo - branding */}
             <div className="hidden lg:flex lg:w-1/2 bg-black relative flex-col p-16 overflow-hidden">
-                {/* Linhas decorativas finas */}
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-0 left-1/4 w-px h-full bg-[#D4AF37]/10" />
                     <div className="absolute top-1/3 left-0 w-full h-px bg-[#D4AF37]/10" />
                 </div>
 
-                {/* Topo: marca */}
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
                         <span className="text-3xl font-light tracking-[0.2em] text-white">
@@ -55,7 +52,6 @@ const LoginPage: React.FC = () => {
                     <div className="mt-2 w-12 h-px bg-[#D4AF37]" />
                 </div>
 
-                {/* Centro: frase de posicionamento */}
                 <div className="relative z-10 max-w-md top mt-10">
                     <p className="text-[#D4AF37] text-xs tracking-[0.35em] uppercase mb-6">
                         Além dos investimentos:
@@ -70,10 +66,8 @@ const LoginPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Painel direito - formulário */}
             <div className="flex w-full lg:w-1/2 items-center justify-center bg-white px-6 sm:px-12 lg:px-20">
                 <div className="w-full max-w-sm">
-                    {/* Marca mobile */}
                     <div className="lg:hidden mb-12 text-center">
                         <span className="text-2xl font-light tracking-[0.2em] text-black">
                             Manchester<span className="text-[#D4AF37]">.</span>
@@ -93,7 +87,6 @@ const LoginPage: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6 font-sans">
-                        {/* Nome (apenas no cadastro) */}
                         {isRegister && (
                             <div>
                                 <label
@@ -111,7 +104,6 @@ const LoginPage: React.FC = () => {
                             </div>
                         )}
 
-                        {/* Email */}
                         <div>
                             <label
                                 htmlFor="email"
@@ -127,7 +119,6 @@ const LoginPage: React.FC = () => {
                                 className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200" />
                         </div>
 
-                        {/* Senha */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <label
@@ -175,12 +166,10 @@ const LoginPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Mensagem de erro */}
                         {error && (
                             <p className="text-sm text-red-600">{error}</p>
                         )}
 
-                        {/* Botão de login/cadastro */}
                         <button
                             type="submit"
                             disabled={loading}
@@ -191,7 +180,6 @@ const LoginPage: React.FC = () => {
                         </button>
                     </form>
 
-                    {/* Alternar entre login e cadastro */}
                     <p className="mt-6 text-center text-sm text-black/50 font-sans">
                         {isRegister ? "Já tem uma conta?" : "Ainda não tem uma conta?"}{" "}
                         <button

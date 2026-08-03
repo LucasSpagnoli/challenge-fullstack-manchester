@@ -43,7 +43,7 @@ export function useClient() {
             setClients((prev) => prev.map((c) => (c.client_id === client_id ? updatedClient : c)));
             return updatedClient
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao cadastrar cliente.");
+            setError(err instanceof Error ? err.message : "Erro ao atualizar cliente.");
             throw err;
         }
     }, [])
@@ -55,7 +55,7 @@ export function useClient() {
             setClients((prev) => prev.filter((c) => c.client_id !== client_id));
             return deletedClient
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao cadastrar cliente.");
+            setError(err instanceof Error ? err.message : "Erro ao deletar cliente.");
             throw err;
         }
     }, [])

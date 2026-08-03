@@ -23,3 +23,16 @@ export interface CreateClientPayload {
     name: string,
     number: string
 }
+
+export interface ClientModalProps {
+    onClose: () => void;
+    isNew: boolean;
+    initialData?: Client;
+    onSubmitAction: (data: { name: string; number: string }) => Promise<any>;
+}
+
+export interface UseClientFormProps {
+    initialData?: Client;
+    onClose: () => void;
+    onSubmitAction: (data: { name: string; number: string }) => Promise<any>;
+}
