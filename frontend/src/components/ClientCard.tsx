@@ -6,9 +6,9 @@ import { ClientModal } from "./ClientModal";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
 import ClientNews from "./ClientNews";
 import useClientSummary from "../api/lib/useClientSummary";
-import { updateClient } from "../api/clients";
+import type { UpdateClientPayload } from "../api/types/client.interfaces";
 
-export const ClientCard = ({ client, onDelete }: { client: Client, onDelete: () => void }) => {
+export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onDelete: () => any, onUpdate: (newData: UpdateClientPayload) => any }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
@@ -119,7 +119,7 @@ export const ClientCard = ({ client, onDelete }: { client: Client, onDelete: () 
                     Excluir
                 </button>
             </footer>
-            {isModalOpen && <ClientModal isNew={false} initialData={client} onClose={() => setIsModalOpen(false)} onSubmitAction={(data) => updateClient(client.client_id, data)} />}
+            {isModalOpen && <ClientModal isNew={false} initialData={client} onClose={() => setIsModalOpen(false)} onSubmitAction={onUpdate} />}
         </article>
     );
 };
