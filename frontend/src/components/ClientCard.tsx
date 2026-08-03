@@ -3,17 +3,17 @@ import type { Client } from "../api/types/client.interfaces";
 import { usePreferences } from "../api/lib/usePreferences";
 import { useFeed } from "../api/lib/useFeed";
 import { ClientModal } from "./ClientModal";
-import { deleteClient } from "../api/clients";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
 import ClientNews from "./ClientNews";
 import useClientSummary from "../api/lib/useClientSummary";
+import { updateClient } from "../api/clients";
 
-export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () => void }) => {
+export const ClientCard = ({ client, onDelete }: { client: Client, onDelete: () => void }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
     const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
-    const { copySummary, error, summaryLoading } = useClientSummary(client.client_id, feed, refresh);
+    const { copySummary, error, summaryLoading, sendSummary, sendSummaryLoading } = useClientSummary(client, feed, refresh);
 
     const handleAddPref = async () => {
         if (!newPref.trim()) return;
@@ -100,9 +100,10 @@ export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () 
 
                 <button
                     type="button"
-                    disabled={summaryLoading}
-                    className="flex-1 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex justify-center items-center gap-2 disabled:opacity-50">
-                    Enviar Resumo
+                    disabled={summaryLoading || sendSummaryLoading}
+                    className="flex-1 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex justify-center items-center gap-2 disabled:opacity-50"
+                    onClick={sendSummary}>
+                    {sendSummaryLoading ? 'Redirecionando...' : 'Enviar Resumo'}
                 </button>
             </div>
 
@@ -114,14 +115,11 @@ export const ClientCard = ({ client, onUpdate }: { client: Client, onUpdate: () 
                 <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
                 </button>
-                <button onClick={async () => {
-                    await deleteClient(client.client_id)
-                    onUpdate()
-                }} className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
+                <button onClick={onDelete} className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
                     Excluir
                 </button>
             </footer>
-            {isModalOpen && <ClientModal client_id={client.client_id} initialData={client} isNew={false} onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <ClientModal isNew={false} initialData={client} onClose={() => setIsModalOpen(false)} onSubmitAction={(data) => updateClient(client.client_id, data)} />}
         </article>
     );
 };

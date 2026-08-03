@@ -28,5 +28,11 @@ export interface ClientModalProps {
     onClose: () => void;
     isNew: boolean;
     initialData?: Client;
-    client_id?: number
+    onSubmitAction: (data: { name: string; number: string }) => Promise<any>;
+}
+
+export interface UseClientFormProps {
+    initialData?: Client;
+    onClose: () => void;
+    onSubmitAction: (data: { name: string; number: string }) => Promise<any>;
 }

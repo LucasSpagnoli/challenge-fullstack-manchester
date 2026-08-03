@@ -1,8 +1,8 @@
 import type { ClientModalProps } from "../api/types/client.interfaces";
 import useClientForm from "../api/lib/useClientForm";
 
-export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, client_id }) => {
-    const { name, setName, number, setNumber, fieldErrors, error: apiError, isSubmitting, handleSubmit } = useClientForm({ isNew, initialData, client_id, onClose })
+export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, onSubmitAction }) => {
+    const { name, setName, number, setNumber, fieldErrors, error: apiError, isSubmitting, handleSubmit } = useClientForm({ initialData, onClose, onSubmitAction })
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
@@ -33,6 +33,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                         />
                     </div>
 
+                    {fieldErrors.name && <p className="text-xs text-red-600">{fieldErrors.name}</p>}
                     <div>
                         <label className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
                             Número de Celular
@@ -46,7 +47,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200 disabled:opacity-50"
                         />
                     </div>
-                    {fieldErrors.name && <p className="text-xs text-red-600">{fieldErrors.name}</p>}
                     {fieldErrors.number && <p className="text-xs text-red-600 mb-2">{fieldErrors.number}</p>}
                     {apiError && <p className="text-xs text-red-600 mb-2">{apiError}</p>}
                     <footer className="mt-10 flex items-center justify-end gap-4">

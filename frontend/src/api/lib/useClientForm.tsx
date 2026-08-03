@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { validateClient } from "../../utils/validateClient";
 import { numberToCellphone } from "../../utils/numberToCellphone";
-import type { ClientModalProps } from "../types/client.interfaces";
-import { createClient, updateClient } from "../clients";
+import type { UseClientFormProps } from "../types/client.interfaces";
 
-function useClientForm({ isNew, initialData, client_id, onClose }: ClientModalProps) {
+function useClientForm({ initialData, onClose, onSubmitAction }: UseClientFormProps) {
     const [name, setName] = useState(initialData?.name ?? "");
     const [number, setNumber] = useState(initialData?.number ?? "");
     const [fieldErrors, setFieldErrors] = useState<{ name?: string; number?: string }>({});
@@ -13,15 +12,15 @@ function useClientForm({ isNew, initialData, client_id, onClose }: ClientModalPr
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { valid, errors } = validateClient(name, number);
+        const formattedNumber = numberToCellphone(number.trim());
+        const { valid, errors } = validateClient(name, formattedNumber);
+        setError(null)
         setFieldErrors(errors);
         if (!valid) return;
 
         setIsSubmitting(true);
         try {
-            const formattedNumber = numberToCellphone(number.trim());
-            if (isNew) await createClient({ name: name.trim(), number: formattedNumber });
-            else if (client_id) await updateClient(client_id, { name: name.trim(), number: formattedNumber });
+            await onSubmitAction({ name: name.trim(), number: formattedNumber })
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : "Falha ao carregar os clientes.");
