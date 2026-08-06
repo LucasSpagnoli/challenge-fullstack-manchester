@@ -28,7 +28,7 @@ export function useClient() {
         setError(null)
         try {
             const response = await apiCreateClient(payload)
-            setClients((prev) => [...prev, response.newClient]);
+            setClients((prev) => [...prev, response.Client]);
             return response
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao cadastrar cliente.");

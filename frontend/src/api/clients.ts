@@ -24,8 +24,8 @@ export function updateClient(client_id: number, payload: UpdateClientPayload): P
     });
 }
 
-export function createClient(payload: CreateClientPayload): Promise<{ newClient: Client; Preferences: any }> {
-    return apiFetch<{ newClient: Client; Preferences: any }>(`/clients`, {
+export function createClient(payload: CreateClientPayload): Promise<{ Client: Client; }> {
+    return apiFetch<{ Client: Client; }>(`/clients`, {
         method: "POST",
         body: JSON.stringify(payload)
     });
