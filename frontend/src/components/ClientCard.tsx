@@ -1,19 +1,14 @@
 import { useState } from "react";
 import type { Client } from "../api/types/client.interfaces";
 import { usePreferences } from "../api/lib/usePreferences";
-import { useFeed } from "../api/lib/useFeed";
 import { ClientModal } from "./ClientModal";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
-import ClientNews from "./ClientNews";
-import useClientSummary from "../api/lib/useClientSummary";
 import type { UpdateClientPayload } from "../api/types/client.interfaces";
 
 export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onDelete: () => any, onUpdate: (newData: UpdateClientPayload) => any }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
-    const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
-    const { copySummary, error, summaryLoading, sendSummary, sendSummaryLoading } = useClientSummary(client, feed, refresh);
 
     const handleAddPref = async () => {
         if (!newPref.trim()) return;
@@ -77,40 +72,7 @@ export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onD
                     {prefsError && <p className="text-xs text-red-600 mb-2">{prefsError}</p>}
                 </div>
             </section>
-
-            <button
-                onClick={refresh}
-                disabled={feedLoading || feedRefreshing}
-                className="w-full py-2.5 bg-black text-white text-[11px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 mb-5 disabled:opacity-50">
-                {feedRefreshing ? "Atualizando..." : "Gerar Feed"}
-            </button>
-
-            <section className="mb-5 flex-1 flex flex-col">
-                <ClientNews items={feed?.items || []} loading={feedLoading} />
-            </section>
-
-            <div className="flex items-center gap-3 mb-5">
-                <button
-                    type="button"
-                    disabled={summaryLoading}
-                    className="flex-1 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50"
-                    onClick={copySummary}>
-                    {summaryLoading ? 'Resumindo...' : 'Copiar Resumo'}
-                </button>
-
-                <button
-                    type="button"
-                    disabled={summaryLoading || sendSummaryLoading}
-                    className="flex-1 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex justify-center items-center gap-2 disabled:opacity-50"
-                    onClick={sendSummary}>
-                    {sendSummaryLoading ? 'Redirecionando...' : 'Enviar Resumo'}
-                </button>
-            </div>
-
-            {error && (
-                <p className="text-sm text-red-600">{error}</p>
-            )}
-
+            
             <footer className="pt-4 border-t border-black/10 flex items-center justify-between mt-auto">
                 <button className="text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
