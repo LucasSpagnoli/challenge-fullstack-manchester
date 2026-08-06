@@ -24,11 +24,6 @@ const Header: React.FC = () => {
                         Clientes
                     </Link>
                     <Link
-                        to="/preferences"
-                        className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
-                        Preferências
-                    </Link>
-                    <Link
                         to="/feed"
                         className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
                         Feed
