@@ -16,6 +16,7 @@ export function usePreferences(clientId?: number): UsePreferencesResult {
     const fetchPrefs = useCallback(async () => {
         setLoading(true);
         try {
+            console.log(clientId)
             const data = clientId
                 ? await getClientPreferences(clientId)
                 : await getUserPreferences();

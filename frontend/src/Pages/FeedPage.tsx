@@ -1,111 +1,58 @@
 import React from "react";
-import { useFeed } from "../api/lib/useFeed";
 import Header from "../components/Header";
-import UserNews from "../components/UserNews";
-
-// Decodifica entidades HTML que vêm nos títulos/resumos (ex.: &#8221; -> ”)
-
+import { ClientSection } from "../components/ClientSection";
+import { useClient } from "../api/lib/useClient";
 
 const FeedPage: React.FC = () => {
-  const { feed, loading, refreshing, error, refresh } = useFeed();
-
-  const generatedAt = feed?.generatedAt ? new Date(feed.generatedAt) : null;
+  const { clients, loading } = useClient();
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col font-sans">
+    <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
       <Header />
 
       <main className="flex-1 px-6 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
-            <div>
-              <div className="mb-2 flex items-center gap-3">
-                <div className="w-8 h-px bg-[#D4AF37]" />
-                <span className="text-xs uppercase tracking-[0.35em] text-[#D4AF37]">
-                  Resumo diário
-                </span>
-              </div>
-              <h1 className="text-3xl font-serif font-light text-black tracking-tight mb-2">
-                Seu feed personalizado
-              </h1>
-              <p className="text-sm text-black/50">
-                {generatedAt
-                  ? <>
-                    Gerado em{" "}
-                    {generatedAt.toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })}{" "}
-                    às{" "}
-                    {generatedAt.toLocaleTimeString("pt-BR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </>
-                  : "Carregando informações do feed..."}
-              </p>
+        <div className="max-w-7xl mx-auto w-full">
 
-              {feed && feed.interests.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {feed.interests.map((interest) => (
-                    <span
-                      key={interest}
-                      className="text-xs uppercase tracking-widest border border-black/15 px-3 py-1 text-black/60">
-                      {interest}
-                    </span>
-                  ))}
-                </div>
-              )}
+          <header className="mb-12">
+            <div className="mb-2 flex items-center gap-3">
+              <div className="w-8 h-px bg-[#D4AF37]" />
+              <span className="text-xs uppercase tracking-[0.35em] text-[#D4AF37]">
+                Geral
+              </span>
             </div>
+            <h1 className="text-3xl font-serif font-light text-black tracking-tight">
+              FEED DOS CLIENTES
+            </h1>
+          </header>
 
-            <button
-              onClick={refresh}
-              disabled={loading || refreshing}
-              className="self-start sm:self-auto px-8 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-150 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
-              {refreshing ? "Atualizando..." : "Atualizar feed"}
-            </button>
+          <div className="flex flex-col gap-8">
+            {loading ? (
+              Array.from({ length: 3 }).map((_, idx) => (
+                <div key={idx} className="border border-black/10 p-6 flex flex-col gap-6 animate-pulse">
+                  <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                    <div className="h-6 w-48 bg-black/10" />
+                    <div className="flex gap-3">
+                      <div className="h-9 w-28 bg-black/10" />
+                      <div className="h-9 w-32 bg-black/10" />
+                      <div className="h-9 w-36 bg-black/10" />
+                    </div>
+                  </div>
+                  <div className="h-36 w-full bg-black/5" />
+                </div>
+              ))
+            ) : clients.length > 0 ? (
+              clients.map((client) => (
+                <ClientSection key={client.client_id} client={client} />
+              ))
+            ) : (
+              <div className="border border-dashed border-black/15 py-20 text-center">
+                <p className="text-sm text-black/40 italic font-serif">
+                  Inexistência de clientes cadastrados para gerar o feed.
+                </p>
+              </div>
+            )}
           </div>
 
-          {error && (
-            <div className="border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3 mb-8">
-              {error}
-            </div>
-          )}
-
-          {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="border border-black/10 p-6 flex flex-col gap-4 animate-pulse">
-                  <div className="h-3 w-24 bg-black/10" />
-                  <div className="h-5 w-3/4 bg-black/10" />
-                  <div className="space-y-2">
-                    <div className="h-3 w-full bg-black/5" />
-                    <div className="h-3 w-full bg-black/5" />
-                    <div className="h-3 w-2/3 bg-black/5" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!loading && feed && feed.items.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {feed.items.map((item, idx) => (
-                <UserNews item={item} idx={idx} />
-              ))}
-            </div>
-          )}
-
-          {!loading && !error && feed && feed.items.length === 0 && (
-            <div className="border border-dashed border-black/15 py-16 text-center">
-              <p className="text-sm text-black/40">
-                Nenhuma notícia encontrada para os seus interesses hoje.
-              </p>
-            </div>
-          )}
         </div>
       </main>
     </div>
