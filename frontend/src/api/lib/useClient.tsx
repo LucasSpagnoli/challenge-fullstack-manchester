@@ -40,7 +40,17 @@ export function useClient() {
         setError(null)
         try {
             const updatedClient = await apiUpdateClient(client_id, payload)
-            setClients((prev) => prev.map((c) => (c.client_id === client_id ? updatedClient : c)));
+
+            setClients((prev) => prev.map((c) => {
+                if (c.client_id === client_id) {
+                    return {
+                        ...c,
+                        ...updatedClient,
+                        client_id: client_id
+                    }}
+
+                return c
+            }))
             return updatedClient
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao atualizar cliente.");
