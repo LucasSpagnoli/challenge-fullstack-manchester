@@ -15,7 +15,7 @@ const ClientPage: React.FC = () => {
             <Header />
 
             <main className="flex-1 px-6 py-16">
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-5xl mx-auto">
 
                     <header className="mb-14">
                         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-4">

@@ -54,13 +54,13 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                             onClick={onClose}
                             type="button"
                             disabled={isSubmitting}
-                            className="text-xs uppercase tracking-[0.15em] text-black/60 hover:text-black transition-colors font-medium px-4 py-2 disabled:opacity-50">
+                            className="cursor-pointer text-xs uppercase tracking-[0.15em] text-black/60 hover:text-black transition-colors font-medium px-4 py-2 disabled:opacity-50">
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={isSubmitting || !name.trim() || !number.trim()}
-                            className="px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 disabled:opacity-50">
+                            className={`${(isSubmitting || !name.trim() || !number.trim()) ? 'cursor-not-allowed' : 'cursor-pointer'} px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 disabled:opacity-50`}>
                             {isSubmitting
                                 ? "Processando..."
                                 : isNew

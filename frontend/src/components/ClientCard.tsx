@@ -22,7 +22,7 @@ export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onD
     return (
         <article className="flex flex-col h-full w-full border border-black/10 bg-white p-5 hover:border-[#D4AF37] transition-colors duration-300">
             <header className="flex items-start gap-3 mb-6">
-                <div className="w-10 h-10 shrink-0 border border-black/15 flex items-center justify-center font-serif text-base text-black/70">
+                <div className="w-12 h-12 shrink-0 border border-black/15 flex items-center justify-center font-serif text-base text-black/70">
                     {initial}
                 </div>
                 <div className="min-w-0 pt-0.5">
