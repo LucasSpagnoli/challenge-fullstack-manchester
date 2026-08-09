@@ -30,7 +30,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     return (
         <div className="relative">
-            <div className="flex gap-4 overflow-x-auto py-2 snap-x snap-mandatory [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-black/5 [&::-webkit-scrollbar-thumb]:bg-[#D4AF37]/60 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37] transition-colors">
+            <div className="flex gap-4 overflow-x-auto pt-2 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-black/5 [&::-webkit-scrollbar-thumb]:bg-[#D4AF37]/60 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37] transition-colors">
                 {items!.map((item, idx) => (
                     <a
                         key={idx}

@@ -38,8 +38,7 @@ const FeedPage: React.FC = () => {
                 <div
                   key={idx}
                   className="border border-black/10 p-6 flex flex-col gap-6 animate-pulse"
-                  style={{ animationDelay: `${idx * 100}ms` }}
-                >
+                  style={{ animationDelay: `${idx * 100}ms` }}>
                   <div className="flex justify-between items-end border-b border-black/5 pb-4">
                     <div className="h-6 w-48 bg-black/10" />
                     <div className="flex gap-3">
@@ -56,8 +55,7 @@ const FeedPage: React.FC = () => {
                 <div
                   key={client.client_id}
                   className="opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards]"
-                  style={{ animationDelay: `${idx * 60}ms` }}
-                >
+                  style={{ animationDelay: `${idx * 60}ms` }}>
                   <ClientSection client={client} />
                 </div>
               ))
@@ -70,19 +68,8 @@ const FeedPage: React.FC = () => {
               </div>
             )}
           </div>
-
         </div>
       </main>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(6px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; opacity: 1 !important; transform: none !important; }
-        }
-      `}</style>
     </div>
   );
 };
