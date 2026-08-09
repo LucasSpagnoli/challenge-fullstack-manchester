@@ -10,7 +10,7 @@ const ClientPage: React.FC = () => {
     const { clients, loading, deleteClient, addClient, updateClient } = useClient();
 
     return (
-        <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
+        <div className="min-h-screen w-full bg-white flex flex-col font-sans relative pt-20">
             <Header />
 
             <main className="flex-1 px-6 py-16">

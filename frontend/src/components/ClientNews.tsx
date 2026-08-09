@@ -1,10 +1,5 @@
 import React from "react";
-
-function decodeHtml(text: string): string {
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = text;
-    return textarea.value;
-}
+import { decodeHtml } from "../utils/decodeHtml";
 
 const ClientNews: React.FC<{ items: any[]; loading?: boolean }> = ({ items, loading }) => {
     if (loading) {

@@ -16,7 +16,7 @@
 //   };
 
 //   return (
-//     <div className="min-h-screen w-full bg-white flex flex-col font-sans">
+//     <div className="min-h-screen w-full bg-white flex flex-col font-sans pt-20">
 //       <Header />
 
 //       {/* Conteúdo */}

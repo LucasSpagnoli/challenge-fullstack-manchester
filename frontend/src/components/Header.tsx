@@ -12,10 +12,10 @@ const Header: React.FC = () => {
     };
 
     return (
-        <header className="w-full border-b border-black/10">
-            <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+        <header className="w-full top-0 left-0 z-50 border-b border-black/10 fixed">
+            <div className="max-w-5xl mx-auto -px-20 py-6 flex items-center justify-between">
                 <span className="text-xl font-serif font-light tracking-[0.2em] text-black">
-                    Manchester<span className="text-[#D4AF37]">.</span>
+                    Manchester<span className="text-[#D4AF37]">.News</span>
                 </span>
                 <nav className="flex items-center gap-6">
                     <Link
