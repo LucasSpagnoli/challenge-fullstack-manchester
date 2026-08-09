@@ -2,11 +2,7 @@ import React from "react";
 import Header from "../components/Header";
 import { ClientSection } from "../components/ClientSection";
 import { useClient } from "../api/lib/useClient";
-
-const formatToday = () =>
-  new Date()
-    .toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
-    .toUpperCase();
+import { formatToday } from "../utils/formatToday";
 
 const FeedPage: React.FC = () => {
   const { clients, loading } = useClient();

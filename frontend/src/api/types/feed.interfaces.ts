@@ -23,3 +23,8 @@ export interface UseFeedResult {
     error: string | null;
     refresh: () => Promise<void>;
 }
+
+export interface ClientNewsProps {
+    items?: News[];
+    loading: boolean;
+}
