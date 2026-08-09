@@ -1,11 +1,8 @@
 import type { News } from "../api/types/feed.interfaces"
+import { decodeHtml } from "../utils/decodeHtml"
 
 const UserNews: React.FC<{ item: News, idx: number }> = ({ item, idx }) => {
-  function decodeHtml(text: string): string {
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = text;
-    return textarea.value;
-  }
+
   return (
     <article
       key={idx}

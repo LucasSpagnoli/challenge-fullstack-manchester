@@ -39,20 +39,21 @@ function useClientSummary(client: Client, feed: FeedResponse | null, refresh: ()
         setSendSummaryLoading(true)
         const phone = numberToCellphone(client.number)
         try {
+            if (!feed?.items?.length) await refresh();
             const data = await getSummary()
             if (!data.summary) {
                 setError('Resumo vazio.')
                 return;
             }
-            const msg = encodeURIComponent(data.summary)
-            window.open(`https://wa.me/${phone}?text=${msg}`, "_blank", "noopener,noreferrer")
+            const msg = encodeURIComponent(data.summary);
+            window.open(`https://wa.me/${phone}?text=${msg}`, "_blank", "noopener,noreferrer");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao enviar resumo");
             return { summary: '' };
         } finally {
             setSendSummaryLoading(false)
         }
-    }, [client.number])
+    }, [client.number, feed, refresh, getSummary])
 
     return { copySummary, summaryLoading, error, sendSummary, sendSummaryLoading };
 }

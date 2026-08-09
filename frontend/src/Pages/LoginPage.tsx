@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
                         <span className="text-3xl font-light tracking-[0.2em] text-white">
-                            Manchester<span className="text-[#D4AF37]"></span>
+                            Manchester<span className="text-[#D4AF37]">.news</span>
                         </span>
                     </div>
                     <div className="mt-2 w-12 h-px bg-[#D4AF37]" />
@@ -57,29 +57,29 @@ const LoginPage: React.FC = () => {
                         Além dos investimentos:
                     </p>
                     <h1 className="text-4xl lg:text-5xl text-white font-light leading-tight tracking-tight">
-                        Somos especialistas
+                        Curadoria precisa
                         <br />
-                        em cuidar de
+                        em tempo real
                         <br />
-                        grandes histórias.
+                        para seus clientes.
                     </h1>
                 </div>
             </div>
 
             <div className="flex w-full lg:w-1/2 items-center justify-center bg-white px-6 sm:px-12 lg:px-20">
                 <div className="w-full max-w-sm">
-                    <div className="lg:hidden mb-12 text-center">
+                    <div className="lg:hidden mb-4 text-center">
                         <span className="text-2xl font-light tracking-[0.2em] text-black">
-                            Manchester<span className="text-[#D4AF37]">.</span>
+                            Manchester<span className="text-[#D4AF37]">.news</span>
                         </span>
                         <div className="mt-3 w-12 h-px bg-[#D4AF37] mx-auto" />
                     </div>
 
                     <div className="mb-10">
-                        <h2 className="text-3xl font-light text-black tracking-tight">
+                        <h2 className="lg:text-3xl text-xl font-light text-black tracking-tight">
                             {isRegister ? "Criar conta" : "Acesso à conta"}
                         </h2>
-                        <p className="mt-2 text-sm text-black/50 font-sans">
+                        <p className="mt-2 lg:text-sm text-xs text-black/50 font-sans">
                             {isRegister
                                 ? "Preencha seus dados para se cadastrar."
                                 : "Insira suas credenciais para continuar."}
@@ -115,7 +115,7 @@ const LoginPage: React.FC = () => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="seuemail@dominio.com"
+                                placeholder="email@dominio.com"
                                 className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200" />
                         </div>
 
@@ -185,7 +185,7 @@ const LoginPage: React.FC = () => {
                         <button
                             type="button"
                             onClick={() => setIsRegister((v) => !v)}
-                            className="text-black hover:text-[#D4AF37] transition-colors duration-200 uppercase tracking-widest text-xs font-medium">
+                            className="text-black hover:text-[#D4AF37] transition-colors duration-200 uppercase tracking-widest text-xs font-medium cursor-pointer">
                             {isRegister ? "Entrar" : "Cadastre-se"}
                         </button>
                     </p>
