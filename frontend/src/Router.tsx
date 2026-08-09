@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './Pages/LoginPage'
 import FeedPage from './Pages/FeedPage'
-import PreferencesPage from './Pages/PreferencePage'
+// import PreferencesPage from './Pages/PreferencePage'
 import { RequireAuth, RedirectIfAuth, RequirePreferences } from './routes/guards'
 import ClientPage from './Pages/ClientPage'
 import { AuthProvider } from './api/lib/AuthContext'
@@ -17,7 +17,7 @@ function App() {
           </Route>
 
           <Route element={<RequireAuth />}>
-            <Route path='/preferences' element={<PreferencesPage />} />
+            {/* <Route path='/preferences' element={<PreferencesPage />} /> */}
 
             <Route element={<RequirePreferences />}>
               <Route path='/feed' element={<FeedPage />} />

@@ -10,7 +10,7 @@ const FeedPage: React.FC = () => {
     <div className="min-h-screen w-full bg-white flex flex-col font-sans relative">
       <Header />
 
-      <main className="flex-1 px-6 py-16">
+      <main className="flex-1 px-6 py-8">
         <div className="max-w-7xl mx-auto w-full">
 
           <header className="mb-12">

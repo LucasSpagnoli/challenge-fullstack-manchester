@@ -25,7 +25,7 @@ function useClientSummary(client: Client, feed: FeedResponse | null, refresh: ()
     const copySummary = useCallback(async () => {
         setError(null);
         try {
-            if (!feed?.items?.length) await refresh();
+            if (feed?.items?.length && feed?.items?.length > 0) await refresh();
             const data = await getSummary();
             await navigator.clipboard.writeText(data.summary);
             return true;
@@ -39,6 +39,7 @@ function useClientSummary(client: Client, feed: FeedResponse | null, refresh: ()
         setSendSummaryLoading(true)
         const phone = numberToCellphone(client.number)
         try {
+            if (feed?.items?.length && feed?.items?.length > 0) await refresh();
             const data = await getSummary()
             if (!data.summary) {
                 setError('Resumo vazio.')

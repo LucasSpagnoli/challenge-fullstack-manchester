@@ -24,22 +24,22 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                 <div className="flex flex-wrap items-center gap-3 shrink-0">
                     <button
                         onClick={refresh}
-                        disabled={feedLoading || feedRefreshing}
-                        className="px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50">
+                        disabled={sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing}
+                        className="cursor-pointer px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50">
                         {feedRefreshing ? "Atualizando..." : "Gerar Feed"}
                     </button>
 
                     <button
                         onClick={copySummary}
-                        disabled={summaryLoading || feedLoading}
-                        className="px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50">
+                        disabled={sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing}
+                        className="cursor-pointer px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-50">
                         {summaryLoading ? "Resumindo..." : "Copiar Resumo"}
                     </button>
 
                     <button
                         onClick={sendSummary}
-                        disabled={summaryLoading || sendSummaryLoading || feedLoading}
-                        className="px-5 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center min-w-35 disabled:opacity-50">
+                        disabled={sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing}
+                        className="cursor-pointer px-5 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center min-w-35 disabled:opacity-50">
                         {sendSummaryLoading ? "Redirecionando..." : "Enviar Resumo"}
                     </button>
                 </div>
@@ -51,13 +51,13 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                 {feedLoading && (!feed?.items || feed.items.length === 0) ? (
                     <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-36">
                         <p className="text-xs uppercase tracking-[0.2em] text-black/40 animate-pulse">
-                            Buscando informações atinentes...
+                            Buscando notícias...
                         </p>
                     </div>
                 ) : !feed?.items || feed.items.length === 0 ? (
                     <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-36">
                         <p className="text-sm text-black/40 italic font-serif text-center px-4">
-                            Acione 'Gerar Feed' para prospectar o compêndio de notícias.
+                            Acione 'Gerar Feed' para gerar as notícias.
                         </p>
                     </div>
                 ) : (
