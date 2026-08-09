@@ -40,7 +40,7 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                         onClick={refresh}
                         disabled={busy}
                         className="cursor-pointer px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
-                        {feedRefreshing ? "Atualizando..." : "Gerar Feed"}
+                        {feedRefreshing ? "Gerando feed..." : "Gerar Feed"}
                     </button>
 
                     <button
