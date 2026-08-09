@@ -68,18 +68,18 @@ const LoginPage: React.FC = () => {
 
             <div className="flex w-full lg:w-1/2 items-center justify-center bg-white px-6 sm:px-12 lg:px-20">
                 <div className="w-full max-w-sm">
-                    <div className="lg:hidden mb-12 text-center">
+                    <div className="lg:hidden mb-4 text-center">
                         <span className="text-2xl font-light tracking-[0.2em] text-black">
-                            Manchester<span className="text-[#D4AF37]">.</span>
+                            Manchester<span className="text-[#D4AF37]">.news</span>
                         </span>
                         <div className="mt-3 w-12 h-px bg-[#D4AF37] mx-auto" />
                     </div>
 
                     <div className="mb-10">
-                        <h2 className="text-3xl font-light text-black tracking-tight">
+                        <h2 className="lg:text-3xl text-xl font-light text-black tracking-tight">
                             {isRegister ? "Criar conta" : "Acesso à conta"}
                         </h2>
-                        <p className="mt-2 text-sm text-black/50 font-sans">
+                        <p className="mt-2 lg:text-sm text-xs text-black/50 font-sans">
                             {isRegister
                                 ? "Preencha seus dados para se cadastrar."
                                 : "Insira suas credenciais para continuar."}
