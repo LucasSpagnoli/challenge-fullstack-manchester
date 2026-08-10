@@ -1,10 +1,11 @@
 import type { ClientModalProps } from "../api/types/client.interfaces";
 import useClientForm from "../api/lib/useClientForm";
+import { createPortal } from "react-dom";
 
 export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initialData, onSubmitAction }) => {
     const { name, setName, number, setNumber, fieldErrors, error: apiError, isSubmitting, handleSubmit } = useClientForm({ initialData, onClose, onSubmitAction })
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
             <div className="bg-white w-full max-w-md p-8 shadow-2xl border border-black/10 flex flex-col">
                 <header className="mb-8">
@@ -70,6 +71,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({ onClose, isNew, initia
                     </footer>
                 </form>
             </div>
-        </div>
+        </div>, document.body
     );
 };

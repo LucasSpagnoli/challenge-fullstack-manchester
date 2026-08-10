@@ -14,13 +14,13 @@ const ClientPage: React.FC = () => {
         <div className="min-h-screen w-full bg-white flex flex-col font-sans relative pt-20">
             <Header />
 
-            <main className="flex-1 px-6 py-16">
-                <div className="max-w-5xl mx-auto">
+            <main className="flex-1 px-6 py-8">
+                <div className="max-w-5xl mx-auto w-full">
 
                     <header className="mb-14">
                         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-4">
                             <div className="flex flex-col gap-1">
-                                <h1 className="text-3xl md:text-4xl font-serif font-light text-black tracking-tight leading-none">
+                                <h1 className="text-4xl md:text-[2.75rem] font-serif font-light text-black tracking-tight leading-none">
                                     Meus Clientes
                                 </h1>
                                 <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-black/35">

@@ -17,7 +17,7 @@ export const RedirectIfAuth: React.FC = () => {
     const { isAuthenticated } = useAuth();
 
     if (isAuthenticated) {
-        return <Navigate to="/preferences" replace />;
+        return <Navigate to="/clients" replace />;
     }
 
     return <Outlet />;
