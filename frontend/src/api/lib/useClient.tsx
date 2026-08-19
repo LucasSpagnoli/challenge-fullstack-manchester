@@ -28,7 +28,6 @@ export function useClient() {
         setError(null)
         try {
             const response = await apiCreateClient(payload)
-            setClients((prev) => [...prev, response.Client]);
             return response
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao cadastrar cliente.");
@@ -47,7 +46,8 @@ export function useClient() {
                         ...c,
                         ...updatedClient,
                         client_id: client_id
-                    }}
+                    }
+                }
 
                 return c
             }))
@@ -60,6 +60,7 @@ export function useClient() {
 
     const deleteClient = useCallback(async (client_id: number) => {
         setError(null)
+        setLoading(true)
         try {
             const deletedClient = await apiDeleteClient(client_id)
             setClients((prev) => prev.filter((c) => c.client_id !== client_id));
@@ -67,6 +68,8 @@ export function useClient() {
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao deletar cliente.");
             throw err;
+        } finally {
+            setLoading(false)
         }
     }, [])
 

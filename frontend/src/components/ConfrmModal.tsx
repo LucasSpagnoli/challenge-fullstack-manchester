@@ -1,7 +1,18 @@
 import { createPortal } from "react-dom";
 import type { ConfirmModalProps } from "../api/types/client.interfaces";
+import { useState } from "react";
 
 export function ConfirmModal({ onConfirm, onCancel }: ConfirmModalProps) {
+
+    const [isDeleting, setIsDeleting] = useState(false);
+    const handleConfirm = async () => {
+        setIsDeleting(true);
+        try {
+            await onConfirm();
+        } finally {
+            setIsDeleting(false);
+        }
+    };
     return createPortal(
         <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
             <div className="bg-white w-full max-w-sm p-8 shadow-2xl border border-black/10 flex flex-col">
@@ -21,10 +32,11 @@ export function ConfirmModal({ onConfirm, onCancel }: ConfirmModalProps) {
                     </button>
 
                     <button
-                        onClick={onConfirm}
+                        onClick={handleConfirm}
                         type="button"
+                        disabled={isDeleting}
                         className="cursor-pointer px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-red-700 transition-colors duration-300">
-                        Excluir
+                        {isDeleting ? "Carregando..." : "Excluir"}
                     </button>
                 </footer>
 
