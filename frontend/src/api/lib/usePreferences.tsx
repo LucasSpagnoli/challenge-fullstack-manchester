@@ -32,7 +32,7 @@ export function usePreferences(clientId?: number): UsePreferencesResult {
         fetchPrefs();
     }, [fetchPrefs]);
 
-    const persistPrefs = useCallback(async (newPrefs: string[]) => {
+    const updatePrefs = useCallback(async (newPrefs: string[]) => {
         setSaving(true);
         setError(null);
         try {
@@ -52,32 +52,32 @@ export function usePreferences(clientId?: number): UsePreferencesResult {
     }, [clientId, fetchPrefs]);
 
     const addPref = useCallback(async (topic: string) => {
-        const trimmed = topic.trim();
-        if (!trimmed) return;
+        const trimmedPref = topic.trim();
+        if (!trimmedPref) return;
 
-        const alreadyExists = prefs.some((item) => item.toLowerCase() === trimmed.toLowerCase());
+        const alreadyExists = prefs.some((item) => item.toLowerCase() === trimmedPref.toLowerCase());
         if (alreadyExists) return;
 
-        const newPrefs = [...prefs, trimmed];
+        const newPrefs = [...prefs, trimmedPref];
         setPrefs(newPrefs);
 
         if (clientId) {
-            await persistPrefs(newPrefs);
+            await updatePrefs(newPrefs);
         }
-    }, [prefs, clientId, persistPrefs]);
+    }, [prefs, clientId, updatePrefs]);
 
     const removePref = useCallback(async (topic: string) => {
         const newPrefs = prefs.filter((item) => item !== topic);
         setPrefs(newPrefs);
 
         if (clientId) {
-            await persistPrefs(newPrefs);
+            await updatePrefs(newPrefs);
         }
-    }, [prefs, clientId, persistPrefs]);
+    }, [prefs, clientId, updatePrefs]);
 
     const save = useCallback(async () => {
-        await persistPrefs(prefs);
-    }, [prefs, persistPrefs]);
+        await updatePrefs(prefs);
+    }, [prefs, updatePrefs]);
 
     return { prefs, loading, saving, error, addPref, removePref, save };
 }

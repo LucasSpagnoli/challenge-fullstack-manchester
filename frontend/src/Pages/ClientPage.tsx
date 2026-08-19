@@ -80,7 +80,7 @@ const ClientPage: React.FC = () => {
                 </div>
             </main>
 
-            {isModalOpen && <ClientModal isNew={true} onClose={() => setIsModalOpen(false)} onSubmitAction={addClient} />}
+            {isModalOpen && <ClientModal isNew={true} onClose={() => window.location.reload()} onSubmitAction={addClient} />}
 
             <style>{`
                 @keyframes fadeInUp {
