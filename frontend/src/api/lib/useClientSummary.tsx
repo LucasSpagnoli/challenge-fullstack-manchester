@@ -13,7 +13,9 @@ function useClientSummary(client: Client, feed: FeedResponse | null, refresh: ()
         setError(null);
         setSummaryLoading(true);
         try {
-            return await getClientSummary(client.client_id);
+            const newSum = await getClientSummary(client.client_id);
+            window.alert("Resumo copiado!")
+            return newSum
         } catch (err) {
             setError(err instanceof Error ? err.message : "Erro ao resumir notícias");
             return { summary: '' };

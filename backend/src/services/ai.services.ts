@@ -43,10 +43,10 @@ export class AiService {
     }
 
     async aiSummary(news: News[]) {
-        const formattedNews = news.map(n => `Título: ${n.title} | Descrição: ${n.summary}`).join('\n');
+        const formattedNews = news.map(n => `Título: ${n.title} | Descrição: ${n.summary} | Fonte: ${n.url}`).join('\n');
 
         const body = {
-            contents: [{ parts: [{ text: `[INSTRUÇÕES] ${summaryPrompt} [NOTÍCIAS]\n${formattedNews}` }] }]
+            contents: [{ parts: [{ text: `[INSTRUÇÕES] ${summaryPrompt}\n[NOTÍCIAS]${formattedNews}\n[DATA DE HOJE]${new Date().toLocaleString()}` }] }]
         };
 
         try {

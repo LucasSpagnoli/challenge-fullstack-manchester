@@ -15,11 +15,12 @@ FORMATO DE RESPOSTA:
 export const summaryPrompt = `
 Em seguida, sob a demarcação "[NOTÍCIAS]", constam notícias recentes. 
 Analise os títulos e descrições para elaborar uma síntese que siga a seguinte estrutura textual:
-[Data de hoje]
-[preferência 1]
-[descrição de uma das notícias da preferência 1 em no máximo 120 caracteres, pondo a frase principal da notícia entre asteriscos]
+[descrição de uma das notícias em no máximo 120 caracteres, pondo a frase principal da notícia entre asteriscos]
 [fonte da notícia]
-[descrição da notícia 2 da preferência 1, e assim até acabarem as notícias].
+pula linha
+[descrição da notícia 2, e assim até acabarem as notícias].
+pula linha
+[Data de hoje, por último]
 Abstenha-se de prolixidade e introduções, apenas envie o resumo direto. Caso você não tenha alguma informação, me informe.
 Utilize linguagem simples, clara e simpática.
 `.trim();
