@@ -30,7 +30,7 @@ const Header: React.FC = () => {
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="cursor-pointer text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
+                        className="cursor-pointer text-xs uppercase tracking-[0.15em] text-black/50 hover:text-red-800 transition-colors duration-200">
                         Sair
                     </button>
                 </nav>
