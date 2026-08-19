@@ -36,3 +36,8 @@ export interface UseClientFormProps {
     onClose: () => void;
     onSubmitAction: (data: { name: string; number: string }) => Promise<any>;
 }
+
+export interface ConfirmModalProps {
+    onConfirm: () => any;
+    onCancel: () => void;
+}

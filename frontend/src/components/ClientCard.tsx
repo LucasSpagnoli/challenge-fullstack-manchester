@@ -1,14 +1,15 @@
-// components/ClientCard.tsx
 import { useState } from "react";
 import type { Client } from "../api/types/client.interfaces";
 import { usePreferences } from "../api/lib/usePreferences";
 import { ClientModal } from "./ClientModal";
 import { cellphoneToNumber } from "../utils/cellphoneToNumber";
 import type { UpdateClientPayload } from "../api/types/client.interfaces";
+import { ConfirmModal } from "./ConfrmModal";
 
 export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onDelete: () => any, onUpdate: (newData: UpdateClientPayload) => any }) => {
     const [newPref, setNewPref] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const { prefs, loading: prefsLoading, addPref, removePref, error: prefsError } = usePreferences(client.client_id);
 
     const handleAddPref = async () => {
@@ -92,11 +93,12 @@ export const ClientCard = ({ client, onDelete, onUpdate }: { client: Client, onD
                 <button className="cursor-pointer text-[10px] uppercase tracking-[0.15em] text-black/60 hover:text-[#D4AF37] transition-colors font-medium" onClick={() => setIsModalOpen(true)}>
                     Editar
                 </button>
-                <button onClick={onDelete} className="cursor-pointer text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
+                <button onClick={() => setIsConfirmModalOpen(true)} className="cursor-pointer text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium">
                     Excluir
                 </button>
             </footer>
             {isModalOpen && <ClientModal isNew={false} initialData={client} onClose={() => setIsModalOpen(false)} onSubmitAction={onUpdate} />}
+            {isConfirmModalOpen && <ConfirmModal onConfirm={onDelete} onCancel={() => setIsConfirmModalOpen(false)} />}
         </article>
     );
 };
