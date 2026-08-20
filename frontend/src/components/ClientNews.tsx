@@ -7,9 +7,9 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (loading && itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-36">
-                <p className="text-xs uppercase tracking-[0.2em] text-black/40 animate-pulse">
-                    Buscando notícias...
+            <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-48">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-black/40 animate-pulse">
+                    Buscando...
                 </p>
             </div>
         );
@@ -17,29 +17,26 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 py-10 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-36">
-                <p className="text-sm text-black/40 italic font-serif text-center px-4">
-                    Nenhuma matéria por aqui ainda.
-                </p>
-                <p className="text-[10px] uppercase tracking-[0.15em] text-black/30">
-                    Clique em "Gerar Feed" para buscar
+            <div className="border border-dashed border-black/15 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-48 p-4">
+                <p className="text-xs text-black/40 italic font-serif text-center">
+                    Nenhuma matéria.
                 </p>
             </div>
         );
     }
 
     return (
-        <div className="relative">
-            <div className="flex gap-4 overflow-x-auto pt-2 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-black/5 [&::-webkit-scrollbar-thumb]:bg-[#D4AF37]/60 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37] transition-colors">
+        <div className="relative flex-1">
+            <div className="flex flex-col max-h-75 gap-3 overflow-y-auto pt-1 pb-4 snap-y snap-mandatory pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37]">
                 {items!.map((item, idx) => (
                     <a
                         key={idx}
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="snap-start shrink-0 w-72 md:w-80 h-32 border border-black/10 p-4 flex flex-col justify-between hover:border-[#D4AF37] hover:-translate-y-0.5 transition-all duration-200 group bg-black/2 relative">
+                        className="snap-start shrink-0 w-full min-h-25 border border-black/10 p-4 flex flex-col justify-between hover:border-[#D4AF37] hover:-translate-y-0.5 transition-all duration-200 group bg-black/2 relative">
 
-                        <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center justify-between gap-2 mb-2">
                             <span className="text-[9px] uppercase tracking-[0.15em] text-[#D4AF37] block truncate">
                                 {item.source}
                             </span>
@@ -48,14 +45,15 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
                             </span>
                         </div>
 
-                        <h4 className="text-sm font-serif text-black leading-snug group-hover:text-[#D4AF37] transition-colors line-clamp-3">
+                        <h4 className="text-xs font-serif text-black leading-snug group-hover:text-[#D4AF37] transition-colors line-clamp-3">
                             {decodeHtml(item.title)}
                         </h4>
                     </a>
                 ))}
             </div>
+
             {itemCount > 3 && (
-                <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-12 bg-linear-to-l from-white to-transparent" />
+                <div className="pointer-events-none absolute bottom-0 left-0 right-2 h-10 bg-linear-to-t from-white to-transparent" />
             )}
         </div>
     );
