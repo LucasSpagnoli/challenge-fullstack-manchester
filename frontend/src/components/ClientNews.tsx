@@ -17,7 +17,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-48 p-4">
+            <div className="border border-dashed border-black/15 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-full p-4">
                 <p className="text-xs text-black/40 italic font-serif text-center">
                     Nenhuma matéria.
                 </p>

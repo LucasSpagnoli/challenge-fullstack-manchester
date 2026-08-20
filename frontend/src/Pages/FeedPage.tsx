@@ -8,15 +8,15 @@ export const FeedPage: React.FC = () => {
   const { clients, loading } = useClient();
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col font-sans relative pt-20">
+    <div className="min-h-screen w-full bg-white flex flex-col font-sans relative md:pt-10 pt-15">
       <Header />
 
       <main className="flex-1 py-8 px-6">
-        <div className="max-w-7xl mx-auto w-full">
+        <div className="max-w-5xl mx-auto w-full">
 
-          <header className="mb-14">
+          <header className="mb-5">
             <div className="flex items-end justify-between gap-6 pb-4">
-              <h1 className="text-4xl md:text-[2.75rem] font-serif font-light text-black tracking-tight leading-none">
+              <h1 className="text-4xl font-serif font-light text-black tracking-tight leading-none">
                 Feed dos Clientes
               </h1>
               <div className="hidden sm:flex flex-col items-end shrink-0 pb-1">
@@ -37,7 +37,7 @@ export const FeedPage: React.FC = () => {
               Array.from({ length: 3 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="border border-black/10 p-6 flex flex-col gap-6 animate-pulse h-[400px]"
+                  className="border border-black/10 p-6 flex flex-col gap-6 animate-pulse h-100"
                   style={{ animationDelay: `${idx * 100}ms` }}>
                   <div className="flex justify-between items-end border-b border-black/5 pb-4">
                     <div className="h-6 w-3/4 bg-black/10" />

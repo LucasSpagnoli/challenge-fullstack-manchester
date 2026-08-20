@@ -11,10 +11,10 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
     const busy = sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing;
 
     return (
-        <section className="h-full w-full border border-black/10 bg-white p-6 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
+        <section className="h-full w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
 
-            <div className="flex flex-col flex-1 gap-5">
-                <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-4">
+            <div className="flex flex-col flex-1 gap-2">
+                <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-2">
                     <h2 className="text-xl font-serif font-light text-black tracking-tight truncate flex-1">
                         {client.name}
                     </h2>
@@ -34,15 +34,14 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                 )}
 
                 <div className="relative w-full flex-1 flex flex-col">
-                    <div className="mb-2">
+                    <ClientNews items={feed?.items} loading={feedLoading} />
+                    <div className="mt-2">
                         <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35">
                             {feed?.items?.length
                                 ? `${true ? `Atualizado às [datas]` : ""}`
                                 : "Sem matérias"}
                         </span>
                     </div>
-
-                    <ClientNews items={feed?.items} loading={feedLoading} />
                 </div>
             </div>
 
