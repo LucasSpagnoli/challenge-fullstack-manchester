@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../components/Header";
 import { ClientSection } from "../components/ClientSection";
 import { useClient } from "../api/lib/useClient";
-import { formatToday } from "../utils/formatToday";
+// import { formatToday } from "../utils/formatToday";
 
 export const FeedPage: React.FC = () => {
   const { clients, loading } = useClient();
@@ -14,7 +14,7 @@ export const FeedPage: React.FC = () => {
       <main className="flex-1 py-8 px-6">
         <div className="max-w-5xl mx-auto w-full">
 
-          <header className="mb-5">
+          {/* <header className="mb-5">
             <div className="flex items-end justify-between gap-6 pb-4">
               <h1 className="text-4xl font-serif font-light text-black tracking-tight leading-none">
                 Feed dos Clientes
@@ -30,7 +30,7 @@ export const FeedPage: React.FC = () => {
             </div>
             <div className="border-t-[3px] border-black" />
             <div className="border-t border-[#D4AF37] mt-0.75" />
-          </header>
+          </header> */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
             {loading ? (
