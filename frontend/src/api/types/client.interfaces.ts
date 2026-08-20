@@ -41,3 +41,9 @@ export interface ConfirmModalProps {
     onConfirm: () => any;
     onCancel: () => void;
 }
+
+export interface ClientSectionProps {
+    client: Client;
+    index?: number;
+    total?: number;
+}

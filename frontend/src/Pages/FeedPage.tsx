@@ -12,7 +12,7 @@ export const FeedPage: React.FC = () => {
       <Header />
 
       <main className="flex-1 pt-8">
-        <div className="max-w-6xl w-full mx-auto">
+        <div className="max-w-268 w-full mx-auto">
 
           {/* <header className="mb-5">
             <div className="flex items-end justify-between gap-6 pb-4">
@@ -47,11 +47,11 @@ export const FeedPage: React.FC = () => {
                 </div>
               ))
             ) : clients.length > 0 ? (
-              clients.map((client) => (
+              clients.map((client, idx) => (
                 <div
                   key={client.client_id}
                   className="shrink-0 w-[85vw] sm:w-95 snap-center opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards] flex flex-col">
-                  <ClientSection client={client} />
+                  <ClientSection client={client} index={idx} total={clients.length} />
                 </div>
               ))
             ) : (
@@ -62,6 +62,8 @@ export const FeedPage: React.FC = () => {
                 </p>
               </div>
             )}
+            <div className="lg:ml-22 pointer-events-none absolute left-0 top-0 bottom-5 w-12 bg-linear-to-r from-white to-transparent" />
+            <div className="lg:mr-22 pointer-events-none absolute right-0 top-0 bottom-5 w-12 bg-linear-to-l from-white to-transparent" />
           </div>
         </div>
       </main>

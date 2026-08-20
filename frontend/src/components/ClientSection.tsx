@@ -1,10 +1,10 @@
 import React from "react";
-import type { Client } from "../api/types/client.interfaces";
+import type { ClientSectionProps } from "../api/types/client.interfaces";
 import { useFeed } from "../api/lib/useFeed";
 import useClientSummary from "../api/lib/useClientSummary";
 import { ClientNews } from "./ClientNews";
 
-export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
+export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, total }) => {
     const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
     const { summaryLoading, sendSummary, sendSummaryLoading, error } = useClientSummary(client, feed, refresh);
 
@@ -12,6 +12,12 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
 
     return (
         <section className="flex-1 w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
+
+            {typeof index === "number" && typeof total === "number" && (
+                <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-black/30 mb-2 block">
+                    Registro {String(index + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+                </span>
+            )}
 
             <div className="flex flex-col flex-1 gap-2">
                 <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-2">
@@ -33,15 +39,8 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                     </p>
                 )}
 
-                <div className="relative w-full flex-1 flex flex-col">
+                <div className="relative w-full flex-1 flex flex-col mb-4">
                     <ClientNews items={feed?.items} loading={feedLoading} />
-                    <div className="mt-2">
-                        <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35">
-                            {feed?.items?.length
-                                ? `Atualizado`
-                                : "Sem matérias"}
-                        </span>
-                    </div>
                 </div>
             </div>
 

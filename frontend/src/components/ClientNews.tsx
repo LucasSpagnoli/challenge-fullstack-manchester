@@ -7,7 +7,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (loading && itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-48">
+            <div className="border border-dashed border-black/15 py-10 flex items-center justify-center bg-black/5 w-full h-75">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-black/40 animate-pulse">
                     Buscando...
                 </p>
@@ -52,7 +52,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
                 ))}
             </div>
 
-            {itemCount > 3 && (
+            {itemCount > 2 && (
                 <div className="pointer-events-none absolute bottom-0 left-0 right-2 h-10 bg-linear-to-t from-white to-transparent" />
             )}
         </div>
