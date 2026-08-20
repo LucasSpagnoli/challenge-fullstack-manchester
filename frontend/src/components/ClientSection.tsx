@@ -1,73 +1,55 @@
-import React, { useEffect, useState } from "react";
-import type { Client } from "../api/types/client.interfaces";
+import React from "react";
+import type { ClientSectionProps } from "../api/types/client.interfaces";
 import { useFeed } from "../api/lib/useFeed";
 import useClientSummary from "../api/lib/useClientSummary";
 import { ClientNews } from "./ClientNews";
 
-const formatTime = (date: Date) =>
-    date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-
-export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
+export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, total }) => {
     const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
-    const { copySummary, summaryLoading, sendSummary, sendSummaryLoading, error } = useClientSummary(client, feed, refresh);
+    const { summaryLoading, sendSummary, sendSummaryLoading, error } = useClientSummary(client, feed, refresh);
 
-    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
     const busy = sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing;
 
-    useEffect(() => {
-        if (feed?.items && feed.items.length > 0) {
-            setLastUpdated(new Date());
-        }
-    }, [feed]);
-
     return (
-        <section className="w-full border border-black/10 bg-white p-6 flex flex-col gap-5 hover:border-[#D4AF37] transition-colors duration-300">
+        <section className="flex-1 w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
 
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-black/5 pb-4">
-                <div className="flex flex-col gap-1 min-w-0">
-                    <h2 className="text-2xl font-serif font-light text-black tracking-tight truncate max-w-md">
+            {typeof index === "number" && typeof total === "number" && (
+                <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-black/30 mb-2 block">
+                    Registro {String(index + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+                </span>
+            )}
+
+            <div className="flex flex-col flex-1 gap-2">
+                <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-2">
+                    <h2 className="text-xl font-serif font-light text-black tracking-tight truncate flex-1">
                         {client.name}
                     </h2>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/35">
-                        {feed?.items?.length
-                            ? `${lastUpdated ? `Atualizado às ${formatTime(lastUpdated)}` : ""}`
-                            : "Sem matérias ainda"}
-                    </span>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-3 shrink-0">
                     <button
                         onClick={refresh}
                         disabled={busy}
-                        className="cursor-pointer px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
-                        {feedRefreshing ? "Gerando feed..." : "Gerar Feed"}
+                        className="shrink-0 cursor-pointer px-3 py-1.5 border border-black/20 bg-transparent text-black text-[9px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
+                        {feedRefreshing ? "Gerando..." : "Gerar Feed"}
                     </button>
+                </header>
 
-                    <button
-                        onClick={copySummary}
-                        disabled={busy}
-                        className="cursor-pointer px-5 py-2 border border-black/20 bg-transparent text-black text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
-                        {summaryLoading ? "Resumindo..." : "Copiar Resumo"}
-                    </button>
+                {error && (
+                    <p role="alert" className="text-xs text-red-700 border-l-2 border-red-700 pl-3">
+                        {error}
+                    </p>
+                )}
 
-                    <button
-                        onClick={sendSummary}
-                        disabled={busy}
-                        className="cursor-pointer px-5 py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center min-w-35 disabled:opacity-40 disabled:cursor-not-allowed">
-                        {sendSummaryLoading ? "Redirecionando..." : "Enviar Resumo"}
-                    </button>
+                <div className="relative w-full flex-1 flex flex-col mb-4">
+                    <ClientNews items={feed?.items} loading={feedLoading} />
                 </div>
-            </header>
-
-            {error && (
-                <p role="alert" className="text-xs text-red-700 border-l-2 border-red-700 pl-3">
-                    {error}
-                </p>
-            )}
-
-            <div className="relative w-full">
-                <ClientNews items={feed?.items} loading={feedLoading} />
             </div>
+
+            <button
+                onClick={sendSummary}
+                disabled={busy}
+                className="mt-auto pt-4 w-full cursor-pointer px-5 py-3 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
+                {sendSummaryLoading || summaryLoading ? "Processando..." : "Enviar Resumo"}
+            </button>
         </section>
     );
 };
