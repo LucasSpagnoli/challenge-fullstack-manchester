@@ -20,15 +20,15 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
             )}
 
             <div className="flex flex-col flex-1 gap-2">
-                <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-2">
-                    <h2 className="text-xl font-serif font-light text-black tracking-tight truncate flex-1">
+                <header className="flex items-center justify-between gap-3 sm:gap-4 border-b border-black/5 pb-2">
+                    <h2 className="text-lg sm:text-xl font-serif font-light text-black tracking-tight truncate flex-1">
                         {client.name}
                     </h2>
 
                     <button
                         onClick={refresh}
                         disabled={busy}
-                        className="shrink-0 cursor-pointer px-3 py-1.5 border border-black/20 bg-transparent text-black text-[9px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
+                        className="shrink-0 cursor-pointer px-2.5 sm:px-3 py-1.5 border border-black/20 bg-transparent text-black text-[9px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
                         {feedRefreshing ? "Gerando..." : "Gerar Feed"}
                     </button>
                 </header>
@@ -47,7 +47,7 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
             <button
                 onClick={sendSummary}
                 disabled={busy}
-                className="mt-auto pt-4 w-full cursor-pointer px-5 py-3 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
+                className="mt-auto pt-4 w-full cursor-pointer px-4 sm:px-5 py-2.5 sm:py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
                 {sendSummaryLoading || summaryLoading ? "Processando..." : "Enviar Resumo"}
             </button>
         </section>
