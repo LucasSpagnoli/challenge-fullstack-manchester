@@ -7,7 +7,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (loading && itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 flex items-center justify-center bg-black/5 w-full h-60 sm:h-75">
+            <div className="border border-dashed border-black/15 flex items-center justify-center bg-black/5 w-full h-60 md:h-75">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-black/40 animate-pulse">
                     Buscando...
                 </p>
@@ -17,7 +17,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     if (itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 flex-1 min-h-0 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-60 sm:h-75 p-4">
+            <div className="border border-dashed border-black/15 flex-1 min-h-0 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-60 md:h-75 p-4">
                 <p className="text-xs text-black/40 italic font-serif text-center">
                     Nenhuma matéria.
                 </p>
@@ -27,7 +27,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading }) => {
 
     return (
         <div className="relative flex-1 min-h-0">
-            <div className="flex flex-col max-h-60 sm:max-h-60 h-full gap-3 overflow-y-auto pt-1 pb-4 snap-y snap-mandatory pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37]">
+            <div className="flex flex-col max-h-60 md:max-h-75 h-full gap-3 overflow-y-auto pt-1 pb-4 snap-y snap-mandatory pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37]">
                 {items!.map((item, idx) => (
                     <a
                         key={idx}
