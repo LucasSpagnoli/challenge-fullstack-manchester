@@ -3,12 +3,23 @@ import type { ClientSectionProps } from "../api/types/client.interfaces";
 import { useFeed } from "../api/lib/useFeed";
 import useClientSummary from "../api/lib/useClientSummary";
 import { ClientNews } from "./ClientNews";
+import { decodeHtml } from "../utils/decodeHtml";
 
 export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, total }) => {
     const { feed, loading: feedLoading, refreshing: feedRefreshing, refresh } = useFeed(client.client_id);
     const { summaryLoading, sendSummary, sendSummaryLoading, error } = useClientSummary(client, feed, refresh);
 
     const busy = sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing;
+
+    // MUDANÇA: Função dedicada para enviar uma única notícia via WhatsApp
+    const handleSendSingle = (item: any) => {
+        // Limpa o número para garantir que o link do WhatsApp funcione
+        const phone = client.number.replace(/\D/g, "");
+        const prefix = phone.startsWith("55") ? phone : `55${phone}`;
+
+        const message = encodeURIComponent(`*${decodeHtml(item.title)}*\n\nLeia mais na íntegra: ${item.url}`);
+        window.open(`https://wa.me/${prefix}?text=${message}`, "_blank", "noopener,noreferrer");
+    };
 
     return (
         <section className="flex-1 w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
@@ -40,14 +51,15 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
                 )}
 
                 <div className="relative w-full flex-1 flex flex-col mb-4">
-                    <ClientNews items={feed?.items} loading={feedLoading} />
+                    {/* MUDANÇA: Passando a nova função como prop */}
+                    <ClientNews items={feed?.items} loading={feedLoading} onSendSingle={handleSendSingle} />
                 </div>
             </div>
 
             <button
                 onClick={sendSummary}
                 disabled={busy}
-                className="mt-auto pt-4 w-full cursor-pointer px-4 sm:px-5 py-2.5 sm:py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
+                className="mt-auto pt-4 w-full cursor-pointer px-4 sm:px-5 py-2.5 sm:py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
                 {sendSummaryLoading || summaryLoading ? "Processando..." : "Enviar Resumo"}
             </button>
         </section>
