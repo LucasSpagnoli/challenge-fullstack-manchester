@@ -11,8 +11,8 @@ export const FeedPage: React.FC = () => {
     <div className="min-h-screen w-full bg-white flex flex-col font-sans relative md:pt-10 pt-15">
       <Header />
 
-      <main className="flex-1 py-8 px-6">
-        <div className="max-w-5xl mx-auto w-full">
+      <main className="flex-1 pt-8">
+        <div className="max-w-6xl w-full mx-auto">
 
           {/* <header className="mb-5">
             <div className="flex items-end justify-between gap-6 pb-4">
@@ -32,12 +32,13 @@ export const FeedPage: React.FC = () => {
             <div className="border-t border-[#D4AF37] mt-0.75" />
           </header> */}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+          <div className="flex overflow-x-auto gap-6 px-6 pb-5 items-stretch snap-x snap-mandatory [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 hover:[&::-webkit-scrollbar-thumb]:bg-[#D4AF37] transition-colors">
+
             {loading ? (
               Array.from({ length: 3 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="border border-black/10 p-6 flex flex-col gap-6 animate-pulse h-100"
+                  className="shrink-0 w-[85vw] sm:w-95 snap-center border border-black/10 p-6 flex flex-col gap-6 animate-pulse h-100"
                   style={{ animationDelay: `${idx * 100}ms` }}>
                   <div className="flex justify-between items-end border-b border-black/5 pb-4">
                     <div className="h-6 w-3/4 bg-black/10" />
@@ -49,12 +50,12 @@ export const FeedPage: React.FC = () => {
               clients.map((client) => (
                 <div
                   key={client.client_id}
-                  className="opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards] h-full">
+                  className="shrink-0 w-[85vw] sm:w-95 snap-center opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards] flex flex-col">
                   <ClientSection client={client} />
                 </div>
               ))
             ) : (
-              <div className="col-span-full border border-black/10 py-24 flex flex-col items-center gap-4">
+              <div className="w-full border-y border-black/10 py-24 flex flex-col items-center gap-4">
                 <div className="w-8 h-px bg-[#D4AF37]" />
                 <p className="text-base text-black/50 italic font-serif text-center px-4 max-w-sm">
                   Nenhum cliente cadastrado ainda. Assim que você adicionar um, o feed de notícias aparece aqui.

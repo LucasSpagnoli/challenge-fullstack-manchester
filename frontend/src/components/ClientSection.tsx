@@ -11,7 +11,7 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
     const busy = sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing;
 
     return (
-        <section className="h-full w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
+        <section className="flex-1 w-full border border-black/10 bg-white p-4 flex flex-col hover:border-[#D4AF37] transition-colors duration-300">
 
             <div className="flex flex-col flex-1 gap-2">
                 <header className="flex items-center justify-between gap-4 border-b border-black/5 pb-2">
@@ -38,7 +38,7 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
                     <div className="mt-2">
                         <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-black/35">
                             {feed?.items?.length
-                                ? `${true ? `Atualizado às [datas]` : ""}`
+                                ? `Atualizado`
                                 : "Sem matérias"}
                         </span>
                     </div>
@@ -48,7 +48,7 @@ export const ClientSection: React.FC<{ client: Client }> = ({ client }) => {
             <button
                 onClick={sendSummary}
                 disabled={busy}
-                className="mt-5 w-full cursor-pointer px-5 py-3 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
+                className="mt-auto pt-4 w-full cursor-pointer px-5 py-3 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
                 {sendSummaryLoading || summaryLoading ? "Processando..." : "Enviar Resumo"}
             </button>
         </section>
