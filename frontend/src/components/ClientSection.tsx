@@ -59,7 +59,7 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
             <button
                 onClick={sendSummary}
                 disabled={busy}
-                className="mt-auto pt-4 w-full cursor-pointer px-4 sm:px-5 py-2.5 sm:py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-black transition-colors duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
+                className="mt-auto pt-4 w-full cursor-pointer px-4 sm:px-5 py-2.5 sm:py-2 bg-black text-white text-[10px] font-medium uppercase tracking-[0.15em] hover:border-[#D4AF37] hover:text-[#D4AF37] hover:scale-98 transition-all duration-300 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed">
                 {sendSummaryLoading || summaryLoading ? "Processando..." : "Enviar Resumo"}
             </button>
         </section>
