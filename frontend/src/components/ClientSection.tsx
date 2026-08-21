@@ -11,9 +11,7 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
 
     const busy = sendSummaryLoading || summaryLoading || feedLoading || feedRefreshing;
 
-    // MUDANÇA: Função dedicada para enviar uma única notícia via WhatsApp
     const handleSendSingle = (item: any) => {
-        // Limpa o número para garantir que o link do WhatsApp funcione
         const phone = client.number.replace(/\D/g, "");
         const prefix = phone.startsWith("55") ? phone : `55${phone}`;
 
@@ -51,7 +49,6 @@ export const ClientSection: React.FC<ClientSectionProps> = ({ client, index, tot
                 )}
 
                 <div className="relative w-full flex-1 flex flex-col mb-4">
-                    {/* MUDANÇA: Passando a nova função como prop */}
                     <ClientNews items={feed?.items} loading={feedLoading} onSendSingle={handleSendSingle} />
                 </div>
             </div>
