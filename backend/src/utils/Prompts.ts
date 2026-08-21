@@ -15,12 +15,13 @@ FORMATO DE RESPOSTA:
 export const summaryPrompt = `
 Em seguida, sob a demarcação "[NOTÍCIAS]", constam notícias recentes. 
 Analise os títulos e descrições para elaborar uma síntese que siga a seguinte estrutura textual:
-[descrição de uma das notícias em no máximo 200 caracteres (caso venha apenas uma notícia, pode usar 300 caracteres), pondo a frase principal da notícia entre asteriscos]
+[síntese (explicação abaixo de como fazer esta síntese) de uma das notícias em no máximo 200 caracteres (caso venha apenas uma notícia, pode usar 300 caracteres), pondo a frase principal da notícia entre asteriscos]
 [fonte da notícia]
 pula linha
-[descrição da notícia 2, e assim até acabarem as notícias].
+[síntese da notícia 2, e assim até acabarem as notícias].
 pula linha
 [Data de hoje, por último]
+A síntese da notícia *você* vai fazer, levando em conta principalmente a descrição da notícia, destacando o que é importante. Lembre de usar o máximo de caracteres permitidos possível.
 Abstenha-se de prolixidade e introduções, apenas envie o resumo direto. Caso você não tenha alguma informação, me informe.
 Utilize linguagem simples, clara e simpática.
 `.trim();

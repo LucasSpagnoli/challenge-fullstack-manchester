@@ -27,4 +27,5 @@ export interface UseFeedResult {
 export interface ClientNewsProps {
     items?: News[];
     loading: boolean;
+    onSendSingle?: (item: any) => void
 }
