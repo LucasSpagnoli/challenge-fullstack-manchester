@@ -51,7 +51,7 @@ export const FeedPage: React.FC = () => {
                 clients.map((client, idx) => (
                   <div
                     key={client.client_id}
-                    className="shrink-0 w-[85vw] mt-3 -mb-3 xs:w-72 sm:w-80 lg:w-95 snap-center opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards] flex flex-col"
+                    className="shrink-0 w-[85vw] -mb-3 xs:w-72 sm:w-80 lg:w-95 snap-center opacity-0 animate-[fadeInUp_0.5s_ease-out_forwards] flex flex-col"
                     style={{ animationDelay: `${idx * 60}ms` }}>
                     <ClientSection client={client} index={idx} total={clients.length} />
                   </div>
