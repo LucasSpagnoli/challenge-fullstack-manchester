@@ -2,11 +2,11 @@ import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common
 import { News } from "src/types/news";
 import "dotenv/config";
 import { CacheService } from 'src/services/cache.service';
-import { InfoMoneyService } from 'src/services/infomoney.service';
 import { AiService } from 'src/services/ai.services';
 import { PreferencesService } from 'src/preferences/preferences.service';
 import { Role } from 'src/types/request-with-user';
 import { FeedResponse } from 'src/types/feed-response';
+import { NewsService } from 'src/services/news.service';
 
 @Injectable()
 export class FeedService {
@@ -14,7 +14,7 @@ export class FeedService {
 
     constructor(
         private cacheService: CacheService,
-        private infoMoneyService: InfoMoneyService,
+        private newsService: NewsService,
         private aiService: AiService,
         private preferenceService: PreferencesService
     ) { }
@@ -58,7 +58,7 @@ export class FeedService {
 
     async getFilteredNews(id: number, role: Role): Promise<News[]> {
         try {
-            const news = await this.infoMoneyService.getParsedNews();
+            const news = await this.newsService.getParsedNews();
             const preferences = await this.preferenceService.getPreferencesById(id, role);
 
             const filteredNews = await this.aiService.aiFilter({ news, preferences });

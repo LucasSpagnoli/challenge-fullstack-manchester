@@ -1,16 +1,16 @@
 import { Controller, Get, Param, ParseIntPipe, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { FeedService } from './feed.service';
-import { InfoMoneyService } from 'src/services/infomoney.service';
 import { ClientsService } from 'src/clients/clients.service';
 import type { RequestWithUser } from 'src/types/request-with-user';
+import { NewsService } from 'src/services/news.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('feed')
 export class FeedController {
     constructor(
         private readonly feedService: FeedService,
-        private readonly infoMoneyService: InfoMoneyService,
+        private readonly newsService: NewsService,
         private readonly clientsService: ClientsService,
     ) { }
 
@@ -26,7 +26,7 @@ export class FeedController {
 
     @Get('news')
     async getNews() {
-        return this.infoMoneyService.getParsedNews();
+        return this.newsService.getParsedNews();
     }
 
     @Get('refresh/:client_id')
