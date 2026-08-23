@@ -4,7 +4,7 @@ import "dotenv/config";
 import { CacheService } from 'src/services/cache.service';
 import { AiService } from 'src/services/ai.services';
 import { PreferencesService } from 'src/preferences/preferences.service';
-import { Role } from 'src/types/request-with-user';
+import { FeedRole } from 'src/types/request-with-user';
 import { FeedResponse } from 'src/types/feed-response';
 import { NewsService } from 'src/services/news.service';
 
@@ -19,7 +19,7 @@ export class FeedService {
         private preferenceService: PreferencesService
     ) { }
 
-    async refreshFeed(id: number, role: Role): Promise<FeedResponse> {
+    async refreshFeed(id: number, role: FeedRole): Promise<FeedResponse> {
         try {
             const generatedAt = new Date();
             const filteredNews = await this.getFilteredNews(id, role);
@@ -33,7 +33,7 @@ export class FeedService {
         }
     }
 
-    async getFeed(id: number, role: Role): Promise<FeedResponse> {
+    async getFeed(id: number, role: FeedRole): Promise<FeedResponse> {
         try {
             const cache = await this.cacheService.getCache(id, role);
             let filteredNews: News[];
@@ -51,12 +51,12 @@ export class FeedService {
             return { generatedAt, interests: preferences, items: filteredNews };
         } catch (error) {
             const err = error as Error;
-            this.logger.error(`Falha ao resgatar feed [ID: ${id}, Role: ${role}]: ${err.message}`, err.stack);
+            this.logger.error(`Falha ao resgatar feed [ID: ${id}, FeedRole: ${role}]: ${err.message}`, err.stack);
             throw new InternalServerErrorException("Inviável carregar o feed de notícias.");
         }
     }
 
-    async getFilteredNews(id: number, role: Role): Promise<News[]> {
+    async getFilteredNews(id: number, role: FeedRole): Promise<News[]> {
         try {
             const news = await this.newsService.getParsedNews();
             const preferences = await this.preferenceService.getPreferencesById(id, role);

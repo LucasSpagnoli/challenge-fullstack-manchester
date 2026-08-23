@@ -1,10 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
+import { RolesGuard } from 'src/auth/Guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import type { RequestWithUser } from 'src/types/request-with-user';
 import { CreateClientDTO, UpdateClientDTO } from 'src/types/clients.dto';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('admin', 'user')
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) { }
