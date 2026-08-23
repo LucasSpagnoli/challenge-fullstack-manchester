@@ -14,10 +14,10 @@ export const RequireAuth: React.FC = () => {
 };
 
 export const RedirectIfAuth: React.FC = () => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
 
     if (isAuthenticated) {
-        return <Navigate to="/clients" replace />;
+        return <Navigate to={user?.role === 'admin' ? "/admin" : "/clients"} replace />;
     }
 
     return <Outlet />;
@@ -64,6 +64,16 @@ export const RequirePreferences: React.FC = () => {
 
     if (!hasPreferences) {
         return <Navigate to="/preferences" replace />;
+    }
+
+    return <Outlet />;
+};
+
+export const RequireAdmin: React.FC = () => {
+    const { user } = useAuth();
+
+    if (!user || user.role !== 'admin') {
+        return <Navigate to="/clients" replace />;
     }
 
     return <Outlet />;

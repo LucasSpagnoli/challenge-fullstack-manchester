@@ -2,6 +2,7 @@ export interface LoginResponse {
   accessToken: string;
   name: string;
   userId: number;
+  role: string;
 }
 
 export interface RegisterResponse {
@@ -28,6 +29,7 @@ export interface LoginPayload {
 export interface AuthUser {
   userId: number;
   name: string;
+  role: 'admin' | 'user';
 }
 
 export interface AuthContextValue {
