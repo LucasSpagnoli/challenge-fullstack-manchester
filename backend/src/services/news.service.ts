@@ -7,8 +7,8 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 
 @Injectable()
-export class InfoMoneyService {
-    private readonly logger = new Logger(InfoMoneyService.name);
+export class NewsService {
+    private readonly logger = new Logger(NewsService.name);
     private extractImageUrl(html: string): string | null {
         const match = html.match(/<img[^>]+src="([^"]+)"/i);
         return match ? match[1].replace(/&amp;/g, "&") : null;
@@ -17,35 +17,34 @@ export class InfoMoneyService {
         private httpService: HttpService,
     ) { }
 
-    async getRSSNews(): Promise<string> {
-        const url = 'https://www.infomoney.com.br/feed/';
+    private infomoneyurl = 'https://www.infomoney.com.br/feed/';
+    private g1url = 'https://g1.globo.com/rss/g1/economia/';
+
+    async getRssNews(url: string, source: string): Promise<News[]> {
         try {
             const { data } = await firstValueFrom(this.httpService.get<string>(url));
-            return data;
+            const parser = new XMLParser();
+            const json = parser.parse(data)
+            const items = json.rss.channel.item
+            return items.map((item: any) => ({
+                title: item.title,
+                source,
+                url: item.link,
+                summary: summaryFormatter(item.description),
+                imageUrl: this.extractImageUrl(item.description),
+            }));
         } catch (error) {
             const err = error as Error;
-            this.logger.error(`Falha ao interceptar feed RSS do InfoMoney: ${err.message}\n`, err.stack);
+            this.logger.error(`Falha ao interceptar feed RSS do G1: ${err.message}\n`, err.stack);
             throw new InternalServerErrorException("Serviço de notícias indisponível no momento.");
         }
     }
 
     async getParsedNews(): Promise<News[]> {
-        const xmlNews = await this.getRSSNews();
-
         try {
-            const parser = new XMLParser();
-            const json = parser.parse(xmlNews);
-
-            // navega pelo RSS do InfoMoney (rss -> channel -> item)
-            const items = json.rss.channel.item;
-
-            return items.map((item: any) => ({
-                title: item.title,
-                source: 'InfoMoney',
-                url: item.link,
-                summary: summaryFormatter(item.description),
-                imageUrl: this.extractImageUrl(item.description),
-            }));
+            const infomoneyNews = await this.getRssNews(this.infomoneyurl, "InfoMoney");
+            const g1News = await this.getRssNews(this.g1url, "G1");
+            return [...infomoneyNews, ...g1News];
         } catch (error) {
             const err = error as Error;
             this.logger.error(`Erro ao analisar (parse) o XML das notícias: ${err.message}\n`, err.stack);
