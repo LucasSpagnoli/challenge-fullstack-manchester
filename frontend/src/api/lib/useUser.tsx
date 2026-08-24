@@ -14,7 +14,7 @@ export function useUser() {
             const data = await apiGetUsers();
             setUsers(data.filter((u) => u.role === "user"));
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Falha ao carregar os operadores.");
+            setError(err instanceof Error ? err.message : "Falha ao carregar os Funcionários.");
         } finally {
             setLoading(false);
         }
@@ -31,7 +31,7 @@ export function useUser() {
             setUsers((prev) => [...prev, response]);
             return response;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao cadastrar operador.");
+            setError(err instanceof Error ? err.message : "Erro ao cadastrar Funcionário.");
             throw err;
         }
     }, []);
@@ -43,7 +43,7 @@ export function useUser() {
             await apiDeleteUser(id);
             setUsers((prev) => prev.filter((u) => u.id !== id));
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao deletar operador.");
+            setError(err instanceof Error ? err.message : "Erro ao deletar Funcionário.");
             throw err;
         } finally {
             setLoading(false);

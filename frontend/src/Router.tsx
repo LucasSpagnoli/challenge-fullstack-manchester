@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './Pages/LoginPage'
 // import PreferencesPage from './Pages/PreferencePage'
-import { RequireAuth, RedirectIfAuth, RequirePreferences, RequireAdmin } from './routes/guards'
+import { RequireAuth, RedirectIfAuth, RequireAdmin } from './routes/guards'
 import ClientPage from './Pages/ClientPage'
 import { AuthProvider } from './api/lib/AuthContext'
 import { FeedPage } from './Pages/FeedPage'
@@ -24,9 +24,7 @@ function App() {
               <Route path='/admin' element={<AdminPage />} />
             </Route>
 
-            <Route element={<RequirePreferences />}>
-              <Route path='/feed' element={<FeedPage />} />
-            </Route>
+            <Route path='/feed' element={<FeedPage />} />
 
             <Route path='/clients' element={<ClientPage />} />
           </Route>

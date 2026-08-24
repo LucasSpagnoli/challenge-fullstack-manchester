@@ -26,7 +26,7 @@ export const AdminPage: React.FC = () => {
                   </span>
                 </div>
                 <h1 className="text-4xl md:text-[2.75rem] font-serif font-light text-black tracking-tight leading-none">
-                  Operadores do Sistema
+                  Funcionários do Sistema
                 </h1>
               </div>
 
@@ -34,7 +34,7 @@ export const AdminPage: React.FC = () => {
                 onClick={() => setIsModalOpen(true)}
                 type="button"
                 className="shrink-0 px-6 py-3 bg-black text-white text-[10px] font-medium uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-black transition-colors duration-300 cursor-pointer">
-                + Adicionar Operador
+                + Adicionar Funcionário
               </button>
             </div>
             <div className="border-t-[3px] border-black" />
@@ -43,7 +43,7 @@ export const AdminPage: React.FC = () => {
 
           {loading && users.length === 0 && (
             <div className="text-center py-12 text-sm text-black/40 uppercase tracking-[0.2em]">
-              Carregando operadores...
+              Carregando Funcionários...
             </div>
           )}
 
@@ -55,7 +55,7 @@ export const AdminPage: React.FC = () => {
 
           {!loading && !error && users.length === 0 && (
             <div className="text-center py-12 text-sm text-black/40 uppercase tracking-[0.2em] border border-dashed border-black/10 p-8">
-              Nenhum operador cadastrado no sistema.
+              Nenhum Funcionário cadastrado no sistema.
             </div>
           )}
 
@@ -78,7 +78,7 @@ export const AdminPage: React.FC = () => {
                   <div className="flex flex-col gap-5 flex-1">
                     <div>
                       <span className="block text-[10px] uppercase tracking-[0.15em] text-black/60 mb-1">
-                        Nome do Operador
+                        Nome do Funcionário
                       </span>
                       <p className="text-base text-black font-light font-serif">
                         {user.name}
@@ -99,7 +99,7 @@ export const AdminPage: React.FC = () => {
                         onClick={() => setDeletingUserId(user.id)}
                         type="button"
                         className="text-[10px] uppercase tracking-[0.15em] text-red-900/60 hover:text-red-600 transition-colors font-medium cursor-pointer">
-                        Excluir Operador
+                        Excluir Funcionário
                       </button>
                     </footer>
                   </div>
@@ -113,7 +113,7 @@ export const AdminPage: React.FC = () => {
 
       {isModalOpen && (
         <UserModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => window.location.reload()}
           onSubmitAction={addUser}
         />
       )}
@@ -124,7 +124,7 @@ export const AdminPage: React.FC = () => {
             try {
               await deleteUser(deletingUserId);
             } catch (err) {
-              alert(err instanceof Error ? err.message : "Erro ao deletar operador.");
+              alert(err instanceof Error ? err.message : "Erro ao deletar Funcionário.");
             } finally {
               setDeletingUserId(null);
             }

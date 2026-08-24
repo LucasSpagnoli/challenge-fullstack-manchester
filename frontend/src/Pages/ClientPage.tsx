@@ -81,16 +81,6 @@ const ClientPage: React.FC = () => {
             </main>
 
             {isModalOpen && <ClientModal isNew={true} onClose={() => window.location.reload()} onSubmitAction={addClient} />}
-
-            <style>{`
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(6px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @media (prefers-reduced-motion: reduce) {
-                    * { animation: none !important; opacity: 1 !important; transform: none !important; }
-                }
-            `}</style>
         </div>
     );
 };

@@ -29,11 +29,11 @@ export const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmitAction })
                 name,
                 email,
                 password,
-                preferences: [], // Operadores não têm feed/preferências
+                preferences: [], // Funcionários não têm feed/preferências
             });
             onClose();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro ao cadastrar operador.");
+            setError(err instanceof Error ? err.message : "Erro ao cadastrar Funcionário.");
         } finally {
             setLoading(false);
         }
@@ -45,7 +45,7 @@ export const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmitAction })
 
                 <header className="mb-8">
                     <h2 className="text-2xl font-serif font-light text-black tracking-tight">
-                        Novo Operador
+                        Novo Funcionário
                     </h2>
                     <p className="text-sm text-black/50 font-sans mt-1">
                         Crie credenciais para um novo membro da equipe.
@@ -59,7 +59,6 @@ export const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmitAction })
                         </div>
                     )}
 
-                    {/* Campo: Nome */}
                     <div>
                         <label className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
                             Nome Completo
@@ -75,7 +74,6 @@ export const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmitAction })
                         />
                     </div>
 
-                    {/* Campo: Email */}
                     <div>
                         <label className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
                             E-mail de Acesso
@@ -84,14 +82,13 @@ export const UserModal: React.FC<UserModalProps> = ({ onClose, onSubmitAction })
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="operador@dominio.com"
+                            placeholder="Funcionário@dominio.com"
                             required
                             disabled={loading}
                             className="w-full border-0 border-b border-black/20 bg-transparent py-2.5 text-black placeholder:text-black/30 focus:outline-none focus:border-[#D4AF37] transition-colors duration-200"
                         />
                     </div>
 
-                    {/* Campo: Senha */}
                     <div>
                         <label className="block text-xs uppercase tracking-[0.15em] text-black/60 mb-2">
                             Senha Inicial
