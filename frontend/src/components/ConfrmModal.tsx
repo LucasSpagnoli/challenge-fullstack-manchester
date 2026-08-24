@@ -36,7 +36,7 @@ export function ConfirmModal({ onConfirm, onCancel }: ConfirmModalProps) {
                         type="button"
                         disabled={isDeleting}
                         className="cursor-pointer px-6 py-3 bg-black text-white text-xs uppercase tracking-[0.2em] hover:bg-red-700 transition-colors duration-300">
-                        {isDeleting ? "Carregando..." : "Excluir"}
+                        {isDeleting ? "Excluindo..." : "Excluir"}
                     </button>
                 </footer>
 
