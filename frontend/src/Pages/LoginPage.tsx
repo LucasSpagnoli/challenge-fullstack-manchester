@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserPreferences } from "../api/preferences";
+// import { getUserPreferences } from "../api/preferences";
 import { useAuth } from "../api/lib/AuthContext";
 
 const LoginPage: React.FC = () => {
@@ -26,13 +26,7 @@ const LoginPage: React.FC = () => {
             return;
         }
 
-        // só chega aqui se login/register deu certo
-        try {
-            const preferences = await getUserPreferences();
-            navigate(preferences.length > 0 ? '/feed' : '/preferences');
-        } catch {
-            navigate('/preferences');
-        }
+        navigate('/clients');
     };
 
     return (

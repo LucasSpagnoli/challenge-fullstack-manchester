@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common
 import { JsonValue } from "@prisma/client/runtime/client";
 import { DatabaseService } from "src/database/database.service";
 import { News } from "src/types/news";
-import { Role } from "src/types/role";
+import { FeedRole } from "src/types/role";
 
 @Injectable()
 export class CacheService {
@@ -13,7 +13,7 @@ export class CacheService {
         private databaseService: DatabaseService,
     ) { }
 
-    async createCache(owner_id: number, role: Role) {
+    async createCache(owner_id: number, role: FeedRole) {
         try {
             return role === "user"
                 ? await this.databaseService.user_cache.create({ data: { owner_id, content_json: [] } })
@@ -25,7 +25,7 @@ export class CacheService {
         }
     }
 
-    async updateCache(owner_id: number, role: Role, news?: News[], summary?: string | null) {
+    async updateCache(owner_id: number, role: FeedRole, news?: News[], summary?: string | null) {
         try {
             const where = { owner_id };
             const data: any = { generatedAt: new Date() };
@@ -50,7 +50,7 @@ export class CacheService {
         }
     }
 
-    async getCache(owner_id: number, role: Role): Promise<{ owner_id: number, content_json: JsonValue, summary?: string, generatedAt: Date } | null> {
+    async getCache(owner_id: number, role: FeedRole): Promise<{ owner_id: number, content_json: JsonValue, summary?: string, generatedAt: Date } | null> {
         try {
             const cache = role === "user"
                 ? await this.databaseService.user_cache.findUnique({ where: { owner_id } })

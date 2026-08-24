@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, Logger, InternalServerErrorException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { PreferencesPayload } from 'src/types/preferences.dto';
-import { Role } from 'src/types/role';
+import { FeedRole } from 'src/types/role';
 
 @Injectable()
 export class PreferencesService {
@@ -28,7 +28,7 @@ export class PreferencesService {
         }
     }
 
-    async getPreferencesById(id: number, role: Role) {
+    async getPreferencesById(id: number, role: FeedRole) {
         try {
             const record = role === 'user'
                 ? await this.databaseService.user.findUnique({ where: { id } })

@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { LocalGuard } from './Guards/local.guard';
 import type { Request } from 'express';
 import { JwtAuthGuard } from './Guards/jwt.guard';
-import { CreateUserDTO } from 'src/types/create-user.dto';
+import { AuthRole } from 'src/types/role';
+import { CreateAdminDTO } from 'src/types/create-admin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,14 +20,16 @@ export class AuthController {
         const authData = await this.authService.signIn({
             userId: req.user.id,
             name: req.user.name,
+            role: req.user.role as AuthRole,
         });
-        return authData; 
+        return authData;
     }
 
-    @Post('register')
-    async register(@Body(ValidationPipe) createUserDTO: CreateUserDTO) {
-        const newUser = await this.authService.register(createUserDTO);
-        return newUser; 
+    @Post('admin')
+    async createAdmin(
+        @Body(ValidationPipe) createAdminDTO: CreateAdminDTO,
+    ) {
+        return this.authService.createAdmin(createAdminDTO, createAdminDTO.adminSecret);
     }
 
     @Get('status')
@@ -34,4 +37,10 @@ export class AuthController {
     status(@Req() req: Request) {
         return req.user;
     }
+
+    // @Post('register')
+    // async register(@Body(ValidationPipe) createUserDTO: CreateUserDTO) {
+    //     const newUser = await this.authService.register(createUserDTO);
+    //     return newUser;
+    // }
 }

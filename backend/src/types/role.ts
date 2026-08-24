@@ -1,1 +1,3 @@
-export type Role = 'client' | 'user'
+export type FeedRole = 'client' | 'user';
+
+export type AuthRole = 'admin' | 'user';

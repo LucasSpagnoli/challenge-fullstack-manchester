@@ -17,7 +17,7 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading, onSendSi
 
     if (itemCount === 0) {
         return (
-            <div className="border border-dashed border-black/15 flex-1 min-h-0 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-60 md:h-75 p-4">
+            <div className="border border-dashed border-black/15 flex flex-col items-center justify-center gap-2 bg-black/5 w-full h-60 md:h-75 p-4">
                 <p className="text-xs text-black/40 italic font-serif text-center">
                     Nenhuma matéria.
                 </p>
@@ -52,13 +52,11 @@ export const ClientNews: React.FC<ClientNewsProps> = ({ items, loading, onSendSi
                             </span>
                         </div>
 
-                        {/* MUDANÇA: Título transformado no link principal */}
                         <a
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs font-serif text-black leading-snug group-hover:text-[#D4AF37] transition-colors line-clamp-3 cursor-pointer outline-none"
-                        >
+                            className="text-xs font-serif text-black leading-snug group-hover:text-[#D4AF37] transition-colors line-clamp-3 cursor-pointer outline-none">
                             {decodeHtml(item.title)}
                         </a>
                     </div>

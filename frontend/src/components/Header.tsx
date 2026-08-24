@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import { useAuth } from "../api/lib/AuthContext";
 
 const Header: React.FC = () => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -18,6 +18,19 @@ const Header: React.FC = () => {
                     Manchester<span className="text-[#D4AF37]">.News</span>
                 </span>
                 <nav className="flex items-center gap-6">
+                    {user?.role === 'admin' && (
+                        <NavLink
+                            to="/admin"
+                            className={({ isActive }) =>
+                                `text-xs uppercase tracking-[0.15em] transition-colors duration-200 ${
+                                    isActive
+                                        ? 'text-[#D4AF37] font-medium'
+                                        : 'text-black/50 hover:text-[#D4AF37]'
+                                }`
+                            }>
+                            Admin
+                        </NavLink>
+                    )}
                     <Link
                         to="/clients"
                         className="text-xs uppercase tracking-[0.15em] text-black/50 hover:text-[#D4AF37] transition-colors duration-200">
@@ -39,4 +52,4 @@ const Header: React.FC = () => {
     );
 };
 
-export default Header;
+export default Header;
