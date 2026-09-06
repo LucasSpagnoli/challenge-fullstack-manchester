@@ -1,6 +1,6 @@
-# Manchester.News — Frontend
+# Daily.News — Frontend
 
-Interface web da plataforma **Manchester.News**, ferramenta para assessores de investimentos gerenciarem clientes e enviarem resumos de notícias personalizados via WhatsApp.
+Interface web da plataforma **Daily.News**, ferramenta para assessores de investimentos gerenciarem clientes e enviarem resumos de notícias personalizados via WhatsApp.
 
 ---
 

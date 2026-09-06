@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
                         <span className="text-3xl font-light tracking-[0.2em] text-white">
-                            Manchester<span className="text-[#D4AF37]">.news</span>
+                            Daily<span className="text-[#D4AF37]">.news</span>
                         </span>
                     </div>
                     <div className="mt-2 w-12 h-px bg-[#D4AF37]" />
@@ -64,7 +64,7 @@ const LoginPage: React.FC = () => {
                 <div className="w-full max-w-sm">
                     <div className="lg:hidden mb-4 text-center">
                         <span className="text-2xl font-light tracking-[0.2em] text-black">
-                            Manchester<span className="text-[#D4AF37]">.news</span>
+                            Daily<span className="text-[#D4AF37]">.news</span>
                         </span>
                         <div className="mt-3 w-12 h-px bg-[#D4AF37] mx-auto" />
                     </div>
