@@ -10,6 +10,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://challenge-fullstack-manchester.vercel.app',
   'https://manchester-news-filter.vercel.app',
+  'https://daily-news-challenge.vercel.app'
 ];
 
 expressApp.use(
